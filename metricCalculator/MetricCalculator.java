@@ -15,7 +15,7 @@ public class MetricCalculator {
 
      CTR: number of clicks / number of impressions
      CPA: total cost / number of conversions
-     CPC: Sum of click costs / number of clicks
+     CPC: total cost / number of clicks
      CPM: total cost*1000 / number of impressions
      Bounce rate: number of bounces / number of clicks
      */
@@ -25,14 +25,28 @@ public class MetricCalculator {
 
         MetricCalculator myCalculator = new MetricCalculator();
         myCalculator.clickCounter();
+        myCalculator.readServerLogs();
         myCalculator.uniqueNo = myCalculator.readImpressionLogs().size();
 
-        System.out.println("Number of impressions:"+Integer.toString(myCalculator.impressionNo));
-        System.out.println("Number of clicks:"+Integer.toString(myCalculator.clickNo));
-        System.out.println("Number of uniques:"+Integer.toString(myCalculator.uniqueNo));
-        System.out.println("Number of bounces:"+Integer.toString(myCalculator.bounceNo));
-        System.out.println("Number of conversions:"+Integer.toString(myCalculator.conversionNo));
-        System.out.println("Total cost:"+Double.toString(myCalculator.totalCost));
+        float ctr = myCalculator.clickNo / myCalculator.impressionNo;
+        double cpa = myCalculator.totalCost / myCalculator.conversionNo;
+        double cpc = myCalculator.totalCost / myCalculator.clickNo;
+        double cpm = myCalculator.totalCost*1000 / myCalculator.impressionNo;
+        double br = myCalculator.bounceNo / myCalculator.clickNo;
+
+
+
+        System.out.println("Number of impressions: "+Integer.toString(myCalculator.impressionNo));
+        System.out.println("Number of clicks: "+Integer.toString(myCalculator.clickNo));
+        System.out.println("Number of uniques: "+Integer.toString(myCalculator.uniqueNo));
+        System.out.println("Number of bounces: "+Integer.toString(myCalculator.bounceNo));
+        System.out.println("Number of conversions: "+Integer.toString(myCalculator.conversionNo));
+        System.out.println("Total cost: "+Double.toString(myCalculator.totalCost));
+        System.out.println("CTR: "+ ctr); // Don't know why its giving 0?
+        System.out.println("CPA: "+ Double.toString(cpa));
+        System.out.println("CPC: " + Double.toString(cpc));
+        System.out.println("CPM: " + Double.toString(cpm));
+        System.out.println("Bounce Rate: "+ Double.toString(br));
 
     }
 
@@ -65,14 +79,16 @@ public class MetricCalculator {
         }
     }
 
-    public void bounceCounter() {
+    public void readServerLogs() {
         reader2.getLine();
         while (reader2.fileIsReady()){
             String[] log = reader2.getLine().split(",");
             String exitDate = log[2];
             String entryDate = log[0];
-
-
+            String conversion = log[4];
+            if (conversion.equals("Yes")) {
+                conversionNo++;
+            }
         }
     }
     //Calculates difference between time (in form of string)
@@ -84,6 +100,9 @@ public class MetricCalculator {
         String exitTime = exitDate.split(" ")[1];
         return 0;
     }
+
+
+
 
     //Reads the impression log, and creates a map of lists, using ID as the key, and putting the rest in the list
     public Map<String, ArrayList<String>> readImpressionLogs(){

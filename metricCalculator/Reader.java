@@ -62,46 +62,5 @@ public class Reader {
         }
     }
 
-
-
-
-
-
-
-
-
-
-/*
-    public GameBoard setUpBoard() {
-        System.out.println("Loading file: "+ fileName);
-        GameBoard myGameBoard = new GameBoard();
-        int lineCounter=0;
-        while (fileIsReady()) {
-
-            String[] line = this.getLine().split(" ");
-            for(int i=0; i<8; i++){
-                myGameBoard.addGrid(Integer.parseInt(line[i]),i,lineCounter);
-            }
-            lineCounter++;
-        }
-        return myGameBoard;
-    }
-
-    public int boardSize(){
-        int size = 0;
-        ConfigReader sizeReader = new ConfigReader(fileName);
-        while (sizeReader.fileIsReady()) {
-            String[] parameterAndPositions = sizeReader.getLine().split(" ");
-            String positionsList = parameterAndPositions[1];
-            String[] positions = positionsList.split(",");
-            int[] intPositions = new int[positions.length];
-            for(int i = 0; i< positions.length; i++){
-                intPositions[i]=Integer.parseInt(positions[i]);
-                size = size + 1;
-            }
-        }
-        return size;
-    }
- */
 }
 
