@@ -28,11 +28,11 @@ public class MetricCalculator {
         myCalculator.readServerLogs();
         myCalculator.uniqueNo = myCalculator.readImpressionLogs().size();
 
-        float ctr = myCalculator.clickNo / myCalculator.impressionNo;
+        float ctr = (float) myCalculator.clickNo / (float) myCalculator.impressionNo;
         double cpa = myCalculator.totalCost / myCalculator.conversionNo;
         double cpc = myCalculator.totalCost / myCalculator.clickNo;
         double cpm = myCalculator.totalCost*1000 / myCalculator.impressionNo;
-        double br = myCalculator.bounceNo / myCalculator.clickNo;
+        double br = (float) myCalculator.bounceNo / (float) myCalculator.clickNo;
 
 
 
