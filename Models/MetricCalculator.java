@@ -28,7 +28,8 @@ public class MetricCalculator {
      Number of uniques: unique people who saw the ad
      Number of Bounces: number of people who clicked away after a while
      Number of Conversions: clicks then acts on ad
-     Total Cost:
+     Total Impressions Cost: cost of impressions
+     Total Click Cost: cost of clicks
      CTR: Click through rate, clicks per impression
      CPA: Cost per acquisition
      CPC: Cost per click

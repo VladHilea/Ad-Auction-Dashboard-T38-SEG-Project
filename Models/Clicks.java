@@ -8,6 +8,7 @@ public class Clicks {
 
     private final String clickFile;
 
+    // Initial metric calculation
     public Clicks(String clickLog) {
         clickFile = clickLog;
         readClickLog();

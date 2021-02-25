@@ -1,15 +1,24 @@
 package Models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Server {
     private int bounceNo; // number of bounces
     private int conversionNo; // number of conversions
 
     private final String serverFile;
-    private int pageLimit = 1;
 
+    // Bounce variables
+    private int pageLimit = 1; // user should be able to change this
+    private int timeLimit = 100; // user should be able to change this
+
+    // Initial metric calculation
     public Server(String serverLog) {
         serverFile = serverLog;
         readServerLog();
+        splitDates("2015-01-01 12:01:21", "2015-01-01 12:05:13");
     }
 
     public void readServerLog(/*filtering to be added*/) {
@@ -17,7 +26,7 @@ public class Server {
         serverReader.getLine(); // Ignores the first line
 
         // Reading the file
-        while (serverReader.fileIsReady()){
+        while (serverReader.fileIsReady()) {
             String[] log = serverReader.getLine().split(",");
 
             // Extracting a server log's data
@@ -28,27 +37,41 @@ public class Server {
             boolean conversion = log[4].equalsIgnoreCase("Yes"); // has the user acted after clicking?
 
             // calculating bounce number and conversion number
-            if (pages <= pageLimit && !conversion) {
+            if (pages <= pageLimit || splitDates(entryDate, exitDate) <= timeLimit) {
                 bounceNo++;
             }
+
+            // i dont fully understand the wording behind "walks away after some time"
+            // i have taken this to mean: count as bounce if they spend less than x amount of minutes looking at the ad
+
             if (conversion) {
                 conversionNo++;
             }
         }
     }
 
-    // Calculates difference between time (in form of string)
-    public int timeDifference(String entryDate, String exitDate){
+    // Calculates difference between two dates given as strings
+    public long splitDates(String entry, String exit){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-        String entryTime = exitDate.split(" ")[1];
+            // converts dates as strings to time
+            Date entryDate = sdf.parse(entry);
+            Date exitDate = sdf.parse(exit);
 
-
-        String exitTime = exitDate.split(" ")[1];
-        return 0;
+            // returns the time difference in seconds
+            return exitDate.getTime() - (entryDate.getTime() / 1000);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public void setPageLimit(int pageLimit) {
         this.pageLimit = pageLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
     public int getBounceNo() {

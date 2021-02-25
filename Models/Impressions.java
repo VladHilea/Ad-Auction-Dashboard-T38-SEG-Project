@@ -10,6 +10,7 @@ public class Impressions {
 
     private final String impressionFile;
 
+    // Initial metric calculation
     public Impressions(String impressionLog) {
         impressionFile = impressionLog;
         readImpressionLog();
