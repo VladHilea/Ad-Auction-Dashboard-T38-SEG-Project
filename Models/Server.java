@@ -1,5 +1,6 @@
 package Models;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,10 +20,14 @@ public class Server {
         this.pageLimit = pageLimit;
         this.bounceTime = bounceTime;
 
-        readServerLog();
+        try {
+            readServerLog();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void readServerLog(/*filtering to be added*/) {
+    public void readServerLog(/*filtering to be added*/) throws ParseException {
         Reader serverReader = new Reader(serverFile);
         serverReader.getLine(); // Ignores the first line
 
@@ -31,9 +36,9 @@ public class Server {
             String[] log = serverReader.getLine().split(",");
 
             // Extracting a server log's data
-            String entryDate = log[0]; // entry date and time
+            Date entryDate = parseDate(log[0]); // entry date and time, stored as date
             long id = Long.parseLong(log[1]); // ~19 digit unique user id
-            String exitDate = log[2]; // exit date and time
+            Date exitDate = parseDate(log[2]); // exit date and time
             int pages = Integer.parseInt(log[3]); // num of pages viewed
             boolean conversion = log[4].equalsIgnoreCase("Yes"); // has the user acted after clicking?
 
@@ -47,19 +52,23 @@ public class Server {
         }
     }
 
+    // Converts string to date, catches n/a end dates
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        if (date.equals("n/a")) {
+            return null;
+        } else {
+            return (sdf.parse(date));
+        }
+    }
+
     // Calculates difference between two dates given as strings
-    public long splitDates(String entry, String exit){
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-            // converts dates as strings to time
-            Date entryDate = sdf.parse(entry);
-            Date exitDate = sdf.parse(exit);
-
-            // returns the time difference in seconds
+    public long splitDates(Date entryDate, Date exitDate) {
+        if (exitDate == null) {
+            return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
+        } else {
             return exitDate.getTime() - (entryDate.getTime() / 1000);
-        } catch (Exception e) {
-            return 0;
         }
     }
 

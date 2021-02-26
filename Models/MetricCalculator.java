@@ -22,8 +22,8 @@ public class MetricCalculator {
     private double br; // number of bounces / number of clicks
 
     // to be set by the user
-    private int pageLimit = 1; // max number of pages to count as a bounce
-    private int bounceTime = 100; // max amount of time spent by user to count as a bounce
+    // private int pageLimit = 1; // max number of pages to count as a bounce
+    // private int bounceTime = 100; // max amount of time spent by user to count as a bounce
 
     /**
      Number of impressions: people who saw the ad
@@ -53,13 +53,10 @@ public class MetricCalculator {
         this.impressionLog = "Logs/impression_log.csv";
         this.clickLog = "Logs/click_log.csv";
         this.serverLog = "Logs/server_log.csv";
-
-        calculateMetrics(pageLimit, bounceTime);
-        print();
     }
 
     // Calculates metrics
-    public void calculateMetrics(int pageLimit, int bounceTime) {
+    public void calculateMetrics(int pageLimit, int bounceTime, String startDate, String endDate) {
         // Reads the log files
         impressions = new Impressions(impressionLog);
         clicks = new Clicks(clickLog);
@@ -102,9 +99,8 @@ public class MetricCalculator {
     public static void main(String[] args){
         MetricCalculator calculator = new MetricCalculator();
 
-        /* recalculating metrics based on the bounce (only needs to calculate server stuff so can be optimised)
-        calculator.calculateMetrics(2, 200);
+        // starts taking start date as string
+        calculator.calculateMetrics(2, 200, "2015-01-01 12:01:21", "2015-01-01 13:51:59");
         calculator.print();
-         */
     }
 }

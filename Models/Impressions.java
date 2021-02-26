@@ -1,5 +1,8 @@
 package Models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 
 public class Impressions {
@@ -13,20 +16,28 @@ public class Impressions {
     public Impressions(String impressionLog) {
         this.impressionFile = impressionLog;
 
-        readImpressionLog();
+        try {
+            readImpressionLog();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void readImpressionLog(/*filtering to be added*/) {
+    public void readImpressionLog(/*filtering to be added*/) throws ParseException {
         Reader impressionReader = new Reader(impressionFile);
         impressionReader.getLine(); // Ignores the first line
 
+        // Date format to match strings in csv
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        // List of unique users who gave an impression
         HashSet<Long> uniqueIds = new HashSet<>();
 
         // Reading the file
         while (impressionReader.fileIsReady()){
             String[] log = impressionReader.getLine().split(",");
 
-            String date = log[0]; // date and time
+            Date date = parseDate(log[0]); // date and time
             long id = Long.parseLong(log[1]); // ~19 digit unique user id
             String gender = log[2]; // male or female
             String age = log[3]; // <25, 25-34, 35-44, 45-54, >54
@@ -43,6 +54,12 @@ public class Impressions {
                 uniqueIds.add(id);
             }
         }
+    }
+
+    // Converts string to date, catches n/a end dates
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return (sdf.parse(date));
     }
 
     public int getImpressionNo() {

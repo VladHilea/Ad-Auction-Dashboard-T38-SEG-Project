@@ -1,5 +1,9 @@
 package Models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Clicks {
     private int clickNo; // number of clicks
     private double totalCost; // total cost of clicks
@@ -10,19 +14,26 @@ public class Clicks {
     public Clicks(String clickLog) {
         this.clickLog = clickLog;
 
-        readClickLog();
+        try {
+            readClickLog();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void readClickLog(/*filtering to be added*/) {
+    public void readClickLog(/*filtering to be added*/) throws ParseException {
         Reader clickReader = new Reader(clickLog);
         clickReader.getLine(); // Ignores the first line
+
+        // Date format to match strings in csv
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
         // Reading the file
         while (clickReader.fileIsReady()){
             String[] log = clickReader.getLine().split(",");
 
             // Extracting a click log's data
-            String date = log[0]; // date and time
+            Date date = parseDate(log[0]); // date and time
             long id = Long.parseLong(log[1]); // ~19 digit unique user id
             double clickCost = Double.parseDouble(log[2]); // 6 d.p. value (>0)
 
@@ -30,6 +41,12 @@ public class Clicks {
             clickNo++;
             totalCost += clickCost;
         }
+    }
+
+    // Converts string to date
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return (sdf.parse(date));
     }
 
     public int getClickNo() {
