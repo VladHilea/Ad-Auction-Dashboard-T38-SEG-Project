@@ -1,6 +1,5 @@
 package Models;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Impressions {
@@ -12,7 +11,8 @@ public class Impressions {
 
     // Initial metric calculation
     public Impressions(String impressionLog) {
-        impressionFile = impressionLog;
+        this.impressionFile = impressionLog;
+
         readImpressionLog();
     }
 

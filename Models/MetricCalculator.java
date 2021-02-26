@@ -20,7 +20,10 @@ public class MetricCalculator {
     private double cpc; // total impression cost / number of clicks
     private double cpm; // (total impressions cost * 1000) / number of impressions
     private double br; // number of bounces / number of clicks
-    // private int bounceTime = 10; // bounce time, input by user
+
+    // to be set by the user
+    private int pageLimit = 1; // max number of pages to count as a bounce
+    private int bounceTime = 100; // max amount of time spent by user to count as a bounce
 
     /**
      Number of impressions: people who saw the ad
@@ -47,20 +50,20 @@ public class MetricCalculator {
 
     public MetricCalculator() {
         // File names
-        impressionLog = "Logs/impression_log.csv";
-        clickLog = "Logs/click_log.csv";
-        serverLog = "Logs/server_log.csv";
+        this.impressionLog = "Logs/impression_log.csv";
+        this.clickLog = "Logs/click_log.csv";
+        this.serverLog = "Logs/server_log.csv";
 
-        calculateMetrics();
+        calculateMetrics(pageLimit, bounceTime);
         print();
     }
 
     // Calculates metrics
-    public void calculateMetrics(/*filtering to be added*/) {
+    public void calculateMetrics(int pageLimit, int bounceTime) {
         // Reads the log files
         impressions = new Impressions(impressionLog);
         clicks = new Clicks(clickLog);
-        server = new Server(serverLog);
+        server = new Server(serverLog, pageLimit, bounceTime);
 
         // Metrics gathered directly from logs
         impressionsNo = impressions.getImpressionNo();
@@ -82,11 +85,12 @@ public class MetricCalculator {
     // Temporary function to display metrics in terminal
     public void print() {
         System.out.println("Number of impressions: " + impressionsNo);
-        System.out.println("Number of clicks: " + clicksNo);
         System.out.println("Number of uniques: " + uniquesNo);
+        System.out.println("Number of clicks: " + clicksNo);
         System.out.println("Number of bounces: " + bounceNo);
         System.out.println("Number of conversions: " + conversionsNo);
-        System.out.println("Total cost: " + totalImpressionCost);
+        System.out.println("Total impression cost: " + totalImpressionCost);
+        System.out.println("Total click cost: " + totalClickCost);
         System.out.println("CTR: " + ctr);
         System.out.println("CPA: " + cpa);
         System.out.println("CPC: " + cpc);
@@ -97,5 +101,10 @@ public class MetricCalculator {
     // Main
     public static void main(String[] args){
         MetricCalculator calculator = new MetricCalculator();
+
+        /* recalculating metrics based on the bounce (only needs to calculate server stuff so can be optimised)
+        calculator.calculateMetrics(2, 200);
+        calculator.print();
+         */
     }
 }

@@ -1,21 +1,20 @@
 package Models;
 
-import java.util.ArrayList;
-
 public class Clicks {
     private int clickNo; // number of clicks
     private double totalCost; // total cost of clicks
 
-    private final String clickFile;
+    private final String clickLog;
 
     // Initial metric calculation
     public Clicks(String clickLog) {
-        clickFile = clickLog;
+        this.clickLog = clickLog;
+
         readClickLog();
     }
 
     public void readClickLog(/*filtering to be added*/) {
-        Reader clickReader = new Reader(clickFile);
+        Reader clickReader = new Reader(clickLog);
         clickReader.getLine(); // Ignores the first line
 
         // Reading the file

@@ -1,6 +1,5 @@
 package Models;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,14 +10,16 @@ public class Server {
     private final String serverFile;
 
     // Bounce variables
-    private int pageLimit = 1; // user should be able to change this
-    private int timeLimit = 100; // user should be able to change this
+    private int pageLimit; // bounce page limit
+    private int bounceTime; // // bounce time
 
     // Initial metric calculation
-    public Server(String serverLog) {
-        serverFile = serverLog;
+    public Server(String serverLog, int pageLimit, int bounceTime) {
+        this.serverFile = serverLog;
+        this.pageLimit = pageLimit;
+        this.bounceTime = bounceTime;
+
         readServerLog();
-        splitDates("2015-01-01 12:01:21", "2015-01-01 12:05:13");
     }
 
     public void readServerLog(/*filtering to be added*/) {
@@ -37,13 +38,9 @@ public class Server {
             boolean conversion = log[4].equalsIgnoreCase("Yes"); // has the user acted after clicking?
 
             // calculating bounce number and conversion number
-            if (pages <= pageLimit || splitDates(entryDate, exitDate) <= timeLimit) {
+            if (pages <= pageLimit || splitDates(entryDate, exitDate) <= bounceTime) {
                 bounceNo++;
             }
-
-            // i dont fully understand the wording behind "walks away after some time"
-            // i have taken this to mean: count as bounce if they spend less than x amount of minutes looking at the ad
-
             if (conversion) {
                 conversionNo++;
             }
@@ -64,14 +61,6 @@ public class Server {
         } catch (Exception e) {
             return 0;
         }
-    }
-
-    public void setPageLimit(int pageLimit) {
-        this.pageLimit = pageLimit;
-    }
-
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
     }
 
     public int getBounceNo() {
