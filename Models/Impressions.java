@@ -10,17 +10,19 @@ public class Impressions {
     private int uniquesNo; // total uniques
     private double totalCost; // total impression cost
 
-    private final String impressionFile;
+    private final String impressionFile; // file name for logs
+
+    private Date startDate; // date filtering
+    private Date endDate;
 
     // Initial metric calculation
-    public Impressions(String impressionLog) {
+    public Impressions(String impressionLog, Date startDate, Date endDate) throws ParseException {
         this.impressionFile = impressionLog;
 
-        try {
-            readImpressionLog();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        readImpressionLog();
     }
 
     public void readImpressionLog(/*filtering to be added*/) throws ParseException {
@@ -37,21 +39,26 @@ public class Impressions {
         while (impressionReader.fileIsReady()){
             String[] log = impressionReader.getLine().split(",");
 
+            // Extracting an impression log's data
             Date date = parseDate(log[0]); // date and time
-            long id = Long.parseLong(log[1]); // ~19 digit unique user id
-            String gender = log[2]; // male or female
-            String age = log[3]; // <25, 25-34, 35-44, 45-54, >54
-            String income = log[4]; // high, medium or low
-            String context = log[5]; // blog, new, shopping, social media
-            double impressionCost = Double.parseDouble(log[6]); // 6 d.p. value (>0)
 
-            // calculating total impressions, total cost and unique impressions
-            impressionNo++;
-            totalCost += impressionCost;
+            // Checks if the impression log fits within the given time scale
+            if (date.after(startDate) && date.before(endDate)) {
+                long id = Long.parseLong(log[1]); // ~19 digit unique user id
+                String gender = log[2]; // male or female
+                String age = log[3]; // <25, 25-34, 35-44, 45-54, >54
+                String income = log[4]; // high, medium or low
+                String context = log[5]; // blog, new, shopping, social media
+                double impressionCost = Double.parseDouble(log[6]); // 6 d.p. value (>0)
 
-            if (!uniqueIds.contains(id)) {
-                uniquesNo++;
-                uniqueIds.add(id);
+                // calculating total impressions, total cost and unique impressions
+                impressionNo++;
+                totalCost += impressionCost;
+
+                if (!uniqueIds.contains(id)) {
+                    uniquesNo++;
+                    uniqueIds.add(id);
+                }
             }
         }
     }

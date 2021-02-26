@@ -1,6 +1,9 @@
 package Models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,11 +59,19 @@ public class MetricCalculator {
     }
 
     // Calculates metrics
-    public void calculateMetrics(int pageLimit, int bounceTime, String startDate, String endDate) {
-        // Reads the log files
-        impressions = new Impressions(impressionLog);
-        clicks = new Clicks(clickLog);
-        server = new Server(serverLog, pageLimit, bounceTime);
+    public void calculateMetrics(int pageLimit, int bounceTime, String start, String end) {
+        // Date filtering
+        try {
+            Date endDate = parseDate(end);
+            Date startDate = parseDate(start);
+
+            // Reads the log files
+            impressions = new Impressions(impressionLog, startDate, endDate);
+            clicks = new Clicks(clickLog, startDate, endDate);
+            server = new Server(serverLog, pageLimit, bounceTime, startDate, endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         // Metrics gathered directly from logs
         impressionsNo = impressions.getImpressionNo();
@@ -77,6 +88,12 @@ public class MetricCalculator {
         cpc = totalImpressionCost / clicksNo;
         cpm = (totalImpressionCost * 1000) / impressionsNo;
         br = (double) bounceNo / (double) clicksNo;
+    }
+
+    // Converts string to date
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return (sdf.parse(date));
     }
 
     // Temporary function to display metrics in terminal
