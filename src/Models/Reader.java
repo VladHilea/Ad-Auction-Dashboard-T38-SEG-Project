@@ -27,7 +27,6 @@ public class Reader {
 
     public boolean fileIsReady() {
         try {
-
             if (configuration == null || reader == null) {
                 return false;
             } else return reader.ready();

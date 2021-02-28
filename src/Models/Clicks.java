@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Clicks {
-    private int clickNo; // number of clicks
-    private double totalCost; // total cost of clicks
-
     private final ArrayList<Click> clicks = new ArrayList<>(); // list of logs
 
     // Initial metric calculation
