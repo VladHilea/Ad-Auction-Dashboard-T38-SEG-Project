@@ -47,27 +47,32 @@ public class MetricCalculator {
     private final String serverLog;
 
     public MetricCalculator() {
-        // File names
+        // file names
         this.impressionLog = "src/Logs/impression_log.csv";
         this.clickLog = "src/Logs/click_log.csv";
         this.serverLog = "src/Logs/server_log.csv";
+
+        // reads the log files
+        try {
+            this.impressions = new Impressions(impressionLog);
+            this.clicks = new Clicks(clickLog);
+            this.servers = new Servers(serverLog);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     // calculates metrics
     public void calculateMetrics(int pageLimit, int bounceTime, String start, String end) {
-        // cate filtering
+        // calculating metrics from the three separate logs
         try {
-            Date endDate = parseDate(end);
-            Date startDate = parseDate(start);
+            // converts string to date - very likely temporary
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date startDate = sdf.parse(start);
+            Date endDate = sdf.parse(end);
 
-            // Reads the log files
-            impressions = new Impressions(impressionLog);
             calculateImpressionsMetrics(startDate, endDate);
-
-            clicks = new Clicks(clickLog);
             calculateClicksMetrics(startDate, endDate);
-
-            servers = new Servers(serverLog);
             calculateServersMetrics(pageLimit, bounceTime, startDate, endDate);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -79,12 +84,6 @@ public class MetricCalculator {
         cpc = totalImpressionCost / clicksNo;
         cpm = (totalImpressionCost * 1000) / impressionsNo;
         br = (double) bounceNo / (double) clicksNo;
-    }
-
-    // Converts string to date
-    public Date parseDate(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return (sdf.parse(date));
     }
 
     // calculates metrics from impressions
@@ -129,7 +128,7 @@ public class MetricCalculator {
         while (inTime) {
             Click click = clicksList.get(count);
 
-            // Checks if the click log fits within the given time scale
+            // checks if the click log fits within the given time scale
             if (click.date.after(startDate) && click.date.before(endDate)) {
                 // calculating total clicks and total cost
                 clicksNo++;
@@ -150,7 +149,7 @@ public class MetricCalculator {
         while (inTime) {
             Server server = serversList.get(count);
 
-            // Checks if the server log fits within the given time scale
+            // checks if the server log fits within the given time scale
             if (server.entryDate.after(startDate) && server.entryDate.before(endDate)) {
                 // calculating bounce number and conversion number
                 if (server.pages <= pageLimit || splitDates(bounceTime, server.entryDate, server.exitDate) <= bounceTime) {
@@ -167,7 +166,7 @@ public class MetricCalculator {
         }
     }
 
-    // Calculates difference between two dates given as strings
+    // calculates difference between two dates given as strings
     public long splitDates(int bounceTime, Date entryDate, Date exitDate) {
         if (exitDate == null) {
             return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
@@ -176,7 +175,7 @@ public class MetricCalculator {
         }
     }
 
-    // Temporary function to display metrics in terminal
+    // temporary function to display metrics in terminal
     public void print() {
         System.out.println("Number of impressions: " + impressionsNo);
         System.out.println("Number of uniques: " + uniquesNo);
