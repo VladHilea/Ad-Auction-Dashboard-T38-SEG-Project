@@ -2,10 +2,7 @@ package Models;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MetricCalculator {
     // Already calculated
@@ -23,10 +20,6 @@ public class MetricCalculator {
     private double cpc; // total impression cost / number of clicks
     private double cpm; // (total impressions cost * 1000) / number of impressions
     private double br; // number of bounces / number of clicks
-
-    // to be set by the user
-    // private int pageLimit = 1; // max number of pages to count as a bounce
-    // private int bounceTime = 100; // max amount of time spent by user to count as a bounce
 
     /**
      Number of impressions: people who saw the ad
@@ -47,15 +40,15 @@ public class MetricCalculator {
     private Clicks clicks;
     private Server server;
 
-    private String impressionLog;
-    private String clickLog;
-    private String serverLog;
+    private final String impressionLog;
+    private final String clickLog;
+    private final String serverLog;
 
     public MetricCalculator() {
         // File names
-        this.impressionLog = "Logs/impression_log.csv";
-        this.clickLog = "Logs/click_log.csv";
-        this.serverLog = "Logs/server_log.csv";
+        this.impressionLog = "src/Logs/impression_log.csv";
+        this.clickLog = "src/Logs/click_log.csv";
+        this.serverLog = "src/Logs/server_log.csv";
     }
 
     // Calculates metrics
@@ -66,7 +59,7 @@ public class MetricCalculator {
             Date startDate = parseDate(start);
 
             // Reads the log files
-            impressions = new Impressions(impressionLog, startDate, endDate);
+            impressions = new Impressions(impressionLog);
             clicks = new Clicks(clickLog, startDate, endDate);
             server = new Server(serverLog, pageLimit, bounceTime, startDate, endDate);
         } catch (ParseException e) {
