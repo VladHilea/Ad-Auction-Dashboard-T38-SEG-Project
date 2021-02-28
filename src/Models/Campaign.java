@@ -7,12 +7,7 @@ public class Campaign {
     private Clicks clicks;
     private Servers servers;
 
-    public Campaign() {
-        // file names - temporary till inputs
-        String impressionLog = "src/Logs/impression_log.csv";
-        String clickLog = "src/Logs/click_log.csv";
-        String serverLog = "src/Logs/server_log.csv";
-
+    public Campaign(String impressionLog, String clickLog, String serverLog) {
         // reads the log files
         try {
             this.impressions = new Impressions(impressionLog);
@@ -23,20 +18,8 @@ public class Campaign {
         }
     }
 
-    public static void main(String[] args) {
-        Campaign campaign = new Campaign();
-
-        MetricCalculator calculator1 = new MetricCalculator(campaign.impressions, campaign.clicks, campaign.servers);
-        MetricCalculator calculator2 = new MetricCalculator(campaign.impressions, campaign.clicks, campaign.servers);
-
-        // all metrics
-        calculator1.calculateMetrics(1, 500, "n/a", "n/a");
-        calculator1.print();
-
-        System.out.println(" ");
-
-        // metrics within a time frame, and different filtering
-        calculator2.calculateMetrics(2, 250, "2015-01-01 12:01:21", "2015-01-01 13:51:59");
-        calculator2.print();
+    // modular functions for later
+    public MetricCalculator newCalculator() {
+        return new MetricCalculator(impressions, clicks, servers);
     }
 }
