@@ -190,4 +190,52 @@ public class MetricCalculator {
         System.out.println("CPM: " + cpm);
         System.out.println("Bounce Rate: " + br);
     }
+
+    public int getImpressionsNo() {
+        return impressionsNo;
+    }
+
+    public int getUniquesNo() {
+        return uniquesNo;
+    }
+
+    public int getClicksNo() {
+        return clicksNo;
+    }
+
+    public int getBounceNo() {
+        return bounceNo;
+    }
+
+    public int getConversionsNo() {
+        return conversionsNo;
+    }
+
+    public double getTotalImpressionCost() {
+        return totalImpressionCost;
+    }
+
+    public double getTotalClickCost() {
+        return totalClickCost;
+    }
+
+    public double getCtr() {
+        return ctr;
+    }
+
+    public double getCpa() {
+        return cpa;
+    }
+
+    public double getCpc() {
+        return cpc;
+    }
+
+    public double getCpm() {
+        return cpm;
+    }
+
+    public double getBr() {
+        return br;
+    }
 }
