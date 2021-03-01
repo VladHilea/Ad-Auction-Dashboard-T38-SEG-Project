@@ -1,6 +1,11 @@
 import Models.Campaign;
 import Models.ChartCalculator;
+import Models.Impression;
 import Models.MetricCalculator;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,7 +29,7 @@ public class Main {
         **/
 
         ChartCalculator calculator2 = campaign.newChartCalculator();
-        calculator2.createImpressionsDates();
+        Map<LocalDateTime, ArrayList<Impression>> impressionsIntervals = calculator2.createImpressionsIntervals();
         calculator2.createClicksDates();
         calculator2.createServersDates();
     }

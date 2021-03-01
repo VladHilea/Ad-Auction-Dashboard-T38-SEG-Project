@@ -1,8 +1,11 @@
 package Models;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChartCalculator {
     private final Impressions impressions;
@@ -21,20 +24,16 @@ public class ChartCalculator {
         this.servers = servers;
     }
 
-    public void createImpressionsDates() {
-         createDates(impressions.getStartDate(), impressions.getEndDate());
+    public ArrayList<LocalDateTime> createClicksDates() {
+        return createDates(clicks.getStartDate(), clicks.getEndDate());
     }
 
-    public void createClicksDates() {
-        createDates(clicks.getStartDate(), clicks.getEndDate());
-    }
-
-    public void createServersDates() {
-        createDates(servers.getStartDate(), clicks.getEndDate());
+    public ArrayList<LocalDateTime> createServersDates() {
+        return createDates(servers.getStartDate(), clicks.getEndDate());
     }
 
     // creates a list of dates separated by a constant interval
-    public void createDates(LocalDateTime startDate, LocalDateTime endDate) {
+    public ArrayList<LocalDateTime> createDates(LocalDateTime startDate, LocalDateTime endDate) {
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startDate);
 
@@ -46,7 +45,32 @@ public class ChartCalculator {
             dates.add(startDate.plusHours(i));
         }
 
-        System.out.println(dates); // list of intervals
-        System.out.println(dates.size()); // number of intervals
+        return dates;
+    }
+
+    // gets all the impressions data points sorted into the intervals produced
+    public Map<LocalDateTime, ArrayList<Impression>> createImpressionsIntervals() {
+        ArrayList<LocalDateTime> dates = createDates(impressions.getStartDate(), impressions.getEndDate());
+
+        Map<LocalDateTime, ArrayList<Impression>> intervals = new HashMap<>();
+        ArrayList<Impression> interval = new ArrayList<>();
+
+        LocalDateTime currentDate = dates.get(0);
+        LocalDateTime nextDate = dates.get(1);
+        int count = 1;
+
+        for (Impression impression : impressions.getImpressions()) {
+            if (!impression.date.isBefore(nextDate)) {
+                intervals.put(currentDate, interval);
+                interval.clear();
+
+                count++;
+                currentDate = dates.get(count - 1);
+                nextDate = dates.get(count);
+            }
+            interval.add(impression);
+        }
+
+        return intervals;
     }
 }
