@@ -5,8 +5,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class ChartCalculator extends Calculator {
-    public ChartCalculator(Impressions impressions, Clicks clicks, Servers servers) {
-        super(impressions, clicks, servers);
+    public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog) {
+        super(impressionLog, clickLog, serverLog);
     }
 
     /**
@@ -31,18 +31,19 @@ public class ChartCalculator extends Calculator {
         return dates;
     }
 
+    /**
     // gets all the impressions data points sorted into the intervals produced
-    public ArrayList<ImpressionsInterval> createImpressionsIntervals() {
-        ArrayList<LocalDateTime> dates = createDates(getImpressions().getStartDate(), getImpressions().getEndDate());
+    public Chart createImpressionsIntervals() {
+        ArrayList<LocalDateTime> dates = createDates(getImpressionLog().getFirstDate(), getImpressionLog().getLastDate());
 
-        ArrayList<ImpressionsInterval> intervals = new ArrayList<>();
+        Chart intervals = new Chart();
         ArrayList<Impression> interval = new ArrayList<>();
 
         LocalDateTime currentDate = dates.get(0);
         LocalDateTime nextDate = dates.get(1);
         int count = 1;
 
-        for (Impression impression : getImpressions().getImpressions()) {
+        for (Impression impression : getImpressionLog().getImpressionsList()) {
             if (!impression.date.isBefore(nextDate)) {
                 intervals.add(new ImpressionsInterval(currentDate, interval));
                 interval.clear();
@@ -108,4 +109,5 @@ public class ChartCalculator extends Calculator {
 
         return intervals;
     }
+     */
 }

@@ -1,29 +1,25 @@
 package Models;
 
-import java.text.ParseException;
-
 public class Campaign {
-    private Impressions impressions;
-    private Clicks clicks;
-    private Servers servers;
+    private final ImpressionLog impressionLog;
+    private final ClickLog clicksLog;
+    private final ServerLog serversLog;
 
-    public Campaign(String impressionLog, String clickLog, String serverLog) {
+    public Campaign(String impressionFile, String clickFile, String serverFile) {
         // reads the log files
-        try {
-            this.impressions = new Impressions(impressionLog);
-            this.clicks = new Clicks(clickLog);
-            this.servers = new Servers(serverLog);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.impressionLog = new ImpressionLog(impressionFile);
+        this.clicksLog = new ClickLog(clickFile);
+        this.serversLog = new ServerLog(serverFile);
     }
 
     // modular functions for later
     public MetricCalculator newMetricCalculator() {
-        return new MetricCalculator(impressions, clicks, servers);
+        return new MetricCalculator(impressionLog, clicksLog, serversLog);
     }
 
+    /**
     public Chart newChart() {
-        return new Chart(new ChartCalculator(impressions, clicks, servers));
+        return new Chart(new ChartCalculator(impressionLog, clicksLog, serversLog));
     }
+     */
 }

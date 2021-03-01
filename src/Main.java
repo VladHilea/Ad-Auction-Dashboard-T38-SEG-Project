@@ -1,7 +1,5 @@
 import Models.*;
 
-import java.util.ArrayList;
-
 public class Main {
     public static void main(String[] args) {
         Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv"); // string inputs temporary
@@ -23,10 +21,10 @@ public class Main {
         i changed this so it was easier to make classes and i think it could now improve the performance a bit
         **/
 
-        Chart chart1 = campaign.newChart();
-        ArrayList<ImpressionsInterval> impressionsIntervals = chart1.getCalculator().createImpressionsIntervals();
-        ArrayList<ClicksInterval> clicksIntervals = chart1.getCalculator().createClicksIntervals();
-        ArrayList<ServersInterval> serversIntervals = chart1.getCalculator().createServersIntervals();
+        //Chart chart1 = campaign.newChart();
+        //ArrayList<ImpressionsInterval> impressionsIntervals = chart1.getCalculator().createImpressionsIntervals();
+        //ArrayList<ClicksInterval> clicksIntervals = chart1.getCalculator().createClicksIntervals();
+        //ArrayList<ServersInterval> serversIntervals = chart1.getCalculator().createServersIntervals();
     }
 
     // temporary function to display metrics in terminal

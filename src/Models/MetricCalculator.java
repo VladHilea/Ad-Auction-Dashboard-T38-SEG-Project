@@ -11,8 +11,8 @@ public class MetricCalculator extends Calculator {
     private int clicksNo; // number of clicks - people who clicked the ad
     private int bounceNo; // number of bounces - people who clicked away after a while
     private int conversionsNo; // number of conversions - people who click then acts on ad
-    private double totalImpressionCost; // total impression cost - cost of impressions
-    private double totalClickCost; // total click cost - cost of clicks
+    private double totalImpressionsCost; // total impression cost - cost of impressions
+    private double totalClicksCost; // total click cost - cost of clicks
 
     private double ctr; // click-through-rate - clicks per impression
     private double cpa; // cost-per-acquisition
@@ -23,8 +23,8 @@ public class MetricCalculator extends Calculator {
     private final int pageLimit; // max number of pages to be counted as a bounce
     private final int bounceTime; // max amount of time to be counted as a bounce
 
-    public MetricCalculator(Impressions impressions, Clicks clicks, Servers servers) {
-        super(impressions, clicks, servers);
+    public MetricCalculator(ImpressionLog impressions, ClickLog clickLog, ServerLog serverLog) {
+        super(impressions, clickLog, serverLog);
 
         this.pageLimit = 1;
         this.bounceTime = 500;
@@ -32,85 +32,72 @@ public class MetricCalculator extends Calculator {
 
     // calculates metrics
     public void calculateMetrics() {
-        // calculating metrics from the three separate logs
-        calculateImpressionsMetrics();
-        calculateClicksMetrics();
-        calculateServersMetrics(pageLimit, bounceTime);
+        // calculating metrics from the three log classes
+        calculateImpressionsNo();
+        calculateUniquesNo();
+        calculateImpressionsCost();
+        calculateClicksNo();
+        calculateClicksCost();
+        calculateBouncesNo(pageLimit, bounceTime);
+        calculateConversionsNo();
 
         // additional metrics calculated from previous metrics
         ctr = (double) clicksNo / (double) impressionsNo;
-        cpa = totalImpressionCost / conversionsNo;
-        cpc = totalImpressionCost / clicksNo;
-        cpm = (totalImpressionCost * 1000) / impressionsNo;
+        cpa = totalImpressionsCost / conversionsNo;
+        cpc = totalImpressionsCost / clicksNo;
+        cpm = (totalImpressionsCost * 1000) / impressionsNo;
         br = (double) bounceNo / (double) clicksNo;
     }
 
-    // calculates metrics from impressions
-    public void calculateImpressionsMetrics(/*filtering to be added*/) {
-        ArrayList<Impression> impressionsList = getImpressions().getImpressions(); // list of impressions
+    // calculates the number of impressions
+    public void calculateImpressionsNo() {
+        this.impressionsNo = getImpressionLog().getImpressionsList().size();
+    }
+
+    // calculates the number of impressions from unique users
+    public void calculateUniquesNo() {
+        ArrayList<Impression> impressionsList = getImpressionLog().getImpressionsList(); // list of impressions
         HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
-        int count = 0; // indexing
 
-        // resets the impressions metrics
-        impressionsNo = 0;
-        totalImpressionCost = 0;
-        uniquesNo = 0;
-
-        while (count < impressionsList.size()) {
-            Impression impression = impressionsList.get(count);
-
-            // calculating total impressions, total cost and unique impressions
-            impressionsNo++;
-            totalImpressionCost += impression.impressionCost;
-
-            if (!uniqueIds.contains(impression.id)) {
-                uniquesNo++;
-                uniqueIds.add(impression.id);
+        for (Impression impression : impressionsList) {
+            if (!uniqueIds.contains(impression.getId())) {
+                this.uniquesNo++;
+                uniqueIds.add(impression.getId());
             }
-
-            count++;
         }
     }
 
-    // calculates metrics from clicks
-    public void calculateClicksMetrics(/*filtering to be added*/) {
-        ArrayList<Click> clicksList = getClicks().getClicks(); // list of clicks
-        int count = 0; // indexing
+    // calculates the total cost of impressions
+    public void calculateImpressionsCost() {
+        ArrayList<Impression> impressionsList = getImpressionLog().getImpressionsList(); // list of impressions
 
-        // resets the clicks metrics
-        clicksNo = 0;
-        totalClickCost = 0;
-
-        while (count < clicksList.size()) {
-            Click click = clicksList.get(count);
-
-            // calculating total clicks and total cost
-            clicksNo++;
-            totalClickCost += click.clickCost;
-
-            count++;
+        for (Impression impression : impressionsList) {
+            this.totalImpressionsCost += impression.getImpressionCost();
         }
     }
 
-    public void calculateServersMetrics(int pageLimit, int bounceTime /*filtering to be added*/) {
-        ArrayList<Server> serversList = getServers().getServers(); // list of clicks
-        int count = 0; // indexing
+    // calculates the number of clicks
+    public void calculateClicksNo() {
+        this.clicksNo = getClickLog().getClicksList().size();
+    }
 
-        // resets the servers metrics
-        bounceNo = 0;
-        conversionsNo = 0;
+    // calculates the total cost of clicks
+    public void calculateClicksCost() {
+        ArrayList<Click> clickList = getClickLog().getClicksList(); // list of clicks
 
-        while (count < serversList.size()) {
-            Server server = serversList.get(count);
+        for (Click click : clickList) {
+            this.totalClicksCost += click.getClickCost();
+        }
+    }
 
-            // calculating bounce number and conversion number
-            if (server.pages <= pageLimit || timeDifference(bounceTime, server.entryDate, server.exitDate) <= bounceTime) {
-                bounceNo++;
+    // calculates the number of bounces
+    public void calculateBouncesNo(int pageLimit, int bounceTime) {
+        ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
+
+        for (Server server : serverList) {
+            if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
+                this.bounceNo++;
             }
-            if (server.conversion) {
-                conversionsNo++;
-            }
-            count++;
         }
     }
 
@@ -120,6 +107,17 @@ public class MetricCalculator extends Calculator {
             return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
         } else {
             return (exitDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli() - entryDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli()) / 1000;
+        }
+    }
+
+    // calculates the number of conversions
+    public void calculateConversionsNo() {
+        ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
+
+        for (Server server : serverList) {
+            if (server.isConversion()) {
+                this.conversionsNo++;
+            }
         }
     }
 
@@ -144,11 +142,11 @@ public class MetricCalculator extends Calculator {
     }
 
     public double getTotalImpressionCost() {
-        return totalImpressionCost;
+        return totalImpressionsCost;
     }
 
     public double getTotalClickCost() {
-        return totalClickCost;
+        return totalClicksCost;
     }
 
     public double getCtr() {

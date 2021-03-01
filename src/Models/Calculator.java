@@ -1,25 +1,25 @@
 package Models;
 
 public class Calculator {
-    private final Impressions impressions;
-    private final Clicks clicks;
-    private final Servers servers;
+    private final ImpressionLog impressionLog;
+    private final ClickLog clickLog;
+    private final ServerLog serverLog;
 
-    public Calculator(Impressions impressions, Clicks clicks, Servers servers) {
-        this.impressions = impressions;
-        this.clicks = clicks;
-        this.servers = servers;
+    public Calculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog) {
+        this.impressionLog = impressionLog;
+        this.clickLog = clickLog;
+        this.serverLog = serverLog;
     }
 
-    public Impressions getImpressions() {
-        return impressions;
+    public ImpressionLog getImpressionLog() {
+        return impressionLog;
     }
 
-    public Clicks getClicks() {
-        return clicks;
+    public ClickLog getClickLog() {
+        return clickLog;
     }
 
-    public Servers getServers() {
-        return servers;
+    public ServerLog getServerLog() {
+        return serverLog;
     }
 }
