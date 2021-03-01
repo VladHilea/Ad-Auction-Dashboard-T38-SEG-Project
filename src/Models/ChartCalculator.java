@@ -1,6 +1,8 @@
 package Models;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class ChartCalculator {
@@ -34,12 +36,20 @@ public class ChartCalculator {
         this.servers = servers;
     }
 
+    // creates a list of dates separated by a constant interval
     public void createDates() {
-        System.out.println(LocalDateTime.now());
-        System.out.println(LocalDateTime.now().plusHours(1));
-        System.out.println(LocalDateTime.now().plusDays(1));
-        System.out.println(LocalDateTime.now().plusWeeks(1));
-        System.out.println(LocalDateTime.now().plusMonths(1));
-        System.out.println(LocalDateTime.now().plusYears(1));
+        ArrayList<LocalDateTime> dates = new ArrayList<>();
+        dates.add(LocalDateTime.now());
+
+        // calculates time difference
+        long weeks = ChronoUnit.WEEKS.between(LocalDateTime.now(), LocalDateTime.now().plusYears(1));
+
+        // gets dates at every interval
+        for (long i=1; i<weeks; i++) {
+            dates.add(LocalDateTime.now().plusWeeks(i));
+        }
+
+        System.out.println(dates);
+        System.out.println(dates.size());
     }
 }
