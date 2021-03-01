@@ -1,28 +1,26 @@
 package Models;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class ChartCalculator {
-    private int[] impressionsNo; // number of impressions - people who saw the ad
-    private int[] uniquesNo; // number of unique impressions - unique people who saw the ad
-    private int[] clicksNo; // number of clicks - people who clicked the ad
-    private int[] bounceNo; // number of bounces - people who clicked away after a while
-    private int[] conversionsNo; // number of conversions - people who click then acts on ad
-    private double[] totalImpressionCost; // total impression cost - cost of impressions
-    private double[] totalClickCost; // total click cost - cost of clicks
+    private ArrayList<Integer> impressionsNos; // number of impressions - people who saw the ad
+    private ArrayList<Integer> uniquesNos; // number of unique impressions - unique people who saw the ad
+    private ArrayList<Integer> clicksNos; // number of clicks - people who clicked the ad
+    private ArrayList<Integer> bounceNos; // number of bounces - people who clicked away after a while
+    private ArrayList<Integer> conversionsNos; // number of conversions - people who click then acts on ad
+    private ArrayList<Double> totalImpressionCosts; // total impression cost - cost of impressions
+    private ArrayList<Double> totalClickCosts; // total click cost - cost of clicks
 
-    private double[] ctr; // click-through-rate - clicks per impression
-    private double[] cpa; // cost-per-acquisition
-    private double[] cpc; // cost-per-click
-    private double[] cpm; // cost-per-thousand impressions
-    private double[] br; // bounce rate - number of bounces per click
+    private ArrayList<Double> ctrs; // click-through-rate - clicks per impression
+    private ArrayList<Double> cpas; // cost-per-acquisition
+    private ArrayList<Double> cpcs; // cost-per-click
+    private ArrayList<Double> cpms; // cost-per-thousand impressions
+    private ArrayList<Double> brs; // bounce rate - number of bounces per click
 
-    private Impressions impressions;
-    private Clicks clicks;
-    private Servers servers;
+    private final Impressions impressions;
+    private final Clicks clicks;
+    private final Servers servers;
 
     /**
     my next approach will be to try results in multiple groups depending on time granularity
@@ -37,9 +35,11 @@ public class ChartCalculator {
     }
 
     public void createDates() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-        Date startDate = new Date();
-        System.out.println(sdf.format(startDate));
+        System.out.println(LocalDateTime.now());
+        System.out.println(LocalDateTime.now().plusHours(1));
+        System.out.println(LocalDateTime.now().plusDays(1));
+        System.out.println(LocalDateTime.now().plusWeeks(1));
+        System.out.println(LocalDateTime.now().plusMonths(1));
+        System.out.println(LocalDateTime.now().plusYears(1));
     }
 }

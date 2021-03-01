@@ -6,16 +6,16 @@ public class Main {
     public static void main(String[] args) {
         Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv"); // string inputs temporary
 
-        MetricCalculator calculator1 = campaign.newMetricCalculator();
-        MetricCalculator calculator2 = campaign.newMetricCalculator();
+        //MetricCalculator calculator1 = campaign.newMetricCalculator();
+        //MetricCalculator calculator2 = campaign.newMetricCalculator();
 
-        calculator1.calculateMetrics(1, 500);
-        print(calculator1);
+        //calculator1.calculateMetrics(1, 500);
+        //print(calculator1);
 
         System.out.println(" ");
 
-        calculator2.calculateMetrics(2, 250);
-        print(calculator2);
+        //calculator2.calculateMetrics(2, 250);
+        //print(calculator2);
 
         /**
         a new calculator should be created for each chart, graph or histogram we need
