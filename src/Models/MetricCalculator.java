@@ -1,9 +1,10 @@
 package Models;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 
 public class MetricCalculator {
@@ -21,9 +22,9 @@ public class MetricCalculator {
     private double cpm; // cost-per-thousand impressions
     private double br; // bounce rate - number of bounces per click
 
-    private Impressions impressions;
-    private Clicks clicks;
-    private Servers servers;
+    private final Impressions impressions;
+    private final Clicks clicks;
+    private final Servers servers;
 
     public MetricCalculator(Impressions impressions, Clicks clicks, Servers servers) {
         this.impressions = impressions;
@@ -35,8 +36,8 @@ public class MetricCalculator {
     public void calculateMetrics(int pageLimit, int bounceTime, String start, String end) {
         try {
             // converts string to date - temporary till inputs
-            Date startDate = parseDate(start);
-            Date endDate = parseDate(end);
+            LocalDateTime startDate = parseDate(start);
+            LocalDateTime endDate = parseDate(end);
 
             // calculating metrics from the three separate logs
             calculateImpressionsMetrics(startDate, endDate);
@@ -55,30 +56,29 @@ public class MetricCalculator {
     }
 
     // converts string to date, catches n/a end dates
-    public Date parseDate(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
+    public LocalDateTime parseDate(String date) throws ParseException {
         if (date.equals("n/a")) {
             return null;
         } else {
-            return (sdf.parse(date));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(date, formatter);
         }
     }
 
-    public boolean inTime(Date logDate, Date filterStart, Date filterEnd) {
+    public boolean inTime(LocalDateTime logDate, LocalDateTime filterStart, LocalDateTime filterEnd) {
         if (filterStart == null && filterEnd == null) {
             return true;
         } else if (filterStart != null && filterEnd == null){
-            return logDate.after(filterStart);
+            return logDate.isAfter(filterStart);
         } else if (filterStart == null) {
-            return logDate.before(filterEnd);
+            return logDate.isBefore(filterEnd);
         } else {
-            return logDate.after(filterStart) && logDate.before(filterEnd);
+            return logDate.isAfter(filterStart) && logDate.isAfter(filterEnd);
         }
     }
 
     // calculates metrics from impressions
-    public void calculateImpressionsMetrics(Date startDate, Date endDate /*more filtering to be added*/) {
+    public void calculateImpressionsMetrics(LocalDateTime startDate, LocalDateTime endDate /*more filtering to be added*/) {
         ArrayList<Impression> impressionsList = impressions.getImpressions(); // list of impressions
         HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
         boolean inTime = true; // date filtering
@@ -102,7 +102,7 @@ public class MetricCalculator {
                     uniquesNo++;
                     uniqueIds.add(impression.id);
                 }
-            } else if (impression.date.after(endDate)) {
+            } else if (impression.date.isAfter(endDate)) {
                 inTime = false;
             }
 
@@ -111,7 +111,7 @@ public class MetricCalculator {
     }
 
     // calculates metrics from clicks
-    public void calculateClicksMetrics(Date startDate, Date endDate /*more filtering to be added*/) {
+    public void calculateClicksMetrics(LocalDateTime startDate, LocalDateTime endDate /*more filtering to be added*/) {
         ArrayList<Click> clicksList = clicks.getClicks(); // list of clicks
         boolean inTime = true; // date filtering
         int count = 0; // indexing
@@ -128,7 +128,7 @@ public class MetricCalculator {
                 // calculating total clicks and total cost
                 clicksNo++;
                 totalClickCost += click.clickCost;
-            } else if (click.date.after(endDate)) {
+            } else if (click.date.isAfter(endDate)) {
                 inTime = false;
             }
 
@@ -136,7 +136,7 @@ public class MetricCalculator {
         }
     }
 
-    public void calculateServersMetrics(int pageLimit, int bounceTime, Date startDate, Date endDate /*more filtering to be added*/) {
+    public void calculateServersMetrics(int pageLimit, int bounceTime, LocalDateTime startDate, LocalDateTime endDate /*more filtering to be added*/) {
         ArrayList<Server> serversList = servers.getServers(); // list of clicks
         boolean inTime = true; // date filtering
         int count = 0; // indexing
@@ -157,7 +157,7 @@ public class MetricCalculator {
                 if (server.conversion) {
                     conversionsNo++;
                 }
-            } else if (server.entryDate.after(endDate)) {
+            } else if (server.entryDate.isAfter(endDate)) {
                 inTime = false;
             }
 
@@ -166,29 +166,12 @@ public class MetricCalculator {
     }
 
     // calculates difference between two dates given as strings
-    public long splitDates(int bounceTime, Date entryDate, Date exitDate) {
+    public long splitDates(int bounceTime, LocalDateTime entryDate, LocalDateTime exitDate) {
         if (exitDate == null) {
             return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
         } else {
-            return exitDate.getTime() - (entryDate.getTime() / 1000);
+            return (exitDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli() - entryDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli()) / 1000;
         }
-    }
-
-    // temporary function to display metrics in terminal
-    public void print() {
-        System.out.println("Number of impressions: " + impressionsNo);
-        System.out.println("Number of uniques: " + uniquesNo);
-        System.out.println("Number of clicks: " + clicksNo);
-        System.out.println("Number of bounces: " + bounceNo);
-        System.out.println("Number of conversions: " + conversionsNo);
-        System.out.println("Total impression cost: " + totalImpressionCost);
-        System.out.println("Total click cost: " + totalClickCost);
-
-        System.out.println("CTR: " + ctr);
-        System.out.println("CPA: " + cpa);
-        System.out.println("CPC: " + cpc);
-        System.out.println("CPM: " + cpm);
-        System.out.println("Bounce Rate: " + br);
     }
 
     public int getImpressionsNo() {

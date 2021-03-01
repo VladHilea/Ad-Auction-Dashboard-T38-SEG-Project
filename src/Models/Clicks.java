@@ -1,9 +1,9 @@
 package Models;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Clicks {
     private final ArrayList<Click> clicks = new ArrayList<>(); // list of logs
@@ -26,10 +26,10 @@ public class Clicks {
         }
     }
 
-    // converts string to date
-    public Date parseDate(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return (sdf.parse(date));
+    // converts string to date,
+    public LocalDateTime parseDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date, formatter);
     }
 
     public ArrayList<Click> getClicks() {

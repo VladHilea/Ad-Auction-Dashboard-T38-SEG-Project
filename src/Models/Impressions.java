@@ -1,14 +1,13 @@
 package Models;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Impressions {
     private final ArrayList<Impression> impressions = new ArrayList<>(); // list of logs
 
-    public Impressions(String impressionLog) throws ParseException {
+    public Impressions(String impressionLog) {
         Reader impressionReader = new Reader(impressionLog); // file reader
         impressionReader.getLine(); // ignore first line
 
@@ -29,10 +28,10 @@ public class Impressions {
         }
     }
 
-    // converts string to date, catches n/a end dates
-    public Date parseDate(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return (sdf.parse(date));
+    // converts string to date
+    public LocalDateTime parseDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date, formatter);
     }
 
     public ArrayList<Impression> getImpressions() {

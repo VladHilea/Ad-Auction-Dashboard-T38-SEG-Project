@@ -1,9 +1,9 @@
 package Models;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Servers {
     private final ArrayList<Server> servers = new ArrayList<>(); // list of logs
@@ -28,13 +28,12 @@ public class Servers {
     }
 
     // converts string to date, catches n/a end dates
-    public Date parseDate(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
+    public LocalDateTime parseDate(String date) {
         if (date.equals("n/a")) {
             return null;
         } else {
-            return (sdf.parse(date));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(date, formatter);
         }
     }
 

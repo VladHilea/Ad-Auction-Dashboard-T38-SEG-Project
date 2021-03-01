@@ -1,15 +1,15 @@
 package Models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Server {
-    Date entryDate; // entry date and time, stored as date
+    LocalDateTime entryDate; // entry date and time, stored as date
     long id; // ~19 digit unique user id
-    Date exitDate; // exit date and time
+    LocalDateTime exitDate; // exit date and time
     int pages; // num of pages viewed
     boolean conversion; // has the user acted after clicking?
 
-    public Server(Date entryDate, long id, Date exitDate, int pages, boolean conversion) {
+    public Server(LocalDateTime entryDate, long id, LocalDateTime exitDate, int pages, boolean conversion) {
         this.entryDate = entryDate;
         this.id = id;
         this.exitDate = exitDate;

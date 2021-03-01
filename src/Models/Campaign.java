@@ -19,7 +19,11 @@ public class Campaign {
     }
 
     // modular functions for later
-    public MetricCalculator newCalculator() {
+    public MetricCalculator newMetricCalculator() {
         return new MetricCalculator(impressions, clicks, servers);
+    }
+
+    public ChartCalculator newChartCalculator() {
+        return new ChartCalculator(impressions, clicks, servers);
     }
 }
