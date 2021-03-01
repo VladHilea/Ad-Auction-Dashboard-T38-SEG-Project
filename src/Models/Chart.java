@@ -3,10 +3,15 @@ package Models;
 import java.util.ArrayList;
 
 public class Chart {
+    private final ChartCalculator calculator;
     private ArrayList<ChartPoint> points;
 
-    public Chart(ArrayList<ChartPoint> points) {
-        this.points = points;
+    public Chart(ChartCalculator calculator) {
+        this.calculator = calculator;
+    }
+
+    public ChartCalculator getCalculator() {
+        return calculator;
     }
 
     public ArrayList<ChartPoint> getPoints() {

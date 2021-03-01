@@ -1,8 +1,6 @@
 import Models.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,10 +23,10 @@ public class Main {
         i changed this so it was easier to make classes and i think it could now improve the performance a bit
         **/
 
-        ChartCalculator calculator2 = campaign.newChartCalculator();
-        Map<LocalDateTime, ArrayList<Impression>> impressionsIntervals = calculator2.createImpressionsIntervals();
-        Map<LocalDateTime, ArrayList<Click>> clicksIntervals = calculator2.createClicksIntervals();
-        Map<LocalDateTime, ArrayList<Server>> serversIntervals = calculator2.createServersIntervals();
+        Chart chart1 = campaign.newChart();
+        ArrayList<ImpressionsInterval> impressionsIntervals = chart1.getCalculator().createImpressionsIntervals();
+        ArrayList<ClicksInterval> clicksIntervals = chart1.getCalculator().createClicksIntervals();
+        ArrayList<ServersInterval> serversIntervals = chart1.getCalculator().createServersIntervals();
     }
 
     // temporary function to display metrics in terminal

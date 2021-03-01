@@ -23,7 +23,7 @@ public class Campaign {
         return new MetricCalculator(impressions, clicks, servers);
     }
 
-    public ChartCalculator newChartCalculator() {
-        return new ChartCalculator(impressions, clicks, servers);
+    public Chart newChart() {
+        return new Chart(new ChartCalculator(impressions, clicks, servers));
     }
 }
