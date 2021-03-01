@@ -112,6 +112,56 @@ public class MetricCalculator {
         System.out.println("Bounce Rate: " + br);
     }
 
+    //getters for all metrics 
+    
+    public int getImpressionsNo() {
+        return impressionsNo;
+    }
+    
+    public int getUniquesNo() {
+      return uniquesNo;
+    }
+    
+    public int getClicksNo() {
+        return clicksNo;
+    }
+    
+    public int getBouncesNo() {
+        return bounceNo;
+    }
+    
+    public int getConversionsNo() {
+        return conversionsNo;
+    }
+    
+    public double getTotalImpressionCost() {
+      return totalImpressionCost;
+    }
+    
+    public double getTotalClickCost() {
+        return totalClickCost;
+    }
+    
+    public double getCTR() {
+      return ctr;
+    }
+    
+    public double getCPA() {
+      return cpa;
+    }
+    
+    public double getCPC() {
+      return cpc;
+    }
+    
+    public double getCPM() {
+      return cpm;
+    }
+    
+    public double getBounceRate() {
+      return br;
+    }
+
     // Main
     public static void main(String[] args){
         MetricCalculator calculator = new MetricCalculator();
