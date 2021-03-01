@@ -1,6 +1,6 @@
 import Models.*;
-
-import java.time.LocalDateTime;
+import View.Chart;
+import org.jfree.ui.RefineryUtilities;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,17 +11,21 @@ public class Main {
         calculator1.calculateMetrics();
         print(calculator1);
 
+        /*
         System.out.println(" ");
 
-        /**
-        a new chart calculator should be created for each chart, graph or histogram we need
-        the print functions are to be replaced with far more variety
-        atm you can print all, or get each metric individually (OOP getters)
-        atm we can only show them in a terminal but in future this will be changed to produce outputs that can be used in charts and histograms
-        **/
-
         ChartCalculator calculator2 = campaign.newChartCalculator();
-        //System.out.println(calculator2.createDates(LocalDateTime.now(), LocalDateTime.now().plusYears(1)));
+        System.out.println(calculator2.createDates(LocalDateTime.now(), LocalDateTime.now().plusYears(1)));
+         */
+
+        Chart chart = new Chart(
+                "Metrics vs Time" ,
+                "Metrics vs Time",
+                calculator1);
+
+        chart.pack();
+        RefineryUtilities.centerFrameOnScreen( chart );
+        chart.setVisible( true );
     }
 
     // temporary function to display metrics in terminal
@@ -29,7 +33,7 @@ public class Main {
         System.out.println("Number of impressions: " + calculator.getImpressionsNo());
         System.out.println("Number of uniques: " + calculator.getUniquesNo());
         System.out.println("Number of clicks: " + calculator.getClicksNo());
-        System.out.println("Number of bounces: " + calculator.getBounceNo());
+        System.out.println("Number of bounces: " + calculator.getBouncesNo());
         System.out.println("Number of conversions: " + calculator.getConversionsNo());
         System.out.println("Total impression cost: " + calculator.getTotalImpressionCost());
         System.out.println("Total click cost: " + calculator.getTotalClickCost()); // not a required metric, but one that can be calculated

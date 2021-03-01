@@ -1,19 +1,21 @@
+package View;
+
+import Models.MetricCalculator;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Chart extends ApplicationFrame{
-	public Chart( String applicationTitle , String chartTitle ) {
+	public Chart( String applicationTitle , String chartTitle, MetricCalculator calculator ) {
 	      super(applicationTitle);
 	      String metric = "impressions"; // change this to view a different metric on the graph
 	      JFreeChart Chart = ChartFactory.createLineChart(
 	         chartTitle,
 	         "Time (Day) ","Number of "+metric,
-	         createDataset(metric,14),
+	         createDataset(metric,14, calculator),
 	         PlotOrientation.VERTICAL,
 	         true,true,false);
 	         
@@ -22,12 +24,11 @@ public class Chart extends ApplicationFrame{
 	      setContentPane( chartPanel );
 	   }
 	
-	private DefaultCategoryDataset createDataset( String metric, int days) {
+	private DefaultCategoryDataset createDataset(String metric, int days, MetricCalculator calculator) {
 	      DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-	      MetricCalculator calculator = new MetricCalculator();
 	      for (int i = 1 ; i<days+1 ; i++) {
 	    	String day = String.valueOf(i);
-	    	calculator.calculateMetrics(2, 200, "2015-01-0"+ day +" 00:00:00", "2015-01-0"+ day + " 23:59:59");
+
 	    	if (metric.equals("impressions")) {
 	    	  dataset.addValue(calculator.getImpressionsNo(), metric, day);	
 	    	}
@@ -38,7 +39,7 @@ public class Chart extends ApplicationFrame{
 		    	  dataset.addValue(calculator.getClicksNo(), metric, day);	
 		    }
 	    	if (metric.equals("bounces")) {
-		    	  dataset.addValue(calculator.getBouncesNo(), metric, day);	
+		    	  dataset.addValue(calculator.getBouncesNo(), metric, day);
 		    }
 	    	if (metric.equals("conversions")) {
 		    	  dataset.addValue(calculator.getConversionsNo(), metric, day);	
@@ -50,32 +51,22 @@ public class Chart extends ApplicationFrame{
 		    	  dataset.addValue(calculator.getTotalClickCost(), metric, day);	
 		    }
 	    	if (metric.equals("ctr")) {
-		    	  dataset.addValue(calculator.getCTR(), metric, day);	
+		    	  dataset.addValue(calculator.getCtr(), metric, day);
 		    }
 	    	if (metric.equals("cpa")) {
-		    	  dataset.addValue(calculator.getCPA(), metric, day);	
+		    	  dataset.addValue(calculator.getCpa(), metric, day);
 		    }
 	    	if (metric.equals("cpc")) {
-		    	  dataset.addValue(calculator.getCPC(), metric, day);	
+		    	  dataset.addValue(calculator.getCpc(), metric, day);
 		    }
 	    	if (metric.equals("cpm")) {
-		    	  dataset.addValue(calculator.getCPM(), metric, day);	
+		    	  dataset.addValue(calculator.getCpm(), metric, day);
 		    }
 	    	if (metric.equals("bounce rate")) {
-		    	  dataset.addValue(calculator.getBounceRate(), metric, day);	
+		    	  dataset.addValue(calculator.getBr(), metric, day);
 		    }
 	        
 	      }
 	      return dataset;
-	   }
-	   
-	public static void main( String[ ] args ) {
-	      Chart chart = new Chart(
-	         "Metrics vs Time" ,
-	         "Metrics vs Time");
-
-	      chart.pack();
-	      RefineryUtilities.centerFrameOnScreen( chart );
-	      chart.setVisible( true );
 	   }
 }

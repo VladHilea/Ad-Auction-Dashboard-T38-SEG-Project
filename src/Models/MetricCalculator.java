@@ -9,7 +9,7 @@ public class MetricCalculator extends Calculator {
     private int impressionsNo; // number of impressions - people who saw the ad
     private int uniquesNo; // number of unique impressions - unique people who saw the ad
     private int clicksNo; // number of clicks - people who clicked the ad
-    private int bounceNo; // number of bounces - people who clicked away after a while
+    private int bouncesNo; // number of bounces - people who clicked away after a while
     private int conversionsNo; // number of conversions - people who click then acts on ad
     private double totalImpressionsCost; // total impression cost - cost of impressions
     private double totalClicksCost; // total click cost - cost of clicks
@@ -46,7 +46,7 @@ public class MetricCalculator extends Calculator {
         cpa = totalImpressionsCost / conversionsNo;
         cpc = totalImpressionsCost / clicksNo;
         cpm = (totalImpressionsCost * 1000) / impressionsNo;
-        br = (double) bounceNo / (double) clicksNo;
+        br = (double) bouncesNo / (double) clicksNo;
     }
 
     // calculates the number of impressions
@@ -96,7 +96,7 @@ public class MetricCalculator extends Calculator {
 
         for (Server server : serverList) {
             if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
-                this.bounceNo++;
+                this.bouncesNo++;
             }
         }
     }
@@ -133,8 +133,8 @@ public class MetricCalculator extends Calculator {
         return clicksNo;
     }
 
-    public int getBounceNo() {
-        return bounceNo;
+    public int getBouncesNo() {
+        return bouncesNo;
     }
 
     public int getConversionsNo() {
