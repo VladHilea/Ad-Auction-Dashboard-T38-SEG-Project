@@ -1,5 +1,7 @@
 import Models.*;
 
+import java.time.LocalDateTime;
+
 public class Main {
     public static void main(String[] args) {
         Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv"); // string inputs temporary
@@ -12,19 +14,14 @@ public class Main {
         System.out.println(" ");
 
         /**
-        a new calculator should be created for each chart, graph or histogram we need
+        a new chart calculator should be created for each chart, graph or histogram we need
         the print functions are to be replaced with far more variety
         atm you can print all, or get each metric individually (OOP getters)
         atm we can only show them in a terminal but in future this will be changed to produce outputs that can be used in charts and histograms
-
-        i also want to go back to storing the records as a map of the id to the details
-        i changed this so it was easier to make classes and i think it could now improve the performance a bit
         **/
 
-        //Chart chart1 = campaign.newChart();
-        //ArrayList<ImpressionsInterval> impressionsIntervals = chart1.getCalculator().createImpressionsIntervals();
-        //ArrayList<ClicksInterval> clicksIntervals = chart1.getCalculator().createClicksIntervals();
-        //ArrayList<ServersInterval> serversIntervals = chart1.getCalculator().createServersIntervals();
+        ChartCalculator calculator2 = campaign.newChartCalculator();
+        //System.out.println(calculator2.createDates(LocalDateTime.now(), LocalDateTime.now().plusYears(1)));
     }
 
     // temporary function to display metrics in terminal

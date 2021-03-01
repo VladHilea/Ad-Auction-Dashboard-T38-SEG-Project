@@ -17,9 +17,7 @@ public class Campaign {
         return new MetricCalculator(impressionLog, clicksLog, serversLog);
     }
 
-    /**
-    public Chart newChart() {
-        return new Chart(new ChartCalculator(impressionLog, clicksLog, serversLog));
+    public ChartCalculator newChartCalculator() {
+        return new ChartCalculator(impressionLog, clicksLog, serversLog);
     }
-     */
 }
