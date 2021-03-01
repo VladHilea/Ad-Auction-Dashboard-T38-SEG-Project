@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class MetricCalculator {
+public class MetricCalculator extends Calculator {
     private int impressionsNo; // number of impressions - people who saw the ad
     private int uniquesNo; // number of unique impressions - unique people who saw the ad
     private int clicksNo; // number of clicks - people who clicked the ad
@@ -23,14 +23,8 @@ public class MetricCalculator {
     private final int pageLimit; // max number of pages to be counted as a bounce
     private final int bounceTime; // max amount of time to be counted as a bounce
 
-    private final Impressions impressions;
-    private final Clicks clicks;
-    private final Servers servers;
-
     public MetricCalculator(Impressions impressions, Clicks clicks, Servers servers) {
-        this.impressions = impressions;
-        this.clicks = clicks;
-        this.servers = servers;
+        super(impressions, clicks, servers);
 
         this.pageLimit = 1;
         this.bounceTime = 500;
@@ -53,7 +47,7 @@ public class MetricCalculator {
 
     // calculates metrics from impressions
     public void calculateImpressionsMetrics(/*filtering to be added*/) {
-        ArrayList<Impression> impressionsList = impressions.getImpressions(); // list of impressions
+        ArrayList<Impression> impressionsList = getImpressions().getImpressions(); // list of impressions
         HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
         int count = 0; // indexing
 
@@ -80,7 +74,7 @@ public class MetricCalculator {
 
     // calculates metrics from clicks
     public void calculateClicksMetrics(/*filtering to be added*/) {
-        ArrayList<Click> clicksList = clicks.getClicks(); // list of clicks
+        ArrayList<Click> clicksList = getClicks().getClicks(); // list of clicks
         int count = 0; // indexing
 
         // resets the clicks metrics
@@ -99,7 +93,7 @@ public class MetricCalculator {
     }
 
     public void calculateServersMetrics(int pageLimit, int bounceTime /*filtering to be added*/) {
-        ArrayList<Server> serversList = servers.getServers(); // list of clicks
+        ArrayList<Server> serversList = getServers().getServers(); // list of clicks
         int count = 0; // indexing
 
         // resets the servers metrics

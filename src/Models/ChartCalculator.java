@@ -1,28 +1,21 @@
 package Models;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChartCalculator {
-    private final Impressions impressions;
-    private final Clicks clicks;
-    private final Servers servers;
+public class ChartCalculator extends Calculator {
+    public ChartCalculator(Impressions impressions, Clicks clicks, Servers servers) {
+        super(impressions, clicks, servers);
+    }
 
     /**
     my next approach will be to try results in multiple groups depending on time granularity
     the first step will be to produce of start and end date pairs where each item follows on from the last
     eg. (Jan-March, April-June, July-Sep, etc.)
     **/
-
-    public ChartCalculator(Impressions impressions, Clicks clicks, Servers servers) {
-        this.impressions = impressions;
-        this.clicks = clicks;
-        this.servers = servers;
-    }
 
     // creates a list of dates separated by a constant interval
     public ArrayList<LocalDateTime> createDates(LocalDateTime startDate, LocalDateTime endDate) {
@@ -42,7 +35,7 @@ public class ChartCalculator {
 
     // gets all the impressions data points sorted into the intervals produced
     public Map<LocalDateTime, ArrayList<Impression>> createImpressionsIntervals() {
-        ArrayList<LocalDateTime> dates = createDates(impressions.getStartDate(), impressions.getEndDate());
+        ArrayList<LocalDateTime> dates = createDates(getImpressions().getStartDate(), getImpressions().getEndDate());
 
         Map<LocalDateTime, ArrayList<Impression>> intervals = new HashMap<>();
         ArrayList<Impression> interval = new ArrayList<>();
@@ -51,7 +44,7 @@ public class ChartCalculator {
         LocalDateTime nextDate = dates.get(1);
         int count = 1;
 
-        for (Impression impression : impressions.getImpressions()) {
+        for (Impression impression : getImpressions().getImpressions()) {
             if (!impression.date.isBefore(nextDate)) {
                 intervals.put(currentDate, interval);
                 interval.clear();
@@ -68,7 +61,7 @@ public class ChartCalculator {
 
     // gets all the clicks data points sorted into the intervals produced
     public Map<LocalDateTime, ArrayList<Click>> createClicksIntervals() {
-        ArrayList<LocalDateTime> dates = createDates(clicks.getStartDate(), clicks.getEndDate());
+        ArrayList<LocalDateTime> dates = createDates(getClicks().getStartDate(), getClicks().getEndDate());
 
         Map<LocalDateTime, ArrayList<Click>> intervals = new HashMap<>();
         ArrayList<Click> interval = new ArrayList<>();
@@ -77,7 +70,7 @@ public class ChartCalculator {
         LocalDateTime nextDate = dates.get(1);
         int count = 1;
 
-        for (Click click : clicks.getClicks()) {
+        for (Click click : getClicks().getClicks()) {
             if (!click.date.isBefore(nextDate)) {
                 intervals.put(currentDate, interval);
                 interval.clear();
@@ -94,7 +87,7 @@ public class ChartCalculator {
 
     // gets all the servers data points sorted into the intervals produced
     public Map<LocalDateTime, ArrayList<Server>> createServersIntervals() {
-        ArrayList<LocalDateTime> dates = createDates(servers.getStartDate(), servers.getEndDate());
+        ArrayList<LocalDateTime> dates = createDates(getServers().getStartDate(), getServers().getEndDate());
 
         Map<LocalDateTime, ArrayList<Server>> intervals = new HashMap<>();
         ArrayList<Server> interval = new ArrayList<>();
@@ -103,7 +96,7 @@ public class ChartCalculator {
         LocalDateTime nextDate = dates.get(1);
         int count = 1;
 
-        for (Server server : servers.getServers()) {
+        for (Server server : getServers().getServers()) {
             if (!server.entryDate.isBefore(nextDate)) {
                 intervals.put(currentDate, interval);
                 interval.clear();
