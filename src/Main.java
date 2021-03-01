@@ -9,7 +9,7 @@ public class Main {
         MetricCalculator calculator1 = campaign.newMetricCalculator();
 
         calculator1.calculateMetrics();
-        //print(calculator1);
+        print(calculator1);
 
         System.out.println(" ");
 
@@ -18,10 +18,15 @@ public class Main {
         the print functions are to be replaced with far more variety
         atm you can print all, or get each metric individually (OOP getters)
         atm we can only show them in a terminal but in future this will be changed to produce outputs that can be used in charts and histograms
+
+        i also want to go back to storing the records as a map of the id to the details
+        i changed this so it was easier to make classes and i think it could now improve the performance a bit
         **/
 
         ChartCalculator calculator2 = campaign.newChartCalculator();
-        calculator2.createDates();
+        calculator2.createImpressionsDates();
+        calculator2.createClicksDates();
+        calculator2.createServersDates();
     }
 
     // temporary function to display metrics in terminal

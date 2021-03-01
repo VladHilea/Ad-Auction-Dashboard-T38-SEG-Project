@@ -7,6 +7,9 @@ import java.util.ArrayList;
 public class Impressions {
     private final ArrayList<Impression> impressions = new ArrayList<>(); // list of logs
 
+    private final LocalDateTime startDate; // date of first log
+    private final LocalDateTime endDate; // date of last log
+
     public Impressions(String impressionLog) {
         Reader impressionReader = new Reader(impressionLog); // file reader
         impressionReader.getLine(); // ignore first line
@@ -26,6 +29,9 @@ public class Impressions {
 
             impressions.add(impression);
         }
+
+        this.startDate = impressions.get(0).date; // start date
+        this.endDate = impressions.get(impressions.size() - 1).date; // end date
     }
 
     // converts string to date
@@ -36,5 +42,13 @@ public class Impressions {
 
     public ArrayList<Impression> getImpressions() {
         return impressions;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 }

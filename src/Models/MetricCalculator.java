@@ -110,7 +110,7 @@ public class MetricCalculator {
             Server server = serversList.get(count);
 
             // calculating bounce number and conversion number
-            if (server.pages <= pageLimit || splitDates(bounceTime, server.entryDate, server.exitDate) <= bounceTime) {
+            if (server.pages <= pageLimit || timeDifference(bounceTime, server.entryDate, server.exitDate) <= bounceTime) {
                 bounceNo++;
             }
             if (server.conversion) {
@@ -121,7 +121,7 @@ public class MetricCalculator {
     }
 
     // calculates difference between two dates given as strings
-    public long splitDates(int bounceTime, LocalDateTime entryDate, LocalDateTime exitDate) {
+    public long timeDifference(int bounceTime, LocalDateTime entryDate, LocalDateTime exitDate) {
         if (exitDate == null) {
             return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
         } else {
