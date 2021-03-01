@@ -1,7 +1,4 @@
-import Models.Campaign;
-import Models.ChartCalculator;
-import Models.Impression;
-import Models.MetricCalculator;
+import Models.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,8 +27,8 @@ public class Main {
 
         ChartCalculator calculator2 = campaign.newChartCalculator();
         Map<LocalDateTime, ArrayList<Impression>> impressionsIntervals = calculator2.createImpressionsIntervals();
-        calculator2.createClicksDates();
-        calculator2.createServersDates();
+        Map<LocalDateTime, ArrayList<Click>> clicksIntervals = calculator2.createClicksIntervals();
+        Map<LocalDateTime, ArrayList<Server>> serversIntervals = calculator2.createServersIntervals();
     }
 
     // temporary function to display metrics in terminal
