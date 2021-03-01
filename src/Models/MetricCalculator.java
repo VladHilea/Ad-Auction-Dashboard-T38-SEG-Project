@@ -1,9 +1,7 @@
 package Models;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -33,19 +31,11 @@ public class MetricCalculator {
     }
 
     // calculates metrics
-    public void calculateMetrics(int pageLimit, int bounceTime, String start, String end) {
-        try {
-            // converts string to date - temporary till inputs
-            LocalDateTime startDate = parseDate(start);
-            LocalDateTime endDate = parseDate(end);
-
-            // calculating metrics from the three separate logs
-            calculateImpressionsMetrics(startDate, endDate);
-            calculateClicksMetrics(startDate, endDate);
-            calculateServersMetrics(pageLimit, bounceTime, startDate, endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public void calculateMetrics(int pageLimit, int bounceTime) {
+        // calculating metrics from the three separate logs
+        calculateImpressionsMetrics();
+        calculateClicksMetrics();
+        calculateServersMetrics(pageLimit, bounceTime);
 
         // additional metrics calculated from previous metrics
         ctr = (double) clicksNo / (double) impressionsNo;
@@ -55,33 +45,10 @@ public class MetricCalculator {
         br = (double) bounceNo / (double) clicksNo;
     }
 
-    // converts string to date, catches n/a end dates
-    public LocalDateTime parseDate(String date) throws ParseException {
-        if (date.equals("n/a")) {
-            return null;
-        } else {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            return LocalDateTime.parse(date, formatter);
-        }
-    }
-
-    public boolean inTime(LocalDateTime logDate, LocalDateTime filterStart, LocalDateTime filterEnd) {
-        if (filterStart == null && filterEnd == null) {
-            return true;
-        } else if (filterStart != null && filterEnd == null){
-            return logDate.isAfter(filterStart);
-        } else if (filterStart == null) {
-            return logDate.isBefore(filterEnd);
-        } else {
-            return logDate.isAfter(filterStart) && logDate.isAfter(filterEnd);
-        }
-    }
-
     // calculates metrics from impressions
-    public void calculateImpressionsMetrics(LocalDateTime startDate, LocalDateTime endDate /*more filtering to be added*/) {
+    public void calculateImpressionsMetrics(/*filtering to be added*/) {
         ArrayList<Impression> impressionsList = impressions.getImpressions(); // list of impressions
         HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
-        boolean inTime = true; // date filtering
         int count = 0; // indexing
 
         // resets the impressions metrics
@@ -89,21 +56,16 @@ public class MetricCalculator {
         totalImpressionCost = 0;
         uniquesNo = 0;
 
-        while (inTime && count < impressionsList.size()) {
+        while (count < impressionsList.size()) {
             Impression impression = impressionsList.get(count);
 
-            // checks if the impression log fits within the given time scale
-            if (inTime(impression.date, startDate, endDate)) {
-                // calculating total impressions, total cost and unique impressions
-                impressionsNo++;
-                totalImpressionCost += impression.impressionCost;
+            // calculating total impressions, total cost and unique impressions
+            impressionsNo++;
+            totalImpressionCost += impression.impressionCost;
 
-                if (!uniqueIds.contains(impression.id)) {
-                    uniquesNo++;
-                    uniqueIds.add(impression.id);
-                }
-            } else if (impression.date.isAfter(endDate)) {
-                inTime = false;
+            if (!uniqueIds.contains(impression.id)) {
+                uniquesNo++;
+                uniqueIds.add(impression.id);
             }
 
             count++;
@@ -111,56 +73,43 @@ public class MetricCalculator {
     }
 
     // calculates metrics from clicks
-    public void calculateClicksMetrics(LocalDateTime startDate, LocalDateTime endDate /*more filtering to be added*/) {
+    public void calculateClicksMetrics(/*filtering to be added*/) {
         ArrayList<Click> clicksList = clicks.getClicks(); // list of clicks
-        boolean inTime = true; // date filtering
         int count = 0; // indexing
 
         // resets the clicks metrics
         clicksNo = 0;
         totalClickCost = 0;
 
-        while (inTime && count < clicksList.size()) {
+        while (count < clicksList.size()) {
             Click click = clicksList.get(count);
 
-            // checks if the click log fits within the given time scale
-            if (inTime(click.date, startDate, endDate)) {
-                // calculating total clicks and total cost
-                clicksNo++;
-                totalClickCost += click.clickCost;
-            } else if (click.date.isAfter(endDate)) {
-                inTime = false;
-            }
+            // calculating total clicks and total cost
+            clicksNo++;
+            totalClickCost += click.clickCost;
 
             count++;
         }
     }
 
-    public void calculateServersMetrics(int pageLimit, int bounceTime, LocalDateTime startDate, LocalDateTime endDate /*more filtering to be added*/) {
+    public void calculateServersMetrics(int pageLimit, int bounceTime /*filtering to be added*/) {
         ArrayList<Server> serversList = servers.getServers(); // list of clicks
-        boolean inTime = true; // date filtering
         int count = 0; // indexing
 
         // resets the servers metrics
         bounceNo = 0;
         conversionsNo = 0;
 
-        while (inTime && count < serversList.size()) {
+        while (count < serversList.size()) {
             Server server = serversList.get(count);
 
-            // checks if the server log fits within the given time scale
-            if (inTime(server.entryDate, startDate, endDate)) {
-                // calculating bounce number and conversion number
-                if (server.pages <= pageLimit || splitDates(bounceTime, server.entryDate, server.exitDate) <= bounceTime) {
-                    bounceNo++;
-                }
-                if (server.conversion) {
-                    conversionsNo++;
-                }
-            } else if (server.entryDate.isAfter(endDate)) {
-                inTime = false;
+            // calculating bounce number and conversion number
+            if (server.pages <= pageLimit || splitDates(bounceTime, server.entryDate, server.exitDate) <= bounceTime) {
+                bounceNo++;
             }
-
+            if (server.conversion) {
+                conversionsNo++;
+            }
             count++;
         }
     }

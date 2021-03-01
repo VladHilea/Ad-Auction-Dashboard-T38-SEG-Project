@@ -9,16 +9,12 @@ public class Main {
         MetricCalculator calculator1 = campaign.newMetricCalculator();
         MetricCalculator calculator2 = campaign.newMetricCalculator();
 
-        // first calculator for main metrics page
-        // all metrics
-        calculator1.calculateMetrics(1, 500, "n/a", "n/a"); // use n/a for all calculators till we fully implement filtering
+        calculator1.calculateMetrics(1, 500);
         print(calculator1);
 
         System.out.println(" ");
 
-        // subsequent calculators for charts etc.
-        // metrics within a time frame, and different filtering for later, not useful atm
-        calculator2.calculateMetrics(2, 250, "2015-01-01 12:01:21", "2015-01-01 13:51:59");
+        calculator2.calculateMetrics(2, 250);
         print(calculator2);
 
         /**
