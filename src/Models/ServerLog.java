@@ -24,18 +24,18 @@ public class ServerLog extends Log {
 
             serverList.add(server);
         }
-
-        // determines the dates of the logs
-        setFirstDate(serverList.get(0).entryDate);
-        setLastDate(serverList.get(serverList.size() - 1).entryDate);
+        setDates();
     }
 
     // constructor for an existing list of server logs
     public ServerLog(ArrayList<Server> serversList) {
         this.serverList = serversList; // list of server logs
+    }
 
-        setFirstDate(serversList.get(0).entryDate); // start date
-        setLastDate(serversList.get(serversList.size() - 1).entryDate); // end date
+    // sets the first and last dates of the log
+    public void setDates() {
+        setFirstDate(serverList.get(0).entryDate); // start date
+        setLastDate(serverList.get(serverList.size() - 1).entryDate); // end date
     }
 
     // converts string to date, catches n/a end dates

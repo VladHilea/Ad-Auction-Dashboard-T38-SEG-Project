@@ -27,15 +27,16 @@ public class ImpressionLog extends Log {
 
             impressionsList.add(impression);
         }
-
-        // determines the dates of the logs
-        setFirstDate(impressionsList.get(0).date);
-        setLastDate(impressionsList.get(impressionsList.size() - 1).date);
+        setDates();
     }
 
     // constructor for an exisiting list of impressions
     public ImpressionLog(ArrayList<Impression> impressionsList) {
         this.impressionsList = impressionsList; // list of impressions
+    }
+
+    // sets the first and last dates of the log
+    public void setDates() {
         setFirstDate(impressionsList.get(0).date); // start date
         setLastDate(impressionsList.get(impressionsList.size() - 1).date); // end date
     }

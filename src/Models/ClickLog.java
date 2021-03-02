@@ -23,15 +23,16 @@ public class ClickLog extends Log {
 
             clicksList.add(click);
         }
-
-        // determines the dates of the logs
-        setFirstDate(clicksList.get(0).date);
-        setLastDate(clicksList.get(clicksList.size() - 1).date);
+        setDates();
     }
 
     // constructor for an exisiting list of clicks
     public ClickLog(ArrayList<Click> clicksList) {
         this.clicksList = clicksList; // list of impressions
+    }
+
+    // sets the first and last dates of the log
+    public void setDates() {
         setFirstDate(clicksList.get(0).date); // start date
         setLastDate(clicksList.get(clicksList.size() - 1).date); // end date
     }
