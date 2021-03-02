@@ -21,7 +21,7 @@ public class Main {
         Chart chart = new Chart(
                 "Metrics vs Time" ,
                 "Metrics vs Time",
-                calculator1);
+                calculator2);
 
         chart.pack();
         RefineryUtilities.centerFrameOnScreen( chart );
