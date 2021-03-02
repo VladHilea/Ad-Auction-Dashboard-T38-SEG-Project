@@ -26,7 +26,7 @@ public class Chart extends ApplicationFrame{
 	
 	private DefaultCategoryDataset createDataset(String metric, int days, MetricCalculator calculator) {
 	      DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-	      for (int i = 1 ; i<days+1 ; i++) {
+	      for (int i = 0 ; i<days ; i++) {
 	    	String day = String.valueOf(i);
 
 	    	if (metric.equals("impressions")) {

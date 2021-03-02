@@ -4,16 +4,20 @@ import org.jfree.ui.RefineryUtilities;
 
 public class Main {
     public static void main(String[] args) {
+        // reads the files and stores the logs - only create one campaign otherwise it will be slow
         Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv"); // string inputs temporary
 
+        // used to display metrics on the main page
         MetricCalculator calculator1 = campaign.newMetricCalculator();
         printMetrics(calculator1);
 
         System.out.println(" ");
 
+        // used to display metrics as charts
         ChartCalculator calculator2 = campaign.newChartCalculator();
         printCharts(calculator2);
 
+        // displaying the chart
         Chart chart = new Chart(
                 "Metrics vs Time" ,
                 "Metrics vs Time",
@@ -22,6 +26,28 @@ public class Main {
         chart.pack();
         RefineryUtilities.centerFrameOnScreen( chart );
         chart.setVisible( true );
+
+        /**
+         * notes:
+         * chart interval (days) is currently hardcoded
+         * start and end dates for charts are hardcoded - some data is being cut off as a result
+         * print functions are there to see what is going on easily
+         * all the backend is in Models, all the GUI stuff is in View - MVC
+         * file reading is only done once - unavoidably slow
+         * master branch is using Date, this branch is using LocalDateTime
+         * jfreechart needs to be installed to run
+         *
+         * to do:
+         * find any possible performance improvements in the backend
+         * create class diagrams for 1st deliverable
+         * improve & update commenting
+         * merge any GUI stuff
+         *
+         * for later:
+         * filtering was removed due to my bad implementation - leave till 2nd deliverable
+         * bounce factors are hardcoded - leave till 2nd & 3rd deliverables
+         * will later add a class HistogramCalculator - leave till 2nd & 3rd deliverables
+        **/
     }
 
     // temporary function to display metrics in terminal

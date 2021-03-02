@@ -19,16 +19,15 @@ public class ChartCalculator extends Calculator {
     private final ArrayList<Double> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private final ArrayList<Double> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
-    private ArrayList<MetricCalculator> intervalCalculators = new ArrayList<>();
-
     public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog) {
         super(impressionLog, clickLog, serverLog);
 
-        createIntervals(getImpressionLog().getFirstDate(), getImpressionLog().getLastDate());
+        // hardcoded start and end dates - some server and click log entries are cut off atm
+        calculateCharts(getImpressionLog().getFirstDate(), getImpressionLog().getLastDate());
     }
 
     // produces a list of metric calculators that stores all the logs split into a set interval
-    public void createIntervals(LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
+    public void calculateCharts(LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
         // creates a list of dates separated by a constant interval
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startDate);
@@ -113,6 +112,7 @@ public class ChartCalculator extends Calculator {
             currentServerLog.getServerList().add(server); // adds the log entry to the current interval log
         }
 
+        // creates all the calculators for the intervals (probably doesn't need the if from now on)
         if (intervalImpressionLogs.size() == intervalClickLogs.size() && intervalImpressionLogs.size() == intervalServerLogs.size()) {
             for (int i=0; i < intervalImpressionLogs.size(); i++) {
                 intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i)));
@@ -121,103 +121,19 @@ public class ChartCalculator extends Calculator {
             System.out.println("Error!");
         }
 
-        this.intervalCalculators = intervalCalculators;
-
         // calculating metrics for every interval
-        calculateImpressionsNoList();
-        calculateUniquesNoList();
-        calculateImpressionsCostList();
-        calculateClickNoList();
-        calculateClickCostList();
-        calculateBouncesNoList();
-        calculateConversionsNoList();
-        calculateCtrList();
-        calculateCpaList();
-        calculateCpcList();
-        calculateCpmList();
-        calculateBrList();
-    }
-
-    // calculates the number of impressions for every interval
-    public void calculateImpressionsNoList() {
         for (MetricCalculator calculator : intervalCalculators) {
             this.impressionsNoList.add(calculator.getImpressionsNo());
-        }
-    }
-
-    // calculates the number of impressions from unique users for every interval
-    public void calculateUniquesNoList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.uniquesNoList.add(calculator.getUniquesNo());
-        }
-    }
-
-    // calculates the total cost of impressions for every interval
-    public void calculateImpressionsCostList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.totalImpressionCostList.add(calculator.getTotalImpressionCost());
-        }
-    }
-
-    // calculates the number of clicks for every interval
-    public void calculateClickNoList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.clicksNoList.add(calculator.getClicksNo());
-        }
-    }
-
-    // calculates the total cost of clicks for every interval
-    public void calculateClickCostList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.totalClickCostList.add(calculator.getTotalClickCost());
-        }
-    }
-
-    // calculates the number of bounces for every interval
-    public void calculateBouncesNoList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.bouncesNoList.add(calculator.getBouncesNo());
-        }
-    }
-
-    // calculates the number of conversions for every interval
-    public void calculateConversionsNoList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.conversionsNoList.add(calculator.getConversionsNo());
-        }
-    }
-
-    // calculates the ctr for every interval
-    public void calculateCtrList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.ctrList.add(calculator.getCtr());
-        }
-    }
-
-    // calculates the cpa for every interval
-    public void calculateCpaList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.cpaList.add(calculator.getCpa());
-        }
-    }
-
-    // calculates the cpc for every interval
-    public void calculateCpcList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.cpcList.add(calculator.getCpc());
-        }
-    }
-
-    // calculates the cpm for every interval
-    public void calculateCpmList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.cpmList.add(calculator.getCpm());
-        }
-    }
-
-    // calculates the br for every interval
-    public void calculateBrList() {
-        for (MetricCalculator calculator : intervalCalculators) {
             this.brList.add(calculator.getBr());
         }
     }
