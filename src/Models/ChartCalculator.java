@@ -3,6 +3,7 @@ package Models;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ChartCalculator extends Calculator {
     private final ArrayList<Integer> impressionsNoList = new ArrayList<>(); // number of impressions - people who saw the ad
@@ -35,6 +36,7 @@ public class ChartCalculator extends Calculator {
                 for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusHours(i));
                 }
+                System.out.println(interval);
             }
             case "days" -> {
                 for (long i = 1; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
@@ -72,7 +74,9 @@ public class ChartCalculator extends Calculator {
         int count = 1;
 
         // Creates a list of impression logs for each interval
-        for (Impression impression : getImpressionLog().getImpressionsList()) {
+        Iterator<Impression> impressionIterator = getImpressionLog().getImpressionsList().iterator();
+        while (impressionIterator.hasNext()) {
+            Impression impression = impressionIterator.next();
             if (!impression.date.isBefore(lastDate)) { // if its the first log in a new interval
                 // completes the current interval log
                 currentImpressionLog.setDates();
@@ -86,6 +90,12 @@ public class ChartCalculator extends Calculator {
                 lastDate = dates.get(count);
             }
             currentImpressionLog.getImpressionsList().add(impression); // adds the log entry to the current interval log
+
+            // completes the last interval log
+            if (!impressionIterator.hasNext()) {
+                currentImpressionLog.setDates();
+                intervalImpressionLogs.add(currentImpressionLog);
+            }
         }
 
         // resets the date
@@ -93,7 +103,9 @@ public class ChartCalculator extends Calculator {
         count = 1;
 
         // Creates a list of click logs for each interval
-        for (Click click : getClickLog().getClicksList()) {
+        Iterator<Click> clickIterator = getClickLog().getClicksList().iterator();
+        while (clickIterator.hasNext()) {
+            Click click = clickIterator.next();
             if (!click.date.isBefore(lastDate)) { // if its the first log in a new interval
                 // completes the current interval log
                 currentClickLog.setDates();
@@ -107,6 +119,12 @@ public class ChartCalculator extends Calculator {
                 lastDate = dates.get(count);
             }
             currentClickLog.getClicksList().add(click); // adds the log entry to the current interval log
+
+            // completes the last interval log
+            if (!clickIterator.hasNext()) {
+                currentClickLog.setDates();
+                intervalClickLogs.add(currentClickLog);
+            }
         }
 
         // resets the date
@@ -114,7 +132,9 @@ public class ChartCalculator extends Calculator {
         count = 1;
 
         // Creates a list of server logs for each interval
-        for (Server server : getServerLog().getServerList()) {
+        Iterator<Server> serverIterator = getServerLog().getServerList().iterator();
+        while (serverIterator.hasNext()) {
+            Server server = serverIterator.next();
             if (!server.entryDate.isBefore(lastDate)) { // if its the first log in a new interval
                 // completes the current interval log
                 currentServerLog.setDates();
@@ -128,6 +148,12 @@ public class ChartCalculator extends Calculator {
                 lastDate = dates.get(count);
             }
             currentServerLog.getServerList().add(server); // adds the log entry to the current interval log
+
+            // completes the last interval log
+            if (!serverIterator.hasNext()) {
+                currentServerLog.setDates();
+                intervalServerLogs.add(currentServerLog);
+            }
         }
 
         // creates all the calculators for the intervals (probably doesn't need the if from now on)
@@ -141,6 +167,7 @@ public class ChartCalculator extends Calculator {
 
         // calculating metrics for every interval
         for (MetricCalculator calculator : intervalCalculators) {
+            calculator.calculateMetrics();
             this.impressionsNoList.add(calculator.getImpressionsNo());
             this.uniquesNoList.add(calculator.getUniquesNo());
             this.totalImpressionCostList.add(calculator.getTotalImpressionCost());
