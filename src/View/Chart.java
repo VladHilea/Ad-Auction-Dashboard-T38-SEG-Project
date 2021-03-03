@@ -1,7 +1,6 @@
 package View;
 
 import Models.ChartCalculator;
-import Models.MetricCalculator;
 import org.jfree.chart.ChartPanel;
 
 import java.util.ArrayList;

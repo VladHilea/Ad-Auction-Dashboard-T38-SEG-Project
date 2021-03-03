@@ -9,12 +9,15 @@ public class Main {
 
         // used to display metrics on the main page
         MetricCalculator calculator1 = campaign.newMetricCalculator();
+        calculator1.calculateMetrics();
         printMetrics(calculator1);
 
         System.out.println(" ");
 
         // used to display metrics as charts
         ChartCalculator calculator2 = campaign.newChartCalculator();
+        // hardcoded interval, start and end dates - some server and click log entries are cut off atm because of the dates
+        calculator2.calculateCharts("days", calculator2.getImpressionLog().getFirstDate(), calculator2.getImpressionLog().getLastDate());
         printCharts(calculator2);
 
         // displaying the chart
@@ -26,19 +29,20 @@ public class Main {
 
         /**
          * notes:
-         * chart interval (days) is currently hardcoded
-         * start and end dates for charts are hardcoded - some data is being cut off as a result
+         * interval, start and end dates are partially hardcoded - not much to really to really do till GUI
          * print functions are there to see what is going on easily
          * all the backend is in Models, all the GUI stuff is in View - MVC
          * file reading is only done once - unavoidably slow
-         * master branch is using Date, this branch is using LocalDateTime
-         * jfreechart needs to be installed to run
+         * master branch is using Date, this branch is using LocalDateTime - very important change
+         * jfreechart needs to be installed to run - downloads in whatsapp
          *
          * to do:
          * find any possible performance improvements in the backend
          * create class diagrams for 1st deliverable
          * improve & update commenting
          * merge any GUI stuff
+         * find out from Yvonne how large the actual data set is - response pending
+         * change how the interval is handled - make subclasses of chart calculator for intervals
          *
          * for later:
          * filtering was removed due to my bad implementation - leave till 2nd deliverable

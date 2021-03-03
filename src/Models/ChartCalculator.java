@@ -21,23 +21,41 @@ public class ChartCalculator extends Calculator {
 
     public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog) {
         super(impressionLog, clickLog, serverLog);
-
-        // hardcoded start and end dates - some server and click log entries are cut off atm
-        calculateCharts(getImpressionLog().getFirstDate(), getImpressionLog().getLastDate());
     }
 
     // produces a list of metric calculators that stores all the logs split into a set interval
-    public void calculateCharts(LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
+    public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
         // creates a list of dates separated by a constant interval
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startDate);
 
-        // calculates time difference (temporarily in days)
-        long days = ChronoUnit.DAYS.between(startDate, endDate);
-
-        // gets dates at every interval
-        for (long i=1; i<=days+1; i++) {
-            dates.add(startDate.plusDays(i));
+        // calculates time difference and gets dates at every interval
+        switch (interval) {
+            case "hours" -> {
+                for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
+                    dates.add(startDate.plusHours(i));
+                }
+            }
+            case "days" -> {
+                for (long i = 1; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
+                    dates.add(startDate.plusDays(i));
+                }
+            }
+            case "weeks" -> {
+                for (long i = 1; i <= ChronoUnit.WEEKS.between(startDate, endDate) + 1; i++) {
+                    dates.add(startDate.plusWeeks(i));
+                }
+            }
+            case "months" -> {
+                for (long i = 1; i <= ChronoUnit.MONTHS.between(startDate, endDate) + 1; i++) {
+                    dates.add(startDate.plusMonths(i));
+                }
+            }
+            case "years" -> {
+                for (long i = 1; i <= ChronoUnit.YEARS.between(startDate, endDate) + 1; i++) {
+                    dates.add(startDate.plusYears(i));
+                }
+            }
         }
 
         ArrayList<MetricCalculator> intervalCalculators = new ArrayList<>(); // list of calculators for log entries in each interval
