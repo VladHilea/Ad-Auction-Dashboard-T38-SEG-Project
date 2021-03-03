@@ -33,7 +33,7 @@ public class Chart extends ApplicationFrame{
 	      DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
 	      if (metric.equals("impressions")) {
 	        ArrayList<Integer> impList = calculator.getImpressionsNoList();
-	        int count = 0;
+	        int count = 1;
 	        for (int i : impList) {
 	          dataset.addValue(i, metric, String.valueOf(count));
 	          count = count + 1;
@@ -41,7 +41,7 @@ public class Chart extends ApplicationFrame{
 	      }
 	      if (metric.equals("uniques")) {
 		    ArrayList<Integer> uniList = calculator.getUniquesNoList();
-		    int count = 0;
+		    int count = 1;
 		    for (int i : uniList) {
 		      dataset.addValue(i, metric, String.valueOf(count));
 		      count = count + 1;
@@ -49,7 +49,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("clicks")) {
 	         ArrayList<Integer> clickList = calculator.getClicksNoList();
-			 int count = 0;
+			 int count = 1;
 			 for (int i : clickList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -57,7 +57,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("bounces")) {
 	         ArrayList<Integer> bounceList = calculator.getBouncesNoList();
-		     int count = 0;
+		     int count = 1;
 		     for (int i : bounceList) {
 		       dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -65,7 +65,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("conversions")) {
 		     ArrayList<Integer> conversionList = calculator.getConversionsNoList();
-		     int count = 0;
+		     int count = 1;
 		     for (int i : conversionList) {
 		       dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -73,7 +73,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("total impression cost")) {
 	         ArrayList<Double> ticList = calculator.getTotalImpressionCostList();
-			 int count = 0;
+			 int count = 1;
 			 for (double i : ticList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -81,7 +81,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("total click cost")) {
 	         ArrayList<Double> tccList = calculator.getTotalClickCostList();
-		     int count = 0;
+		     int count = 1;
 			 for (double i : tccList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -89,7 +89,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("ctr")) {
 		     ArrayList<Double> ctrList = calculator.getCtrList();
-		     int count = 0;
+		     int count = 1;
 			 for (double i : ctrList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -97,7 +97,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("cpa")) {
 		     ArrayList<Double> cpaList = calculator.getCpaList();
-		     int count = 0;
+		     int count = 1;
 			 for (double i : cpaList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -105,7 +105,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("cpc")) {
 		     ArrayList<Double> cpcList = calculator.getCpcList();
-		     int count = 0;
+		     int count = 1;
 			 for (double i : cpcList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -113,7 +113,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("cpm")) {
 		     ArrayList<Double> cpmList = calculator.getCpmList();
-		     int count = 0;
+		     int count = 1;
 			 for (double i : cpmList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -121,7 +121,7 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("bounce rate")) {
 		     ArrayList<Double> brList = calculator.getBrList();
-		     int count = 0;
+		     int count = 1;
 			 for (double i : brList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
