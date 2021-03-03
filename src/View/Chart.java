@@ -12,10 +12,10 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+
 public class Chart extends ApplicationFrame{
-	public Chart( String applicationTitle , String chartTitle, ChartCalculator calculator ) {
+	public Chart( String applicationTitle , String chartTitle, String metric, ChartCalculator calculator ) {
 	      super(applicationTitle);
-	      String metric = "uniques"; // change this to view a different metric on the graph
 	      JFreeChart Chart = ChartFactory.createLineChart(
 	         chartTitle,
 	         "Time (Day) ","Number of "+metric,

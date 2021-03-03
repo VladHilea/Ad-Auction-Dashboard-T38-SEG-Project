@@ -18,10 +18,7 @@ public class Main {
         printCharts(calculator2);
 
         // displaying the chart
-        Chart chart = new Chart(
-                "Metrics vs Time" ,
-                "Metrics vs Time",
-                calculator2);
+        Chart chart = new Chart( "Metrics vs Time" , "Metrics vs Time","impressions", calculator2);
 
         chart.pack();
         RefineryUtilities.centerFrameOnScreen( chart );
