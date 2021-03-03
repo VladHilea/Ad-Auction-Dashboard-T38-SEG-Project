@@ -32,28 +32,28 @@ public class ChartCalculator extends Calculator {
 
         // calculates time difference and gets dates at every interval
         switch (interval) {
-            case "hours" -> {
+            case "hours": {
                 for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusHours(i));
                 }
                 System.out.println(interval);
             }
-            case "days" -> {
+            case "days": {
                 for (long i = 1; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusDays(i));
                 }
             }
-            case "weeks" -> {
+            case "weeks": {
                 for (long i = 1; i <= ChronoUnit.WEEKS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusWeeks(i));
                 }
             }
-            case "months" -> {
+            case "months": {
                 for (long i = 1; i <= ChronoUnit.MONTHS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusMonths(i));
                 }
             }
-            case "years" -> {
+            case "years": {
                 for (long i = 1; i <= ChronoUnit.YEARS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusYears(i));
                 }
