@@ -196,7 +196,7 @@ public class AdAuctionGUI extends JFrame{
         impressions.setFont(fontOfText);
 
 
-        impressionsValue = new JLabel(String.valueOf(calculator.getImpressionsNo()));
+        impressionsValue = new JLabel(toString(calculator.getImpressionsNo()));
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressionsValue.setFont(fontofValue);
 
@@ -217,7 +217,7 @@ public class AdAuctionGUI extends JFrame{
         clicks.setFont(fontOfText);
 
 
-        clicksValue = new JLabel(String.valueOf(calculator.getClicksNo()));
+        clicksValue = new JLabel(toString(calculator.getClicksNo()));
         clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         clicksValue.setFont(fontofValue);
 
@@ -238,7 +238,7 @@ public class AdAuctionGUI extends JFrame{
         uniques.setFont(fontOfText);
 
 
-        uniquesValue = new JLabel(String.valueOf(calculator.getUniquesNo()));
+        uniquesValue = new JLabel(toString(calculator.getUniquesNo()));
         uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniquesValue.setFont(fontofValue);
 
@@ -262,7 +262,7 @@ public class AdAuctionGUI extends JFrame{
         ctr.setFont(fontOfText);
 
 
-        ctrValues = new JLabel(String.valueOf(calculator.getCtr()));
+        ctrValues = new JLabel(toString(calculator.getCtr()));
         ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         ctrValues.setFont(fontofValue);
 
@@ -283,7 +283,7 @@ public class AdAuctionGUI extends JFrame{
         cpa.setFont(fontOfText);
 
 
-        cpaValues = new JLabel(String.valueOf(calculator.getCpa()));
+        cpaValues = new JLabel(toString(calculator.getCpa()));
         cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpaValues.setFont(fontofValue);
 
@@ -304,7 +304,7 @@ public class AdAuctionGUI extends JFrame{
         cpc.setFont(fontOfText);
 
 
-        cpcValues = new JLabel(String.valueOf(calculator.getCpc()));
+        cpcValues = new JLabel(toString(calculator.getCpc()));
         cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpcValues.setFont(fontofValue);
 
@@ -326,7 +326,7 @@ public class AdAuctionGUI extends JFrame{
         cpm.setFont(fontOfText);
 
 
-        cpmValues = new JLabel(String.valueOf(calculator.getCpm()));
+        cpmValues = new JLabel(toString(calculator.getCpm()));
         cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpmValues.setFont(fontofValue);
 
@@ -348,7 +348,7 @@ public class AdAuctionGUI extends JFrame{
         conversions.setFont(fontOfText);
 
 
-        conversionsValues = new JLabel(String.valueOf(calculator.getConversionsNo()));
+        conversionsValues = new JLabel(toString(calculator.getConversionsNo()));
         conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         conversionsValues.setFont(fontofValue);
 
@@ -370,7 +370,7 @@ public class AdAuctionGUI extends JFrame{
         totalCost.setFont(fontOfText);
 
 
-        totalCostValues = new JLabel(String.valueOf(calculator.getTotalImpressionCost()));
+        totalCostValues = new JLabel(toString(calculator.getTotalImpressionCost()));
         totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalCostValues.setFont(fontofValue);
 
@@ -392,7 +392,7 @@ public class AdAuctionGUI extends JFrame{
         bounce.setFont(fontOfText);
 
 
-        bounceValues = new JLabel(String.valueOf(calculator.getBouncesNo()));
+        bounceValues = new JLabel(toString(calculator.getBouncesNo()));
         bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceValues.setFont(fontofValue);
 
@@ -414,7 +414,7 @@ public class AdAuctionGUI extends JFrame{
         bounceRate.setFont(fontOfText);
 
 
-        bounceRateValues = new JLabel(String.valueOf(calculator.getBr()));
+        bounceRateValues = new JLabel(toString(calculator.getBr()));
         bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceRateValues.setFont(fontofValue);
 
@@ -464,6 +464,14 @@ public class AdAuctionGUI extends JFrame{
         menu.add(insightsGrid);
     }
 
+    // converts a metric to a readable string
+    public static String toString(float metric)
+    {
+        if (metric == (int) metric)
+            return String.format("%d", (int) metric);
+        else
+            return String.format("%.4g%n", metric); // change the 4 to change the dp
+    }
 
     public static void main(String[] args) {
         // reads the files and stores the logs - only create one campaign otherwise it will be slow
