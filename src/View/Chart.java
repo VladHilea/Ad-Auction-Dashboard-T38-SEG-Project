@@ -89,7 +89,8 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("ctr")) {
 		     ArrayList<Float> ctrList = calculator.getCtrList();
-		     int count = 0;
+		     int count = 1;
+
 			 for (double i : ctrList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -97,7 +98,8 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("cpa")) {
 		     ArrayList<Float> cpaList = calculator.getCpaList();
-		     int count = 0;
+		     int count = 1;
+
 			 for (double i : cpaList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -105,7 +107,8 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("cpc")) {
 		     ArrayList<Float> cpcList = calculator.getCpcList();
-		     int count = 0;
+		     int count = 1;
+
 			 for (double i : cpcList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -113,7 +116,8 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("cpm")) {
 		     ArrayList<Float> cpmList = calculator.getCpmList();
-		     int count = 0;
+		     int count = 1;
+
 			 for (double i : cpmList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
@@ -121,7 +125,8 @@ public class Chart extends ApplicationFrame{
 		   }
 	       if (metric.equals("bounce rate")) {
 		     ArrayList<Float> brList = calculator.getBrList();
-		     int count = 0;
+		     int count = 1;
+
 			 for (double i : brList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
 			   count = count + 1;
