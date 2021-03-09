@@ -15,6 +15,8 @@ public class AdAuctionGUI extends JFrame{
     private static JPanel verticalMenu,insightsGrid;
 
     private static JButton insightsButton,chartsButton,histogramsButton,compareButton,settingsButton;
+    private static JPanel insightsButtonPanel,chartsButtonPanel,histogramsButtonPanel,compareButtonPanel,settingsButtonPanel;
+
 
     private static JPanel impressionsPanel,clicksPanel,uniquesPanel,ctrPanel,cpmPanel,cpaPanel,cpcPanel,conversionsPanel,totalCostPanel,bouncePanel,bounceRatePanel,bounceTimePanel;
     private static JLabel impressions,clicks,uniques,ctr,cpm,cpa,cpc,conversions,totalCost,bounce,bounceRate,bounceTime;
@@ -25,8 +27,8 @@ public class AdAuctionGUI extends JFrame{
 
      //Color
      static Color orange= new Color(220,120,27);
-     static Color blue= new Color(220,120,27);
-     static Color grey = new Color(242,236,236);
+    static Color blue= new Color(14,139,229);
+    static Color grey = new Color(242,236,236);
 
      public static Color getPrimaryColor(){
          return blue;
@@ -72,71 +74,94 @@ public class AdAuctionGUI extends JFrame{
 
 
     public static void createVerticalMenu(){
-        verticalMenu = new JPanel();
-        verticalMenu.setBounds(0,100,200,gui.getHeight());
+        verticalMenu = new JPanel(new GridLayout(5,1));
+        verticalMenu.setBounds(0,100,200,gui.getHeight()-100);
         verticalMenu.setAlignmentY(100);
         verticalMenu.setOpaque(true);
         verticalMenu.setBackground(grey);
 
 
-        //La butoanele astea pastreaza ce am scris eu aici gen design. Cand creezi gridul ala nou sa pastrezi astea 4 linii pt fiecare
-        //buton ca sa arate la fel
+        //start panel
+        insightsButtonPanel = new JPanel(new BorderLayout());
+        insightsButtonPanel.setOpaque(false);
+        insightsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
+
         insightsButton = new JButton("Insights");
-        insightsButton.setBackground(null);
         insightsButton.setFont(getMainFont());
+        insightsButton.setBorderPainted(false);
+        insightsButton.setContentAreaFilled(false);
         insightsButton.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
-        
-        insightsButton.setPreferredSize(new Dimension(40,40));
-        insightsButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,1,0,Color.WHITE),BorderFactory.createEmptyBorder(54,75,70,74)));
+
+        insightsButtonPanel.add(insightsButton);
+        //end panel
+
+
+        //start panel
+        chartsButtonPanel = new JPanel(new BorderLayout());
+        chartsButtonPanel.setOpaque(false);
+        chartsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
         chartsButton = new JButton("Charts");
-        chartsButton.setBackground(null);
+        chartsButton.setBorderPainted(false);
+        chartsButton.setContentAreaFilled(false);
         chartsButton.setFont(getMainFont());
         chartsButton.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
-        
-        chartsButton.setPreferredSize(new Dimension(40,40));
-        chartsButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,1,0,Color.WHITE),BorderFactory.createEmptyBorder(54,80,70,82)));
+
+        chartsButtonPanel.add(chartsButton);
+        //end panel
+
+
+        //start panel
+        histogramsButtonPanel = new JPanel(new BorderLayout());
+        histogramsButtonPanel.setOpaque(false);
+        histogramsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
         histogramsButton = new JButton("Histograms");
-        histogramsButton.setBackground(null);
+        histogramsButton.setBorderPainted(false);
+        histogramsButton.setContentAreaFilled(false);
         histogramsButton.setFont(getMainFont());
         histogramsButton.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
-        
-        histogramsButton.setPreferredSize(new Dimension(40,40));
-        histogramsButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,1,0,Color.WHITE),BorderFactory.createEmptyBorder(54,70,70,54)));
+
+        histogramsButtonPanel.add(histogramsButton);
+        //end panel
+
+
+        //start panel
+        compareButtonPanel = new JPanel(new BorderLayout());
+        compareButtonPanel.setOpaque(false);
+        compareButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
         compareButton = new JButton("Compare");
-        compareButton.setBackground(null);
+        compareButton.setBorderPainted(false);
+        compareButton.setContentAreaFilled(false);
         compareButton.setFont(getMainFont());
         compareButton.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
-        
-        compareButton.setPreferredSize(new Dimension(40,40));
-        compareButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,1,0,Color.WHITE),BorderFactory.createEmptyBorder(54,75,70,68)));
+
+        compareButtonPanel.add(compareButton);
+        //end panel
+
+
+        //start panel
+        settingsButtonPanel = new JPanel(new BorderLayout());
+        settingsButtonPanel.setOpaque(false);
+        settingsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
         settingsButton = new JButton("Settings");
-        settingsButton.setBackground(null);
+        settingsButton.setBorderPainted(false);
+        settingsButton.setContentAreaFilled(false);
         settingsButton.setFont(getMainFont());
         settingsButton.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
-        
-        settingsButton.setPreferredSize(new Dimension(40,40));
-        settingsButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,1,0,Color.WHITE),BorderFactory.createEmptyBorder(54,75,70,73)));
+
+        settingsButtonPanel.add(settingsButton);
+        //end panel
 
 
-        Box vbox = Box.createVerticalBox();
-        vbox.setBounds(0,100,200,verticalMenu.getHeight());
-        vbox.setOpaque(true);
+        verticalMenu.add(insightsButtonPanel);
+        verticalMenu.add(chartsButtonPanel);
+        verticalMenu.add(histogramsButtonPanel);
+        verticalMenu.add(compareButtonPanel);
+        verticalMenu.add(settingsButtonPanel);
 
-
-        vbox.add(insightsButton);
-        vbox.add(chartsButton);
-        vbox.add(histogramsButton);
-        vbox.add(compareButton);
-        vbox.add(settingsButton);
-
-
-
-        verticalMenu.setLayout(new BoxLayout(verticalMenu, BoxLayout.Y_AXIS));
-        verticalMenu.add(vbox);
         menu.add(verticalMenu, BorderLayout.WEST,0);
     }
 
@@ -431,17 +456,18 @@ public class AdAuctionGUI extends JFrame{
 
         bounceTime = new JLabel("Time");
         bounceTime.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceTime.setFont(fontOfText);
+        bounceTime.setFont(fontofValue);
 
 
-        bounceTimeValues = new JLabel("Bounce Type:");
+        bounceTimeValues = new JLabel("Bounce Type");
         bounceTimeValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceTimeValues.setForeground(getSeondaryColor());
-        bounceTimeValues.setFont(fontofValue);
+        bounceTimeValues.setFont(fontOfText);
 
         Box bounceTimeBox = Box.createVerticalBox();
-        bounceTimeBox.add(bounceTimeValues);
         bounceTimeBox.add(bounceTime);
+        bounceTimeBox.add(bounceTimeValues);
+
         bounceTimePanel.add(bounceTimeBox);
         //end panel
 
