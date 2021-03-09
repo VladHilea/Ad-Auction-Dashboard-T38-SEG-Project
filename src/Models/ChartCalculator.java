@@ -11,14 +11,14 @@ public class ChartCalculator extends Calculator {
     private final ArrayList<Integer> clicksNoList = new ArrayList<>(); // number of clicks - people who clicked the ad
     private final ArrayList<Integer> bouncesNoList = new ArrayList<>(); // number of bounces - people who clicked away after a while
     private final ArrayList<Integer> conversionsNoList = new ArrayList<>(); // number of conversions - people who click then acts on ad
-    private final ArrayList<Double> totalImpressionCostList = new ArrayList<>(); // total impression cost - cost of impressions
-    private final ArrayList<Double> totalClickCostList = new ArrayList<>(); // total click cost - cost of clicks
+    private final ArrayList<Float> totalImpressionCostList = new ArrayList<>(); // total impression cost - cost of impressions
+    private final ArrayList<Float> totalClickCostList = new ArrayList<>(); // total click cost - cost of clicks
 
-    private final ArrayList<Double> ctrList = new ArrayList<>(); // click-through-rate - clicks per impression
-    private final ArrayList<Double> cpaList = new ArrayList<>(); // cost-per-acquisition
-    private final ArrayList<Double> cpcList = new ArrayList<>(); // cost-per-click
-    private final ArrayList<Double> cpmList = new ArrayList<>(); // cost-per-thousand impressions
-    private final ArrayList<Double> brList = new ArrayList<>(); // bounce rate - number of bounces per click
+    private final ArrayList<Float> ctrList = new ArrayList<>(); // click-through-rate - clicks per impression
+    private final ArrayList<Float> cpaList = new ArrayList<>(); // cost-per-acquisition
+    private final ArrayList<Float> cpcList = new ArrayList<>(); // cost-per-click
+    private final ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
+    private final ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
     public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog) {
         super(impressionLog, clickLog, serverLog);
@@ -203,31 +203,31 @@ public class ChartCalculator extends Calculator {
         return conversionsNoList;
     }
 
-    public ArrayList<Double> getTotalImpressionCostList() {
+    public ArrayList<Float> getTotalImpressionCostList() {
         return totalImpressionCostList;
     }
 
-    public ArrayList<Double> getTotalClickCostList() {
+    public ArrayList<Float> getTotalClickCostList() {
         return totalClickCostList;
     }
 
-    public ArrayList<Double> getCtrList() {
+    public ArrayList<Float> getCtrList() {
         return ctrList;
     }
 
-    public ArrayList<Double> getCpaList() {
+    public ArrayList<Float> getCpaList() {
         return cpaList;
     }
 
-    public ArrayList<Double> getCpcList() {
+    public ArrayList<Float> getCpcList() {
         return cpcList;
     }
 
-    public ArrayList<Double> getCpmList() {
+    public ArrayList<Float> getCpmList() {
         return cpmList;
     }
 
-    public ArrayList<Double> getBrList() {
+    public ArrayList<Float> getBrList() {
         return brList;
     }
 }

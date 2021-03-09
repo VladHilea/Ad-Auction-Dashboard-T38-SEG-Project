@@ -1,4 +1,5 @@
 import Models.*;
+import View.AdAuctionGUI;
 import View.Chart;
 import org.jfree.ui.RefineryUtilities;
 

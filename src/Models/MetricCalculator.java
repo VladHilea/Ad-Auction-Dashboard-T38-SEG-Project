@@ -11,14 +11,14 @@ public class MetricCalculator extends Calculator {
     private int clicksNo; // number of clicks - people who clicked the ad
     private int bouncesNo; // number of bounces - people who clicked away after a while
     private int conversionsNo; // number of conversions - people who click then acts on ad
-    private double totalImpressionsCost; // total impression cost - cost of impressions
-    private double totalClicksCost; // total click cost - cost of clicks
+    private float totalImpressionsCost; // total impression cost - cost of impressions
+    private float totalClicksCost; // total click cost - cost of clicks
 
-    private double ctr; // click-through-rate - clicks per impression
-    private double cpa; // cost-per-acquisition
-    private double cpc; // cost-per-click
-    private double cpm; // cost-per-thousand impressions
-    private double br; // bounce rate - number of bounces per click
+    private float ctr; // click-through-rate - clicks per impression
+    private float cpa; // cost-per-acquisition
+    private float cpc; // cost-per-click
+    private float cpm; // cost-per-thousand impressions
+    private float br; // bounce rate - number of bounces per click
 
     private final int pageLimit; // max number of pages to be counted as a bounce
     private final int bounceTime; // max amount of time to be counted as a bounce
@@ -67,11 +67,11 @@ public class MetricCalculator extends Calculator {
         }
 
         // additional metrics calculated from previous metrics
-        ctr = (double) clicksNo / (double) impressionsNo;
+        ctr = (float) clicksNo / (float) impressionsNo;
         cpa = totalImpressionsCost / conversionsNo;
         cpc = totalImpressionsCost / clicksNo;
         cpm = (totalImpressionsCost * 1000) / impressionsNo;
-        br = (double) bouncesNo / (double) clicksNo;
+        br = (float) bouncesNo / (float) clicksNo;
     }
 
     // calculates difference between two dates given as strings
@@ -103,31 +103,31 @@ public class MetricCalculator extends Calculator {
         return conversionsNo;
     }
 
-    public double getTotalImpressionCost() {
+    public float getTotalImpressionCost() {
         return totalImpressionsCost;
     }
 
-    public double getTotalClickCost() {
+    public float getTotalClickCost() {
         return totalClicksCost;
     }
 
-    public double getCtr() {
+    public float getCtr() {
         return ctr;
     }
 
-    public double getCpa() {
+    public float getCpa() {
         return cpa;
     }
 
-    public double getCpc() {
+    public float getCpc() {
         return cpc;
     }
 
-    public double getCpm() {
+    public float getCpm() {
         return cpm;
     }
 
-    public double getBr() {
+    public float getBr() {
         return br;
     }
 }
