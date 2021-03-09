@@ -72,7 +72,7 @@ public class Chart extends ApplicationFrame{
 		     }
 		   }
 	       if (metric.equals("total impression cost")) {
-	         ArrayList<Double> ticList = calculator.getTotalImpressionCostList();
+	         ArrayList<Float> ticList = calculator.getTotalImpressionCostList();
 			 int count = 0;
 			 for (double i : ticList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
@@ -80,7 +80,7 @@ public class Chart extends ApplicationFrame{
 			 }	
 		   }
 	       if (metric.equals("total click cost")) {
-	         ArrayList<Double> tccList = calculator.getTotalClickCostList();
+	         ArrayList<Float> tccList = calculator.getTotalClickCostList();
 		     int count = 0;
 			 for (double i : tccList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
@@ -88,7 +88,7 @@ public class Chart extends ApplicationFrame{
 		     }	
 		   }
 	       if (metric.equals("ctr")) {
-		     ArrayList<Double> ctrList = calculator.getCtrList();
+		     ArrayList<Float> ctrList = calculator.getCtrList();
 		     int count = 0;
 			 for (double i : ctrList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
@@ -96,7 +96,7 @@ public class Chart extends ApplicationFrame{
 		     }
 		   }
 	       if (metric.equals("cpa")) {
-		     ArrayList<Double> cpaList = calculator.getCpaList();
+		     ArrayList<Float> cpaList = calculator.getCpaList();
 		     int count = 0;
 			 for (double i : cpaList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
@@ -104,7 +104,7 @@ public class Chart extends ApplicationFrame{
 		     }
 		   }
 	       if (metric.equals("cpc")) {
-		     ArrayList<Double> cpcList = calculator.getCpcList();
+		     ArrayList<Float> cpcList = calculator.getCpcList();
 		     int count = 0;
 			 for (double i : cpcList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
@@ -112,7 +112,7 @@ public class Chart extends ApplicationFrame{
 		     }
 		   }
 	       if (metric.equals("cpm")) {
-		     ArrayList<Double> cpmList = calculator.getCpmList();
+		     ArrayList<Float> cpmList = calculator.getCpmList();
 		     int count = 0;
 			 for (double i : cpmList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
@@ -120,7 +120,7 @@ public class Chart extends ApplicationFrame{
 		     }
 		   }
 	       if (metric.equals("bounce rate")) {
-		     ArrayList<Double> brList = calculator.getBrList();
+		     ArrayList<Float> brList = calculator.getBrList();
 		     int count = 0;
 			 for (double i : brList) {
 			   dataset.addValue(i, metric, String.valueOf(count));
