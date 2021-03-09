@@ -13,9 +13,12 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 
 public class Chart extends ApplicationFrame{
+        
+        JFreeChart Chart;
+
 	public Chart( String applicationTitle , String chartTitle, String metric, ChartCalculator calculator ) {
 	      super(applicationTitle);
-	      JFreeChart Chart = ChartFactory.createLineChart(
+	      Chart = ChartFactory.createLineChart(
 	         chartTitle,
 	         "Time (Day) ","Number of "+metric,
 	         createDataset(metric,calculator),
@@ -136,4 +139,9 @@ public class Chart extends ApplicationFrame{
 		   }
 	      return dataset;
 	   }
+
+        public JFreeChart getChart(){
+          return Chart;
+        }	
+
 }
