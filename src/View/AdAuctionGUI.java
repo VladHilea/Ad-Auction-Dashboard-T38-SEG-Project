@@ -1,9 +1,13 @@
 package View;
 
+import Models.Campaign;
+import Models.ChartCalculator;
+import Models.MetricCalculator;
+import org.jfree.ui.RefineryUtilities;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class AdAuctionGUI extends JFrame{
     private static JFrame gui;
@@ -40,13 +44,13 @@ public class AdAuctionGUI extends JFrame{
      }
 
 
-    public static void prepareGui(){
+    public static void prepareGui(MetricCalculator calculator){
         gui = new JFrame("Ad Auction Monitor");
         gui.setVisible(true);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        createMenu();
+        createMenu(calculator);
         gui.add(menu);
 
     }
@@ -55,7 +59,7 @@ public class AdAuctionGUI extends JFrame{
         aFrame.setSize(screenSize.width, screenSize.height);
     }
 
-    public static void createMenu(){
+    public static void createMenu(MetricCalculator calculator){
         menu = new JLayeredPane();
         menu.setSize(gui.getWidth(),gui.getHeight());
         menu.setOpaque(true);
@@ -63,7 +67,7 @@ public class AdAuctionGUI extends JFrame{
 
         createTopMenu();
         createVerticalMenu();
-        createInsightsGrid();
+        createInsightsGrid(calculator);
     }
 
 
@@ -167,17 +171,12 @@ public class AdAuctionGUI extends JFrame{
 
     }
 
-    public static void createInsightsGrid(){
+    public static void createInsightsGrid(MetricCalculator calculator){
 
 
         Font fontOfText = new Font("Impact", Font.PLAIN, 25);
         Font fontofValue = new Font("Impact", Font.BOLD, 30);
         Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(grey, 1));
-
-        ArrayList<Integer> insightsArray = new ArrayList<Integer>();
-        for(int i = 0; i < 12; i++){
-            insightsArray.add((i+5) *100);
-        }
 
         insightsGrid = new JPanel(new GridLayout(4,3));
         insightsGrid.setBounds(200,100,gui.getWidth()-200,gui.getHeight()-100);
@@ -197,7 +196,7 @@ public class AdAuctionGUI extends JFrame{
         impressions.setFont(fontOfText);
 
 
-        impressionsValue = new JLabel(String.valueOf(insightsArray.get(0)));
+        impressionsValue = new JLabel(String.valueOf(calculator.getImpressionsNo()));
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressionsValue.setFont(fontofValue);
 
@@ -218,7 +217,7 @@ public class AdAuctionGUI extends JFrame{
         clicks.setFont(fontOfText);
 
 
-        clicksValue = new JLabel(String.valueOf(insightsArray.get(1)));
+        clicksValue = new JLabel(String.valueOf(calculator.getClicksNo()));
         clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         clicksValue.setFont(fontofValue);
 
@@ -239,7 +238,7 @@ public class AdAuctionGUI extends JFrame{
         uniques.setFont(fontOfText);
 
 
-        uniquesValue = new JLabel(String.valueOf(insightsArray.get(2)));
+        uniquesValue = new JLabel(String.valueOf(calculator.getUniquesNo()));
         uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniquesValue.setFont(fontofValue);
 
@@ -263,7 +262,7 @@ public class AdAuctionGUI extends JFrame{
         ctr.setFont(fontOfText);
 
 
-        ctrValues = new JLabel(String.valueOf(insightsArray.get(3)));
+        ctrValues = new JLabel(String.valueOf(calculator.getCtr()));
         ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         ctrValues.setFont(fontofValue);
 
@@ -284,7 +283,7 @@ public class AdAuctionGUI extends JFrame{
         cpa.setFont(fontOfText);
 
 
-        cpaValues = new JLabel(String.valueOf(insightsArray.get(4)));
+        cpaValues = new JLabel(String.valueOf(calculator.getCpa()));
         cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpaValues.setFont(fontofValue);
 
@@ -305,7 +304,7 @@ public class AdAuctionGUI extends JFrame{
         cpc.setFont(fontOfText);
 
 
-        cpcValues = new JLabel(String.valueOf(insightsArray.get(5)));
+        cpcValues = new JLabel(String.valueOf(calculator.getCpc()));
         cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpcValues.setFont(fontofValue);
 
@@ -327,7 +326,7 @@ public class AdAuctionGUI extends JFrame{
         cpm.setFont(fontOfText);
 
 
-        cpmValues = new JLabel(String.valueOf(insightsArray.get(6)));
+        cpmValues = new JLabel(String.valueOf(calculator.getCpm()));
         cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpmValues.setFont(fontofValue);
 
@@ -349,7 +348,7 @@ public class AdAuctionGUI extends JFrame{
         conversions.setFont(fontOfText);
 
 
-        conversionsValues = new JLabel(String.valueOf(insightsArray.get(7)));
+        conversionsValues = new JLabel(String.valueOf(calculator.getConversionsNo()));
         conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         conversionsValues.setFont(fontofValue);
 
@@ -371,7 +370,7 @@ public class AdAuctionGUI extends JFrame{
         totalCost.setFont(fontOfText);
 
 
-        totalCostValues = new JLabel(String.valueOf(insightsArray.get(8)));
+        totalCostValues = new JLabel(String.valueOf(calculator.getTotalImpressionCost()));
         totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalCostValues.setFont(fontofValue);
 
@@ -393,7 +392,7 @@ public class AdAuctionGUI extends JFrame{
         bounce.setFont(fontOfText);
 
 
-        bounceValues = new JLabel(String.valueOf(insightsArray.get(9)));
+        bounceValues = new JLabel(String.valueOf(calculator.getBouncesNo()));
         bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceValues.setFont(fontofValue);
 
@@ -415,7 +414,7 @@ public class AdAuctionGUI extends JFrame{
         bounceRate.setFont(fontOfText);
 
 
-        bounceRateValues = new JLabel(String.valueOf(insightsArray.get(10)));
+        bounceRateValues = new JLabel(String.valueOf(calculator.getBr()));
         bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceRateValues.setFont(fontofValue);
 
@@ -467,6 +466,45 @@ public class AdAuctionGUI extends JFrame{
 
 
     public static void main(String[] args) {
-        prepareGui();
+        // reads the files and stores the logs - only create one campaign otherwise it will be slow
+        Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv"); // string inputs temporary
+
+        // used to display metrics as values
+        MetricCalculator calculator1 = campaign.newMetricCalculator();
+        calculator1.calculateMetrics();
+
+        prepareGui(calculator1);
+
+        // used to display metrics as charts
+        ChartCalculator calculator2 = campaign.newChartCalculator();
+        calculator2.calculateCharts("days", calculator2.getImpressionLog().getFirstDate(), calculator2.getImpressionLog().getLastDate());
+
+        Chart chart = new Chart( "Metrics vs Time" , "Metrics vs Time","impressions", calculator2);
+        chart.pack();
+        RefineryUtilities.centerFrameOnScreen( chart );
+        chart.setVisible( true );
+
+        /**
+         * notes:
+         * interval, start and end dates are partially hardcoded - not much to really to really do till GUI
+         * print functions are there to see what is going on easily
+         * all the backend is in Models, all the GUI stuff is in View - MVC
+         * file reading is only done once - unavoidably slow
+         * master branch is using Date, this branch is using LocalDateTime - very important change
+         * jfreechart needs to be installed to run - downloads in whatsapp
+         *
+         * to do:
+         * find any possible performance improvements in the backend
+         * create class diagrams for 1st deliverable
+         * improve & update commenting
+         * merge any GUI stuff
+         * find out from Yvonne how large the actual data set is - response pending
+         * change how the interval is handled - make subclasses of chart calculator for intervals
+         *
+         * for later:
+         * filtering was removed due to my bad implementation - leave till 2nd deliverable
+         * bounce factors are hardcoded - leave till 2nd & 3rd deliverables
+         * will later add a class HistogramCalculator - leave till 2nd & 3rd deliverables
+         **/
     }
 }
