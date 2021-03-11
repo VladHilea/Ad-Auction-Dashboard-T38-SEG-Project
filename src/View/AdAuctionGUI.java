@@ -559,7 +559,7 @@ public class AdAuctionGUI extends JFrame{
         Font comboBoxFont = new Font(chartsButton.getFont().getName(), Font.PLAIN, 14);
 
         //start Box
-        metricsChoices = new String[] {"Metrics","Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
+        metricsChoices = new String[] {"Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
         metricsBox = new JComboBox<>(metricsChoices);
         metricsBox.setVisible(true);
         metricsBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -776,6 +776,7 @@ public class AdAuctionGUI extends JFrame{
         chartSlider.setMinorTickSpacing(5);
         chartSlider.setPaintTicks(true);
         chartSlider.setPaintLabels(true);
+        chartSlider.setValue(13);
 
         Hashtable position = new Hashtable();
         position.put(0, new JLabel("0"));
