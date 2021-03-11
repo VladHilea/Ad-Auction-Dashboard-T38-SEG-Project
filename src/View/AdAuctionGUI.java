@@ -738,12 +738,14 @@ public class AdAuctionGUI extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(! (arrayOfChoicesChart.get(0).equals("Metrics"))){
+                    JOptionPane.showMessageDialog(null, "No Filter ability has been implemented yet");
                     for (String i: arrayOfChoicesChart
                     ) {
                         System.out.println(i);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Metrics choice can't be empty");
+                    //JOptionPane.showMessageDialog(null, "Metrics choice can't be empty");
+                    JOptionPane.showMessageDialog(null, "No Filter ability has been implemented yet");
                     System.out.println(arrayOfChoicesChart.get(0));
                 }
                 System.out.println("---------------------------");
@@ -895,7 +897,7 @@ public class AdAuctionGUI extends JFrame{
         ChartCalculator calculator2 = campaign.newChartCalculator();
         calculator2.calculateCharts("days", calculator2.getImpressionLog().getFirstDate(), calculator2.getImpressionLog().getLastDate());
 
-        Chart chart = new Chart( "Impressions vs Time" , "Metrics vs Time","impressions", calculator2);
+        Chart chart = new Chart( "Metrics vs Time" , "Impressions vs Time","impressions", calculator2);
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
