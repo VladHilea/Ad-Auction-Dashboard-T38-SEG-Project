@@ -40,7 +40,7 @@ public class AdAuctionGUI extends JFrame{
     private static JPanel chartSouthGrid;
     private static Chart chart ;
 
-    
+
     public static ArrayList<String> arrayOfChoicesChart = new ArrayList<String>();
     public static ArrayList<String> arrayOfChoicesHistogram = new ArrayList<String>();
 
@@ -51,19 +51,19 @@ public class AdAuctionGUI extends JFrame{
     static Color grey = new Color(242,236,236);
 
     public static Color getPrimaryColor(){
-         return blue;
-     }
+        return blue;
+    }
     public static Color getSecondaryColor(){
         return orange;
-     }
+    }
 
 
-     //Font
+    //Font
     static Font mainFont = new Font("Impact", Font.PLAIN, 15);
 
     public static Font getMainFont(){
-         return mainFont;
-     }
+        return mainFont;
+    }
 
 
     public static void prepareGui(MetricCalculator calculator,Chart chart){
@@ -556,20 +556,10 @@ public class AdAuctionGUI extends JFrame{
 
 
     public static void createChartNorthBox(){
-
-
-
-
-
-
-
-
-
-
         Font comboBoxFont = new Font(chartsButton.getFont().getName(), Font.PLAIN, 14);
 
         //start Box
-        metricsChoices = new String[] {"Metrics","Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
+        metricsChoices = new String[] {"Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
         metricsBox = new JComboBox<>(metricsChoices);
         metricsBox.setVisible(true);
         metricsBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -580,7 +570,7 @@ public class AdAuctionGUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox)e.getSource();
                 String itemName = (String)cb.getSelectedItem();
-                    arrayOfChoicesChart.set(0, itemName);
+                arrayOfChoicesChart.set(0, itemName);
             }
         });
 
@@ -607,7 +597,7 @@ public class AdAuctionGUI extends JFrame{
                 JComboBox cb = (JComboBox)e.getSource();
                 String itemName = (String)cb.getSelectedItem();
 
-                    arrayOfChoicesChart.set(1, itemName);
+                arrayOfChoicesChart.set(1, itemName);
 
             }
         });
@@ -634,7 +624,7 @@ public class AdAuctionGUI extends JFrame{
                 JComboBox cb = (JComboBox)e.getSource();
                 String itemName = (String)cb.getSelectedItem();
 
-                    arrayOfChoicesChart.set(2, itemName);
+                arrayOfChoicesChart.set(2, itemName);
 
             }
         });
@@ -646,7 +636,7 @@ public class AdAuctionGUI extends JFrame{
         Box ageVerticalBox = Box.createVerticalBox();
         ageVerticalBox.add(ageLabel);
         ageVerticalBox.add(ageBox);
-        
+
         //end box
 
         //start Box
@@ -662,7 +652,7 @@ public class AdAuctionGUI extends JFrame{
                 JComboBox cb = (JComboBox)e.getSource();
                 String itemName = (String)cb.getSelectedItem();
 
-                    arrayOfChoicesChart.set(3, itemName);
+                arrayOfChoicesChart.set(3, itemName);
 
             }
         });
@@ -674,8 +664,8 @@ public class AdAuctionGUI extends JFrame{
         Box contextVerticalBox = Box.createVerticalBox();
         contextVerticalBox.add(contextLabel);
         contextVerticalBox.add(contextBox);
-        
-        
+
+
         //end box
 
         //start Box
@@ -691,7 +681,7 @@ public class AdAuctionGUI extends JFrame{
                 JComboBox cb = (JComboBox)e.getSource();
                 String itemName = (String)cb.getSelectedItem();
 
-                    arrayOfChoicesChart.set(4, itemName);
+                arrayOfChoicesChart.set(4, itemName);
 
             }
         });
@@ -703,8 +693,8 @@ public class AdAuctionGUI extends JFrame{
         Box incomeVerticalBox = Box.createVerticalBox();
         incomeVerticalBox.add(incomeLabel);
         incomeVerticalBox.add(incomeBox);
-        
-        
+
+
         //end box
 
         //start Box
@@ -720,7 +710,7 @@ public class AdAuctionGUI extends JFrame{
                 JComboBox cb = (JComboBox)e.getSource();
                 String itemName = (String)cb.getSelectedItem();
 
-                    arrayOfChoicesChart.set(5, itemName);
+                arrayOfChoicesChart.set(5, itemName);
 
             }
         });
@@ -732,8 +722,6 @@ public class AdAuctionGUI extends JFrame{
         Box timeVerticalBox = Box.createVerticalBox();
         timeVerticalBox.add(timeLabel);
         timeVerticalBox.add(timeBox);
-        
-        
         //end box
 
 
@@ -741,6 +729,7 @@ public class AdAuctionGUI extends JFrame{
         createChartButton.setFont(getMainFont());
         createChartButton.setBackground(blue);
         createChartButton.setForeground(Color.WHITE);
+        createChartButton.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         createChartButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         createChartButton.setPreferredSize(new Dimension(200,40));
         createChartButton.setAlignmentY(CENTER_ALIGNMENT);
@@ -750,7 +739,7 @@ public class AdAuctionGUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if(! (arrayOfChoicesChart.get(0).equals("Metrics"))){
                     for (String i: arrayOfChoicesChart
-                         ) {
+                    ) {
                         System.out.println(i);
                     }
                 } else {
@@ -787,6 +776,7 @@ public class AdAuctionGUI extends JFrame{
         chartSlider.setMinorTickSpacing(5);
         chartSlider.setPaintTicks(true);
         chartSlider.setPaintLabels(true);
+        chartSlider.setValue(13);
 
         Hashtable position = new Hashtable();
         position.put(0, new JLabel("0"));
@@ -830,7 +820,7 @@ public class AdAuctionGUI extends JFrame{
 
         chartsGrid.add(chartSouthGrid,BorderLayout.SOUTH);
     }
-    
+
     public static void createChartsGrid(JFreeChart chart){
 
         arrayOfChoicesChart.add("Metrics");
@@ -865,9 +855,6 @@ public class AdAuctionGUI extends JFrame{
         menu.add(chartsGrid);
     }
 
-
-
-
     public static ArrayList<String> getArrayOfChoicesChart() {
         if(! (arrayOfChoicesChart.get(0).equals("Metrics"))) {
             return arrayOfChoicesChart;
@@ -876,7 +863,7 @@ public class AdAuctionGUI extends JFrame{
         }
     }
 
-    {
+    public static ArrayList<String> getArrayOfChoicesHistogram(){
         if(! (arrayOfChoicesHistogram.get(0).equals("Metrics"))) {
             return arrayOfChoicesHistogram;
         } else {
