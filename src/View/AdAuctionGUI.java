@@ -777,6 +777,8 @@ public class AdAuctionGUI extends JFrame{
         chartSlider.setPaintTicks(true);
         chartSlider.setPaintLabels(true);
         chartSlider.setValue(13);
+        chartSlider.setValue(13);
+        chartSlider.setValue(13);
 
         Hashtable position = new Hashtable();
         position.put(0, new JLabel("0"));
@@ -893,7 +895,7 @@ public class AdAuctionGUI extends JFrame{
         ChartCalculator calculator2 = campaign.newChartCalculator();
         calculator2.calculateCharts("days", calculator2.getImpressionLog().getFirstDate(), calculator2.getImpressionLog().getLastDate());
 
-        Chart chart = new Chart( "Metrics vs Time" , "Metrics vs Time","impressions", calculator2);
+        Chart chart = new Chart( "Impressions vs Time" , "Metrics vs Time","impressions", calculator2);
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
