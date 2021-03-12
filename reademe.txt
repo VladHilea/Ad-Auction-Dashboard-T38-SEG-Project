@@ -1,1 +1,0 @@
-This is the first readme file for testing the repository. It is the first import made on the project so it is not really that interesting
