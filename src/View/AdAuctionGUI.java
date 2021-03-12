@@ -257,7 +257,7 @@ public class AdAuctionGUI extends JFrame{
         uniquesPanel.setBorder(blackBorder);
         uniquesPanel.setOpaque(false);
 
-        JLabel uniques = new JLabel("Clicks");
+        JLabel uniques = new JLabel("Uniques");
         uniques.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniques.setForeground(getSecondaryColor());
         uniques.setFont(fontOfText);
@@ -493,7 +493,6 @@ public class AdAuctionGUI extends JFrame{
         Box metricsVerticalBox = Box.createVerticalBox();
         metricsVerticalBox.add(metricsLabel);
         metricsVerticalBox.add(metricsBox);
-
         //end box
 
         //start Box
@@ -538,7 +537,6 @@ public class AdAuctionGUI extends JFrame{
         Box ageVerticalBox = Box.createVerticalBox();
         ageVerticalBox.add(ageLabel);
         ageVerticalBox.add(ageBox);
-
         //end box
 
         //start Box
@@ -561,8 +559,6 @@ public class AdAuctionGUI extends JFrame{
         Box contextVerticalBox = Box.createVerticalBox();
         contextVerticalBox.add(contextLabel);
         contextVerticalBox.add(contextBox);
-
-
         //end box
 
         //start Box
@@ -585,8 +581,6 @@ public class AdAuctionGUI extends JFrame{
         Box incomeVerticalBox = Box.createVerticalBox();
         incomeVerticalBox.add(incomeLabel);
         incomeVerticalBox.add(incomeBox);
-
-
         //end box
 
         //start Box
@@ -646,11 +640,6 @@ public class AdAuctionGUI extends JFrame{
         chartNorthBox.add(timeVerticalBox);
         chartNorthBox.add(createChartButton);
 
-
-
-
-
-
         chartsGrid.add(chartNorthBox,BorderLayout.NORTH);
     }
 
@@ -706,7 +695,6 @@ public class AdAuctionGUI extends JFrame{
     }
 
     public static void createChartsGrid(JFreeChart chart){
-
         arrayOfChoicesChart.add("Metrics");
         arrayOfChoicesChart.add("Any");
         arrayOfChoicesChart.add("Any");
@@ -714,9 +702,6 @@ public class AdAuctionGUI extends JFrame{
         arrayOfChoicesChart.add("Any");
         arrayOfChoicesChart.add("Days");
         arrayOfChoicesChart.add("25");
-
-
-
 
         chartsGrid = new JPanel(new BorderLayout());
         chartsGrid.setBounds(200,100,gui.getWidth()-210,gui.getHeight()-100);
@@ -765,19 +750,11 @@ public class AdAuctionGUI extends JFrame{
         SwingUtilities.invokeLater(() -> prepareGui(calculator1,chart));
 
         /*
-         * notes:
-         * interval, start and end dates are partially hardcoded - not much to really to really do till GUI
-         * print functions are there to see what is going on easily
-         * all the backend is in Models, all the GUI stuff is in View - MVC
-         * file reading is only done once - unavoidably slow
-         * master branch is using Date, this branch is using LocalDateTime - very important change
-         * jfreechart needs to be installed to run - downloads in whatsapp
-         *
          * to do:
+         * CONTROLLER
          * update commenting for GUI
          * improve file reading with anomalous data
-         * find any possible performance improvements in the backend
-         * change how the interval is handled - make subclasses of chart calculator for intervals
+         * 2nd deliverable sprint plan
          *
          * for later:
          * filtering was removed due to my bad implementation - leave till 2nd deliverable
