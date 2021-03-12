@@ -8,47 +8,25 @@ import org.jfree.chart.JFreeChart;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class AdAuctionGUI extends JFrame{
     private static JFrame gui;
-    private static JLayeredPane menu,topMenu;
-    private static JPanel verticalMenu,insightsGrid,chartsGrid;
-
-    private static JButton insightsButton,chartsButton,histogramsButton,compareButton,settingsButton;
-    private static JPanel insightsButtonPanel,chartsButtonPanel,histogramsButtonPanel,compareButtonPanel,settingsButtonPanel;
-
-
-    private static JPanel impressionsPanel,clicksPanel,uniquesPanel,ctrPanel,cpmPanel,cpaPanel,cpcPanel,conversionsPanel,totalCostPanel,bouncePanel,bounceRatePanel,bounceTimePanel;
-    private static JLabel impressions,clicks,uniques,ctr,cpm,cpa,cpc,conversions,totalCost,bounce,bounceRate,bounceTime;
-    private static JLabel impressionsValue, clicksValue, uniquesValue, ctrValues, cpaValues, cpcValues, cpmValues, conversionsValues, totalCostValues,bounceValues, bounceRateValues, bounceTimeValues;
-    private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-
-    private static JComboBox<String> metricsBox,genderBox,ageBox,contextBox,incomeBox,timeBox;
-    private static String[] metricsChoices,genderChoices,ageChoices,contextChoices,incomeChoices,timeChoices;
-
+    private static JLayeredPane menu;
+    private static JPanel insightsGrid;
+    private static JPanel chartsGrid;
+    private static JButton chartsButton;
     private static JSlider chartSlider;
-    private static JPanel addToComparePanel;
-    private static JButton addToCompareButton, createChartButton;
-    private static JPanel chartSouthGrid;
-    private static Chart chart ;
 
+    public static ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
-    public static ArrayList<String> arrayOfChoicesChart = new ArrayList<String>();
-    public static ArrayList<String> arrayOfChoicesHistogram = new ArrayList<String>();
-
-
-    //Color
     static Color orange= new Color(220,120,27);
     static Color blue= new Color(14,139,229);
     static Color grey = new Color(242,236,236);
+
+    static Font mainFont = new Font("Impact", Font.PLAIN, 15);
 
     public static Color getPrimaryColor(){
         return blue;
@@ -57,28 +35,18 @@ public class AdAuctionGUI extends JFrame{
         return orange;
     }
 
-
-    //Font
-    static Font mainFont = new Font("Impact", Font.PLAIN, 15);
-
     public static Font getMainFont(){
         return mainFont;
     }
 
-
-    public static void prepareGui(MetricCalculator calculator,Chart chart){
+    public static void prepareGui(MetricCalculator calculator,Chart chart) {
         gui = new JFrame("Ad Auction Monitor");
         gui.setVisible(true);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        createMenu(calculator,chart);
+        createMenu(calculator, chart);
         gui.add(menu);
-
-    }
-    public static void makeFrameFullSize(JFrame aFrame) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        aFrame.setSize(screenSize.width, screenSize.height);
     }
 
     public static void createMenu(MetricCalculator calculator, Chart chart){
@@ -94,21 +62,19 @@ public class AdAuctionGUI extends JFrame{
 
     }
 
-
     public static void createVerticalMenu(){
-        verticalMenu = new JPanel(new GridLayout(5,1));
+        JPanel verticalMenu = new JPanel(new GridLayout(5, 1));
         verticalMenu.setBounds(0,100,200,gui.getHeight()-100);
         verticalMenu.setAlignmentY(100);
         verticalMenu.setOpaque(true);
         verticalMenu.setBackground(grey);
 
-
         //start panel
-        insightsButtonPanel = new JPanel(new BorderLayout());
+        JPanel insightsButtonPanel = new JPanel(new BorderLayout());
         insightsButtonPanel.setOpaque(false);
         insightsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
-        insightsButton = new JButton("Insights");
+        JButton insightsButton = new JButton("Insights");
         insightsButton.setFont(getMainFont());
         insightsButton.setBorderPainted(false);
         insightsButton.setContentAreaFilled(false);
@@ -117,9 +83,8 @@ public class AdAuctionGUI extends JFrame{
         insightsButtonPanel.add(insightsButton);
         //end panel
 
-
         //start panel
-        chartsButtonPanel = new JPanel(new BorderLayout());
+        JPanel chartsButtonPanel = new JPanel(new BorderLayout());
         chartsButtonPanel.setOpaque(false);
         chartsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
@@ -132,13 +97,12 @@ public class AdAuctionGUI extends JFrame{
         chartsButtonPanel.add(chartsButton);
         //end panel
 
-
         //start panel
-        histogramsButtonPanel = new JPanel(new BorderLayout());
+        JPanel histogramsButtonPanel = new JPanel(new BorderLayout());
         histogramsButtonPanel.setOpaque(false);
         histogramsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
-        histogramsButton = new JButton("Histograms");
+        JButton histogramsButton = new JButton("Histograms");
         histogramsButton.setBorderPainted(false);
         histogramsButton.setContentAreaFilled(false);
         histogramsButton.setFont(getMainFont());
@@ -147,13 +111,12 @@ public class AdAuctionGUI extends JFrame{
         histogramsButtonPanel.add(histogramsButton);
         //end panel
 
-
         //start panel
-        compareButtonPanel = new JPanel(new BorderLayout());
+        JPanel compareButtonPanel = new JPanel(new BorderLayout());
         compareButtonPanel.setOpaque(false);
         compareButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
-        compareButton = new JButton("Compare");
+        JButton compareButton = new JButton("Compare");
         compareButton.setBorderPainted(false);
         compareButton.setContentAreaFilled(false);
         compareButton.setFont(getMainFont());
@@ -162,13 +125,12 @@ public class AdAuctionGUI extends JFrame{
         compareButtonPanel.add(compareButton);
         //end panel
 
-
         //start panel
-        settingsButtonPanel = new JPanel(new BorderLayout());
+        JPanel settingsButtonPanel = new JPanel(new BorderLayout());
         settingsButtonPanel.setOpaque(false);
         settingsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
-        settingsButton = new JButton("Settings");
+        JButton settingsButton = new JButton("Settings");
         settingsButton.setBorderPainted(false);
         settingsButton.setContentAreaFilled(false);
         settingsButton.setFont(getMainFont());
@@ -176,7 +138,6 @@ public class AdAuctionGUI extends JFrame{
 
         settingsButtonPanel.add(settingsButton);
         //end panel
-
 
         verticalMenu.add(insightsButtonPanel);
         verticalMenu.add(chartsButtonPanel);
@@ -186,57 +147,38 @@ public class AdAuctionGUI extends JFrame{
 
         menu.add(verticalMenu, BorderLayout.WEST,0);
 
+        insightsButton.addActionListener(e -> {
+            insightsGrid.setVisible(true);
+            chartsGrid.setVisible(false);
 
-        insightsButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                insightsGrid.setVisible(true);
-                chartsGrid.setVisible(false);
-
-            }
         });
 
-        chartsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                insightsGrid.setVisible(false);
-                chartsGrid.setVisible(true);
-            }
+        chartsButton.addActionListener(e -> {
+            insightsGrid.setVisible(false);
+            chartsGrid.setVisible(true);
         });
 
-        histogramsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                insightsGrid.setVisible(false);
-                chartsGrid.setVisible(false);
-            }
+        histogramsButton.addActionListener(e -> {
+            insightsGrid.setVisible(false);
+            chartsGrid.setVisible(false);
         });
 
-        compareButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                insightsGrid.setVisible(false);
-                chartsGrid.setVisible(false);
-            }
+        compareButton.addActionListener(e -> {
+            insightsGrid.setVisible(false);
+            chartsGrid.setVisible(false);
         });
 
-        settingsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                insightsGrid.setVisible(false);
-                chartsGrid.setVisible(false);
-            }
+        settingsButton.addActionListener(e -> {
+            insightsGrid.setVisible(false);
+            chartsGrid.setVisible(false);
         });
     }
 
     public static void createTopMenu(){
-        topMenu = new JLayeredPane();
+        JLayeredPane topMenu = new JLayeredPane();
         topMenu.setSize(gui.getWidth(),100);
         topMenu.setOpaque(true);
         topMenu.setBackground(new Color(14,139,229));
-
-
 
         JLabel productName = new JLabel("Ad Monitor");
         productName.setBackground(getPrimaryColor());
@@ -246,14 +188,10 @@ public class AdAuctionGUI extends JFrame{
         productName.setForeground(Color.WHITE);
         productName.setFont(getMainFont());
 
-
-
         JLabel customerName = new JLabel("Customer Name");
         productName.setSize(100,100);
         customerName.setBounds(gui.getWidth()-120,0,100,100);
         customerName.setForeground(Color.WHITE);
-
-
 
         topMenu.add(productName,BorderLayout.WEST,0);
         topMenu.add(customerName,BorderLayout.EAST,1);
@@ -262,10 +200,8 @@ public class AdAuctionGUI extends JFrame{
     }
 
     public static void createInsightsGrid(MetricCalculator calculator){
-
-
         Font fontOfText = new Font("Impact", Font.PLAIN, 25);
-        Font fontofValue = new Font("Impact", Font.BOLD, 30);
+        Font fontOfValue = new Font("Impact", Font.BOLD, 30);
         Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(grey, 1));
 
         insightsGrid = new JPanel(new GridLayout(4,3));
@@ -277,19 +213,18 @@ public class AdAuctionGUI extends JFrame{
         insightsGrid.setVisible(true);
 
         //start panel
-        impressionsPanel = new JPanel(new GridBagLayout());
+        JPanel impressionsPanel = new JPanel(new GridBagLayout());
         impressionsPanel.setBorder(blackBorder);
         impressionsPanel.setOpaque(false);
 
-        impressions = new JLabel("Impressions");
+        JLabel impressions = new JLabel("Impressions");
         impressions.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressions.setForeground(getSecondaryColor());
         impressions.setFont(fontOfText);
 
-
-        impressionsValue = new JLabel(toString(calculator.getImpressionsNo()));
+        JLabel impressionsValue = new JLabel(toString(calculator.getImpressionsNo()));
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        impressionsValue.setFont(fontofValue);
+        impressionsValue.setFont(fontOfValue);
 
         Box insightsVBox = Box.createVerticalBox();
         insightsVBox.add(impressionsValue);
@@ -298,19 +233,18 @@ public class AdAuctionGUI extends JFrame{
         //end panel
 
         //start panel
-        clicksPanel = new JPanel(new GridBagLayout());
+        JPanel clicksPanel = new JPanel(new GridBagLayout());
         clicksPanel.setBorder(blackBorder);
         clicksPanel.setOpaque(false);
 
-        clicks = new JLabel("Clicks");
+        JLabel clicks = new JLabel("Clicks");
         clicks.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         clicks.setForeground(getSecondaryColor());
         clicks.setFont(fontOfText);
 
-
-        clicksValue = new JLabel(toString(calculator.getClicksNo()));
+        JLabel clicksValue = new JLabel(toString(calculator.getClicksNo()));
         clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        clicksValue.setFont(fontofValue);
+        clicksValue.setFont(fontOfValue);
 
         Box clicksVbox = Box.createVerticalBox();
         clicksVbox.add(clicksValue);
@@ -319,19 +253,18 @@ public class AdAuctionGUI extends JFrame{
         //end panel
 
         //start panel
-        uniquesPanel = new JPanel(new GridBagLayout());
+        JPanel uniquesPanel = new JPanel(new GridBagLayout());
         uniquesPanel.setBorder(blackBorder);
         uniquesPanel.setOpaque(false);
 
-        uniques = new JLabel("Clicks");
+        JLabel uniques = new JLabel("Uniques");
         uniques.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniques.setForeground(getSecondaryColor());
         uniques.setFont(fontOfText);
 
-
-        uniquesValue = new JLabel(toString(calculator.getUniquesNo()));
+        JLabel uniquesValue = new JLabel(toString(calculator.getUniquesNo()));
         uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        uniquesValue.setFont(fontofValue);
+        uniquesValue.setFont(fontOfValue);
 
         Box uniquesBox = Box.createVerticalBox();
         uniquesBox.add(uniquesValue);
@@ -339,23 +272,19 @@ public class AdAuctionGUI extends JFrame{
         uniquesPanel.add(uniquesBox);
         //end panel
 
-
-
-
         //start panel
-        ctrPanel = new JPanel(new GridBagLayout());
+        JPanel ctrPanel = new JPanel(new GridBagLayout());
         ctrPanel.setBorder(blackBorder);
         ctrPanel.setOpaque(false);
 
-        ctr = new JLabel("CTR");
+        JLabel ctr = new JLabel("CTR");
         ctr.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         ctr.setForeground(getSecondaryColor());
         ctr.setFont(fontOfText);
 
-
-        ctrValues = new JLabel(toString(calculator.getCtr()));
+        JLabel ctrValues = new JLabel(toString(calculator.getCtr()));
         ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        ctrValues.setFont(fontofValue);
+        ctrValues.setFont(fontOfValue);
 
         Box ctrBox = Box.createVerticalBox();
         ctrBox.add(ctrValues);
@@ -364,19 +293,18 @@ public class AdAuctionGUI extends JFrame{
         //end panel
 
         //start panel
-        cpaPanel = new JPanel(new GridBagLayout());
+        JPanel cpaPanel = new JPanel(new GridBagLayout());
         cpaPanel.setBorder(blackBorder);
         cpaPanel.setOpaque(false);
 
-        cpa = new JLabel("CPA");
+        JLabel cpa = new JLabel("CPA");
         cpa.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpa.setForeground(getSecondaryColor());
         cpa.setFont(fontOfText);
 
-
-        cpaValues = new JLabel(toString(calculator.getCpa()));
+        JLabel cpaValues = new JLabel(toString(calculator.getCpa()));
         cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        cpaValues.setFont(fontofValue);
+        cpaValues.setFont(fontOfValue);
 
         Box cpaBox = Box.createVerticalBox();
         cpaBox.add(cpaValues);
@@ -385,19 +313,18 @@ public class AdAuctionGUI extends JFrame{
         //end panel
 
         //start panel
-        cpcPanel = new JPanel(new GridBagLayout());
+        JPanel cpcPanel = new JPanel(new GridBagLayout());
         cpcPanel.setBorder(blackBorder);
         cpcPanel.setOpaque(false);
 
-        cpc = new JLabel("CPC");
+        JLabel cpc = new JLabel("CPC");
         cpc.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpc.setForeground(getSecondaryColor());
         cpc.setFont(fontOfText);
 
-
-        cpcValues = new JLabel(toString(calculator.getCpc()));
+        JLabel cpcValues = new JLabel(toString(calculator.getCpc()));
         cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        cpcValues.setFont(fontofValue);
+        cpcValues.setFont(fontOfValue);
 
         Box cpcBox = Box.createVerticalBox();
         cpcBox.add(cpcValues);
@@ -405,21 +332,19 @@ public class AdAuctionGUI extends JFrame{
         cpcPanel.add(cpcBox);
         //end panel
 
-
         //start panel
-        cpmPanel = new JPanel(new GridBagLayout());
+        JPanel cpmPanel = new JPanel(new GridBagLayout());
         cpmPanel.setBorder(blackBorder);
         cpmPanel.setOpaque(false);
 
-        cpm = new JLabel("CPM");
+        JLabel cpm = new JLabel("CPM");
         cpm.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpm.setForeground(getSecondaryColor());
         cpm.setFont(fontOfText);
 
-
-        cpmValues = new JLabel(toString(calculator.getCpm()));
+        JLabel cpmValues = new JLabel(toString(calculator.getCpm()));
         cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        cpmValues.setFont(fontofValue);
+        cpmValues.setFont(fontOfValue);
 
         Box cpmBox = Box.createVerticalBox();
         cpmBox.add(cpmValues);
@@ -427,21 +352,19 @@ public class AdAuctionGUI extends JFrame{
         cpmPanel.add(cpmBox);
         //end panel
 
-
         //start panel
-        conversionsPanel = new JPanel(new GridBagLayout());
+        JPanel conversionsPanel = new JPanel(new GridBagLayout());
         conversionsPanel.setBorder(blackBorder);
         conversionsPanel.setOpaque(false);
 
-        conversions = new JLabel("Conversions");
+        JLabel conversions = new JLabel("Conversions");
         conversions.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         conversions.setForeground(getSecondaryColor());
         conversions.setFont(fontOfText);
 
-
-        conversionsValues = new JLabel(toString(calculator.getConversionsNo()));
+        JLabel conversionsValues = new JLabel(toString(calculator.getConversionsNo()));
         conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        conversionsValues.setFont(fontofValue);
+        conversionsValues.setFont(fontOfValue);
 
         Box conversionsBox = Box.createVerticalBox();
         conversionsBox.add(conversionsValues);
@@ -449,21 +372,19 @@ public class AdAuctionGUI extends JFrame{
         conversionsPanel.add(conversionsBox);
         //end panel
 
-
         //start panel
-        totalCostPanel = new JPanel(new GridBagLayout());
+        JPanel totalCostPanel = new JPanel(new GridBagLayout());
         totalCostPanel.setBorder(blackBorder);
         totalCostPanel.setOpaque(false);
 
-        totalCost = new JLabel("Total Cost");
+        JLabel totalCost = new JLabel("Total Cost");
         totalCost.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalCost.setForeground(getSecondaryColor());
         totalCost.setFont(fontOfText);
 
-
-        totalCostValues = new JLabel(toString(calculator.getTotalImpressionCost()));
+        JLabel totalCostValues = new JLabel(toString(calculator.getTotalImpressionCost()));
         totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        totalCostValues.setFont(fontofValue);
+        totalCostValues.setFont(fontOfValue);
 
         Box totalCostBox = Box.createVerticalBox();
         totalCostBox.add(totalCostValues);
@@ -471,21 +392,19 @@ public class AdAuctionGUI extends JFrame{
         totalCostPanel.add(totalCostBox);
         //end panel
 
-
         //start panel
-        bouncePanel = new JPanel(new GridBagLayout());
+        JPanel bouncePanel = new JPanel(new GridBagLayout());
         bouncePanel.setBorder(blackBorder);
         bouncePanel.setOpaque(false);
 
-        bounce = new JLabel("Bounces");
+        JLabel bounce = new JLabel("Bounces");
         bounce.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounce.setForeground(getSecondaryColor());
         bounce.setFont(fontOfText);
 
-
-        bounceValues = new JLabel(toString(calculator.getBouncesNo()));
+        JLabel bounceValues = new JLabel(toString(calculator.getBouncesNo()));
         bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceValues.setFont(fontofValue);
+        bounceValues.setFont(fontOfValue);
 
         Box bounceBox = Box.createVerticalBox();
         bounceBox.add(bounceValues);
@@ -493,21 +412,19 @@ public class AdAuctionGUI extends JFrame{
         bouncePanel.add(bounceBox);
         //end panel
 
-
         //start panel
-        bounceRatePanel = new JPanel(new GridBagLayout());
+        JPanel bounceRatePanel = new JPanel(new GridBagLayout());
         bounceRatePanel.setBorder(blackBorder);
         bounceRatePanel.setOpaque(false);
 
-        bounceRate = new JLabel("Bounce Rate");
+        JLabel bounceRate = new JLabel("Bounce Rate");
         bounceRate.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceRate.setForeground(getSecondaryColor());
         bounceRate.setFont(fontOfText);
 
-
-        bounceRateValues = new JLabel(toString(calculator.getBr()));
+        JLabel bounceRateValues = new JLabel(toString(calculator.getBr()));
         bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceRateValues.setFont(fontofValue);
+        bounceRateValues.setFont(fontOfValue);
 
         Box bounceRateBox = Box.createVerticalBox();
         bounceRateBox.add(bounceRateValues);
@@ -516,16 +433,15 @@ public class AdAuctionGUI extends JFrame{
         //end panel
 
         //start panel
-        bounceTimePanel = new JPanel(new GridBagLayout());
+        JPanel bounceTimePanel = new JPanel(new GridBagLayout());
         bounceTimePanel.setBorder(blackBorder);
         bounceTimePanel.setOpaque(false);
 
-        bounceTime = new JLabel("Time");
+        JLabel bounceTime = new JLabel("Time");
         bounceTime.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceTime.setFont(fontofValue);
+        bounceTime.setFont(fontOfValue);
 
-
-        bounceTimeValues = new JLabel("Bounce Type");
+        JLabel bounceTimeValues = new JLabel("Bounce Type");
         bounceTimeValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceTimeValues.setForeground(getSecondaryColor());
         bounceTimeValues.setFont(fontOfText);
@@ -536,7 +452,6 @@ public class AdAuctionGUI extends JFrame{
 
         bounceTimePanel.add(bounceTimeBox);
         //end panel
-
 
         insightsGrid.add(impressionsPanel);
         insightsGrid.add(clicksPanel);
@@ -559,19 +474,16 @@ public class AdAuctionGUI extends JFrame{
         Font comboBoxFont = new Font(chartsButton.getFont().getName(), Font.PLAIN, 14);
 
         //start Box
-        metricsChoices = new String[] {"Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
-        metricsBox = new JComboBox<>(metricsChoices);
+        String[] metricsChoices = new String[]{"Impressions", "CPA", "CPC", "CPM", "CTR", "Uniques", "Bounce", "Bounce Rate", "Clicks", "Conversions", "Total Cost"};
+        JComboBox<String> metricsBox = new JComboBox<>(metricsChoices);
         metricsBox.setVisible(true);
         metricsBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         metricsBox.setFont(comboBoxFont);
 
-        metricsBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String itemName = (String)cb.getSelectedItem();
-                arrayOfChoicesChart.set(0, itemName);
-            }
+        metricsBox.addActionListener(e -> {
+            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
+            String itemName = (String) cb.getSelectedItem();
+            arrayOfChoicesChart.set(0, itemName);
         });
 
         JLabel metricsLabel = new JLabel("METRICS");
@@ -581,25 +493,19 @@ public class AdAuctionGUI extends JFrame{
         Box metricsVerticalBox = Box.createVerticalBox();
         metricsVerticalBox.add(metricsLabel);
         metricsVerticalBox.add(metricsBox);
-
         //end box
 
         //start Box
-        genderChoices = new String[] {"Any","Male","Female"};
-        genderBox = new JComboBox<>(genderChoices);
+        String[] genderChoices = new String[]{"Any", "Male", "Female"};
+        JComboBox<String> genderBox = new JComboBox<>(genderChoices);
         genderBox.setVisible(true);
         genderBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         genderBox.setFont(comboBoxFont);
 
-        genderBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String itemName = (String)cb.getSelectedItem();
-
-                arrayOfChoicesChart.set(1, itemName);
-
-            }
+        genderBox.addActionListener(e -> {
+            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
+            String itemName = (String) cb.getSelectedItem();
+            arrayOfChoicesChart.set(1, itemName);
         });
 
         JLabel genderLabel = new JLabel("GENDER");
@@ -612,21 +518,16 @@ public class AdAuctionGUI extends JFrame{
         //end box
 
         //start Box
-        ageChoices = new String[] {"Any","<25","25-34","35-44","45-54",">54"};
-        ageBox = new JComboBox<>(ageChoices);
+        String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
+        JComboBox<String> ageBox = new JComboBox<>(ageChoices);
         ageBox.setVisible(true);
         ageBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         ageBox.setFont(comboBoxFont);
 
-        ageBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String itemName = (String)cb.getSelectedItem();
-
-                arrayOfChoicesChart.set(2, itemName);
-
-            }
+        ageBox.addActionListener(e -> {
+            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
+            String itemName = (String) cb.getSelectedItem();
+            arrayOfChoicesChart.set(2, itemName);
         });
 
         JLabel ageLabel = new JLabel("AGE");
@@ -636,25 +537,19 @@ public class AdAuctionGUI extends JFrame{
         Box ageVerticalBox = Box.createVerticalBox();
         ageVerticalBox.add(ageLabel);
         ageVerticalBox.add(ageBox);
-
         //end box
 
         //start Box
-        contextChoices = new String[] {"Any","Blog","Social Media","Shopping","News"};
-        contextBox = new JComboBox<>(contextChoices);
+        String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
+        JComboBox<String> contextBox = new JComboBox<>(contextChoices);
         contextBox.setVisible(true);
         contextBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         contextBox.setFont(comboBoxFont);
 
-        contextBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String itemName = (String)cb.getSelectedItem();
-
-                arrayOfChoicesChart.set(3, itemName);
-
-            }
+        contextBox.addActionListener(e -> {
+            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
+            String itemName = (String) cb.getSelectedItem();
+            arrayOfChoicesChart.set(3, itemName);
         });
 
         JLabel contextLabel = new JLabel("CONTEXT");
@@ -664,26 +559,19 @@ public class AdAuctionGUI extends JFrame{
         Box contextVerticalBox = Box.createVerticalBox();
         contextVerticalBox.add(contextLabel);
         contextVerticalBox.add(contextBox);
-
-
         //end box
 
         //start Box
-        incomeChoices = new String[] {"Any","Low","Medium","High"};
-        incomeBox = new JComboBox<>(incomeChoices);
+        String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
+        JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
         incomeBox.setVisible(true);
         incomeBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         incomeBox.setFont(comboBoxFont);
 
-        incomeBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String itemName = (String)cb.getSelectedItem();
-
-                arrayOfChoicesChart.set(4, itemName);
-
-            }
+        incomeBox.addActionListener(e -> {
+            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
+            String itemName = (String) cb.getSelectedItem();
+            arrayOfChoicesChart.set(4, itemName);
         });
 
         JLabel incomeLabel = new JLabel("INCOME");
@@ -693,26 +581,19 @@ public class AdAuctionGUI extends JFrame{
         Box incomeVerticalBox = Box.createVerticalBox();
         incomeVerticalBox.add(incomeLabel);
         incomeVerticalBox.add(incomeBox);
-
-
         //end box
 
         //start Box
-        timeChoices = new String[] {"Days","Weeks","Months"};
-        timeBox = new JComboBox<>(timeChoices);
+        String[] timeChoices = new String[]{"Days", "Weeks", "Months"};
+        JComboBox<String> timeBox = new JComboBox<>(timeChoices);
         timeBox.setVisible(true);
         timeBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         timeBox.setFont(comboBoxFont);
 
-        timeBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String itemName = (String)cb.getSelectedItem();
-
-                arrayOfChoicesChart.set(5, itemName);
-
-            }
+        timeBox.addActionListener(e -> {
+            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
+            String itemName = (String) cb.getSelectedItem();
+            arrayOfChoicesChart.set(5, itemName);
         });
 
         JLabel timeLabel = new JLabel("TIME");
@@ -724,8 +605,7 @@ public class AdAuctionGUI extends JFrame{
         timeVerticalBox.add(timeBox);
         //end box
 
-
-        createChartButton = new JButton("Create Chart");
+        JButton createChartButton = new JButton("Create Chart");
         createChartButton.setFont(getMainFont());
         createChartButton.setBackground(blue);
         createChartButton.setForeground(Color.WHITE);
@@ -734,20 +614,19 @@ public class AdAuctionGUI extends JFrame{
         createChartButton.setPreferredSize(new Dimension(200,40));
         createChartButton.setAlignmentY(CENTER_ALIGNMENT);
 
-        createChartButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(! (arrayOfChoicesChart.get(0).equals("Metrics"))){
-                    for (String i: arrayOfChoicesChart
-                    ) {
-                        System.out.println(i);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Metrics choice can't be empty");
-                    System.out.println(arrayOfChoicesChart.get(0));
+        createChartButton.addActionListener(e -> {
+            if(! (arrayOfChoicesChart.get(0).equals("Metrics"))){
+                JOptionPane.showMessageDialog(null, "No Filter ability has been implemented yet");
+                for (String i: arrayOfChoicesChart
+                ) {
+                    System.out.println(i);
                 }
-                System.out.println("---------------------------");
+            } else {
+                //JOptionPane.showMessageDialog(null, "Metrics choice can't be empty");
+                JOptionPane.showMessageDialog(null, "No Filter ability has been implemented yet");
+                System.out.println(arrayOfChoicesChart.get(0));
             }
+            System.out.println("---------------------------");
         });
 
         Box chartNorthBox = Box.createHorizontalBox();
@@ -761,11 +640,6 @@ public class AdAuctionGUI extends JFrame{
         chartNorthBox.add(timeVerticalBox);
         chartNorthBox.add(createChartButton);
 
-
-
-
-
-
         chartsGrid.add(chartNorthBox,BorderLayout.NORTH);
     }
 
@@ -777,8 +651,10 @@ public class AdAuctionGUI extends JFrame{
         chartSlider.setPaintTicks(true);
         chartSlider.setPaintLabels(true);
         chartSlider.setValue(13);
+        chartSlider.setValue(13);
+        chartSlider.setValue(13);
 
-        Hashtable position = new Hashtable();
+        Hashtable<Integer, JLabel> position = new Hashtable<>();
         position.put(0, new JLabel("0"));
         position.put(10, new JLabel("10"));
         position.put(20, new JLabel("20"));
@@ -788,20 +664,17 @@ public class AdAuctionGUI extends JFrame{
 
         chartSlider.setLabelTable(position);
 
-        chartSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int sliderValue = chartSlider.getValue();
-                arrayOfChoicesChart.set(6, String.valueOf(sliderValue));
-            }
+        chartSlider.addChangeListener(e -> {
+            int sliderValue = chartSlider.getValue();
+            arrayOfChoicesChart.set(6, String.valueOf(sliderValue));
         });
 
 
-        addToComparePanel = new JPanel(new GridBagLayout());
+        JPanel addToComparePanel = new JPanel(new GridBagLayout());
         addToComparePanel.setOpaque(false);
         addToComparePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-        addToCompareButton = new JButton("Add to Compare");
+        JButton addToCompareButton = new JButton("Add to Compare");
         addToCompareButton.setFont(getMainFont());
         addToCompareButton.setBackground(blue);
         addToCompareButton.setForeground(Color.WHITE);
@@ -811,7 +684,7 @@ public class AdAuctionGUI extends JFrame{
         addToComparePanel.add(addToCompareButton);
 
 
-        chartSouthGrid = new JPanel(new GridLayout(1,2));
+        JPanel chartSouthGrid = new JPanel(new GridLayout(1, 2));
         chartSouthGrid.setPreferredSize(new Dimension(chartsGrid.getWidth(),200));
         chartSouthGrid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
@@ -822,7 +695,6 @@ public class AdAuctionGUI extends JFrame{
     }
 
     public static void createChartsGrid(JFreeChart chart){
-
         arrayOfChoicesChart.add("Metrics");
         arrayOfChoicesChart.add("Any");
         arrayOfChoicesChart.add("Any");
@@ -830,9 +702,6 @@ public class AdAuctionGUI extends JFrame{
         arrayOfChoicesChart.add("Any");
         arrayOfChoicesChart.add("Days");
         arrayOfChoicesChart.add("25");
-
-
-
 
         chartsGrid = new JPanel(new BorderLayout());
         chartsGrid.setBounds(200,100,gui.getWidth()-210,gui.getHeight()-100);
@@ -853,23 +722,6 @@ public class AdAuctionGUI extends JFrame{
         chartsGrid.add(panel,BorderLayout.CENTER);
 
         menu.add(chartsGrid);
-    }
-
-    public static ArrayList<String> getArrayOfChoicesChart() {
-        if(! (arrayOfChoicesChart.get(0).equals("Metrics"))) {
-            return arrayOfChoicesChart;
-        } else {
-            return null;
-        }
-    }
-
-    public static ArrayList<String> getArrayOfChoicesHistogram(){
-        if(! (arrayOfChoicesHistogram.get(0).equals("Metrics"))) {
-            return arrayOfChoicesHistogram;
-        } else {
-            return null;
-        }
-
     }
 
     // converts a metric to a readable string
@@ -893,37 +745,21 @@ public class AdAuctionGUI extends JFrame{
         ChartCalculator calculator2 = campaign.newChartCalculator();
         calculator2.calculateCharts("days", calculator2.getImpressionLog().getFirstDate(), calculator2.getImpressionLog().getLastDate());
 
-        Chart chart = new Chart( "Metrics vs Time" , "Metrics vs Time","impressions", calculator2);
+        Chart chart = new Chart( "Metrics vs Time" , "Impressions vs Time","impressions", calculator2);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                prepareGui(calculator1,chart);
-            }
-        });
+        SwingUtilities.invokeLater(() -> prepareGui(calculator1,chart));
 
-
-        /**
-         * notes:
-         * interval, start and end dates are partially hardcoded - not much to really to really do till GUI
-         * print functions are there to see what is going on easily
-         * all the backend is in Models, all the GUI stuff is in View - MVC
-         * file reading is only done once - unavoidably slow
-         * master branch is using Date, this branch is using LocalDateTime - very important change
-         * jfreechart needs to be installed to run - downloads in whatsapp
-         *
+        /*
          * to do:
-         * find any possible performance improvements in the backend
-         * create class diagrams for 1st deliverable
-         * improve & update commenting
-         * merge any GUI stuff
-         * find out from Yvonne how large the actual data set is - response pending
-         * change how the interval is handled - make subclasses of chart calculator for intervals
+         * CONTROLLER
+         * update commenting for GUI
+         * improve file reading with anomalous data
+         * 2nd deliverable sprint plan
          *
          * for later:
          * filtering was removed due to my bad implementation - leave till 2nd deliverable
          * bounce factors are hardcoded - leave till 2nd & 3rd deliverables
          * will later add a class HistogramCalculator - leave till 2nd & 3rd deliverables
-         **/
+         */
     }
 }
