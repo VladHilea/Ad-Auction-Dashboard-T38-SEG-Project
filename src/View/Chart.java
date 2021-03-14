@@ -11,24 +11,27 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-
 public class Chart extends ApplicationFrame{
-        
-        JFreeChart Chart;
+	private final JFreeChart daysChart;
+	private final JFreeChart weeksChart;
+	private final JFreeChart monthsChart;
+	public Chart( String applicationTitle , String chartTitle, String metric, ChartCalculator daysCalculator, ChartCalculator weeksCalculator, ChartCalculator monthsCalculator) {
+		super(applicationTitle);
 
-	public Chart( String applicationTitle , String chartTitle, String metric, ChartCalculator calculator ) {
-	      super(applicationTitle);
-	      Chart = ChartFactory.createLineChart(
+		daysChart = ChartFactory.createLineChart(
 	         chartTitle,
-	         "Time (Day) ","Number of "+metric,
-	         createDataset(metric,calculator),
+	         "Time (Day) ","Number of " + metric,
+	         createDataset(metric, daysCalculator),
 	         PlotOrientation.VERTICAL,
 	         true,true,false);
-	         
-	      ChartPanel chartPanel = new ChartPanel( Chart );
-	      chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-	      setContentPane( chartPanel );
-	   }
+
+		weeksChart = null;
+		monthsChart = null;
+
+		ChartPanel chartPanel = new ChartPanel( daysChart );
+		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+		setContentPane( chartPanel );
+	}
 	
 	
 	// creates and adds to the dataset using values from the chartCalculator lists 
@@ -140,8 +143,15 @@ public class Chart extends ApplicationFrame{
 	      return dataset;
 	   }
 
-        public JFreeChart getChart(){
-          return Chart;
-        }	
+	public JFreeChart getDaysChart() {
+		return daysChart;
+	}
 
+	public JFreeChart getWeeksChart() {
+		return weeksChart;
+	}
+
+	public JFreeChart getMonthsChart() {
+		return monthsChart;
+	}
 }

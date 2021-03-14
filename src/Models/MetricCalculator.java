@@ -28,6 +28,8 @@ public class MetricCalculator extends Calculator {
 
         this.pageLimit = 1;
         this.bounceTime = 500;
+
+        calculateMetrics();
     }
 
     // calculates metrics

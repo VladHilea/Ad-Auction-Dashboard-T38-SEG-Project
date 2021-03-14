@@ -1,5 +1,7 @@
 package Models;
 
+import View.Chart;
+
 public class Campaign {
     private final ImpressionLog impressionLog;
     private final ClickLog clicksLog;
@@ -13,11 +15,15 @@ public class Campaign {
     }
 
     // modular functions for later
-    public MetricCalculator newMetricCalculator() {
+    public MetricCalculator newMetrics() {
         return new MetricCalculator(impressionLog, clicksLog, serversLog);
     }
 
-    public ChartCalculator newChartCalculator() {
-        return new ChartCalculator(impressionLog, clicksLog, serversLog);
+    public Chart newChart() {
+        ChartCalculator daysCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Days");
+        ChartCalculator weeksCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Weeks");
+        ChartCalculator monthsCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Months");
+
+        return new Chart("Metrics vs Time" , "Impressions vs Time","impressions", daysCalculator, weeksCalculator, monthsCalculator);
     }
 }

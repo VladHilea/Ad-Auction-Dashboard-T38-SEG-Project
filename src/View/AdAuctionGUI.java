@@ -1,7 +1,5 @@
 package View;
 
-import Models.Campaign;
-import Models.ChartCalculator;
 import Models.MetricCalculator;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -22,6 +20,9 @@ public class AdAuctionGUI extends JFrame{
 
     public static ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
+    private static MetricCalculator metricCalculator;
+    private static Chart chart;
+
     static Color orange= new Color(220,120,27);
     static Color blue= new Color(14,139,229);
     static Color grey = new Color(242,236,236);
@@ -34,18 +35,17 @@ public class AdAuctionGUI extends JFrame{
     public static Color getSecondaryColor(){
         return orange;
     }
-
     public static Font getMainFont(){
         return mainFont;
     }
 
-    public static void prepareGui(MetricCalculator calculator,Chart chart) {
+    public static void prepareGui() {
         gui = new JFrame("Ad Auction Monitor");
         gui.setVisible(true);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        createMenu(calculator, chart);
+        createMenu(metricCalculator, chart);
         gui.add(menu);
     }
 
@@ -58,8 +58,7 @@ public class AdAuctionGUI extends JFrame{
         createTopMenu();
         createVerticalMenu();
         createInsightsGrid(calculator);
-        createChartsGrid(chart.getChart());
-
+        createChartsGrid(chart.getDaysChart());
     }
 
     public static void createVerticalMenu(){
@@ -594,6 +593,7 @@ public class AdAuctionGUI extends JFrame{
             JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
             String itemName = (String) cb.getSelectedItem();
             arrayOfChoicesChart.set(5, itemName);
+            //createChartsGrid(chart.getWeeksChart());
         });
 
         JLabel timeLabel = new JLabel("TIME");
@@ -733,33 +733,11 @@ public class AdAuctionGUI extends JFrame{
             return String.format("%.4g%n", metric); // change the 4 to change the dp
     }
 
-    public static void main(String[] args) {
-        // reads the files and stores the logs - only create one campaign otherwise it will be slow
-        Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv"); // string inputs temporary
+    public void setMetricCalculator(MetricCalculator metricCalculator) {
+        AdAuctionGUI.metricCalculator = metricCalculator;
+    }
 
-        // used to display metrics as values
-        MetricCalculator calculator1 = campaign.newMetricCalculator();
-        calculator1.calculateMetrics();
-
-        // used to display chart
-        ChartCalculator calculator2 = campaign.newChartCalculator();
-        calculator2.calculateCharts("days", calculator2.getImpressionLog().getFirstDate(), calculator2.getImpressionLog().getLastDate());
-
-        Chart chart = new Chart( "Metrics vs Time" , "Impressions vs Time","impressions", calculator2);
-
-        SwingUtilities.invokeLater(() -> prepareGui(calculator1,chart));
-
-        /*
-         * to do:
-         * CONTROLLER
-         * update commenting for GUI
-         * improve file reading with anomalous data
-         * 2nd deliverable sprint plan
-         *
-         * for later:
-         * filtering was removed due to my bad implementation - leave till 2nd deliverable
-         * bounce factors are hardcoded - leave till 2nd & 3rd deliverables
-         * will later add a class HistogramCalculator - leave till 2nd & 3rd deliverables
-         */
+    public void setChart(Chart chart) {
+        AdAuctionGUI.chart = chart;
     }
 }

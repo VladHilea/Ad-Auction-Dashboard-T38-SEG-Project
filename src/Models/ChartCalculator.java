@@ -20,8 +20,10 @@ public class ChartCalculator extends Calculator {
     private final ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private final ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
-    public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog) {
+    public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog, String intervalLength) {
         super(impressionLog, clickLog, serverLog);
+
+        calculateCharts(intervalLength, getImpressionLog().getFirstDate(), getImpressionLog().getLastDate());
     }
 
     // produces a list of metric calculators that stores all the logs split into a set interval
@@ -32,28 +34,28 @@ public class ChartCalculator extends Calculator {
 
         // calculates time difference and gets dates at every interval
         switch (interval) {
-            case "hours": {
+            case "Hours": {
                 for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusHours(i));
                 }
                 System.out.println(interval);
             }
-            case "days": {
+            case "Days": {
                 for (long i = 1; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusDays(i));
                 }
             }
-            case "weeks": {
+            case "Weeks": {
                 for (long i = 1; i <= ChronoUnit.WEEKS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusWeeks(i));
                 }
             }
-            case "months": {
+            case "Months": {
                 for (long i = 1; i <= ChronoUnit.MONTHS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusMonths(i));
                 }
             }
-            case "years": {
+            case "Years": {
                 for (long i = 1; i <= ChronoUnit.YEARS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusYears(i));
                 }
