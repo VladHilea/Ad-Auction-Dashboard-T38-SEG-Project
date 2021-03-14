@@ -24,6 +24,6 @@ public class Campaign {
         ChartCalculator weeksCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Weeks");
         ChartCalculator monthsCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Months");
 
-        return new Chart("Metrics vs Time" , "Impressions vs Time","impressions", daysCalculator, weeksCalculator, monthsCalculator);
+        return new Chart("Metrics vs Time", daysCalculator, weeksCalculator, monthsCalculator);
     }
 }

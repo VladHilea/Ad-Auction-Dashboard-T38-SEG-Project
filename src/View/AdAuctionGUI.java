@@ -11,35 +11,25 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class AdAuctionGUI extends JFrame{
-    private static JFrame gui;
-    private static JLayeredPane menu;
-    private static JPanel insightsGrid;
-    private static JPanel chartsGrid;
-    private static JButton chartsButton;
-    private static JSlider chartSlider;
+    private JFrame gui;
+    private JLayeredPane menu;
+    private JPanel insightsGrid;
+    private JPanel chartsGrid;
+    private JButton chartsButton;
+    private JSlider chartSlider;
 
-    public static ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
+    private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
-    private static MetricCalculator metricCalculator;
-    private static Chart chart;
+    private MetricCalculator metricCalculator;
+    private Chart chart;
 
-    static Color orange= new Color(220,120,27);
-    static Color blue= new Color(14,139,229);
-    static Color grey = new Color(242,236,236);
+    private final Color primaryColor = new Color(14,139,229);
+    private final Color secondaryColor = new Color(220,120,27);
+    private final Color tertiaryColor = new Color(242,236,236);
 
-    static Font mainFont = new Font("Impact", Font.PLAIN, 15);
+    private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
 
-    public static Color getPrimaryColor(){
-        return blue;
-    }
-    public static Color getSecondaryColor(){
-        return orange;
-    }
-    public static Font getMainFont(){
-        return mainFont;
-    }
-
-    public static void prepareGui() {
+    public void prepareGui() {
         gui = new JFrame("Ad Auction Monitor");
         gui.setVisible(true);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -49,7 +39,7 @@ public class AdAuctionGUI extends JFrame{
         gui.add(menu);
     }
 
-    public static void createMenu(MetricCalculator calculator, Chart chart){
+    public void createMenu(MetricCalculator calculator, Chart chart){
         menu = new JLayeredPane();
         menu.setSize(gui.getWidth(),gui.getHeight());
         menu.setOpaque(true);
@@ -58,15 +48,15 @@ public class AdAuctionGUI extends JFrame{
         createTopMenu();
         createVerticalMenu();
         createInsightsGrid(calculator);
-        createChartsGrid(chart.getDaysChart());
+        createChartsGrid(chart.getDaysChart("impressions vs time", "impressions"));
     }
 
-    public static void createVerticalMenu(){
+    public void createVerticalMenu(){
         JPanel verticalMenu = new JPanel(new GridLayout(5, 1));
         verticalMenu.setBounds(0,100,200,gui.getHeight()-100);
         verticalMenu.setAlignmentY(100);
         verticalMenu.setOpaque(true);
-        verticalMenu.setBackground(grey);
+        verticalMenu.setBackground(tertiaryColor);
 
         //start panel
         JPanel insightsButtonPanel = new JPanel(new BorderLayout());
@@ -74,7 +64,7 @@ public class AdAuctionGUI extends JFrame{
         insightsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
 
         JButton insightsButton = new JButton("Insights");
-        insightsButton.setFont(getMainFont());
+        insightsButton.setFont(mainFont);
         insightsButton.setBorderPainted(false);
         insightsButton.setContentAreaFilled(false);
         insightsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -90,7 +80,7 @@ public class AdAuctionGUI extends JFrame{
         chartsButton = new JButton("Charts");
         chartsButton.setBorderPainted(false);
         chartsButton.setContentAreaFilled(false);
-        chartsButton.setFont(getMainFont());
+        chartsButton.setFont(mainFont);
         chartsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         chartsButtonPanel.add(chartsButton);
@@ -104,7 +94,7 @@ public class AdAuctionGUI extends JFrame{
         JButton histogramsButton = new JButton("Histograms");
         histogramsButton.setBorderPainted(false);
         histogramsButton.setContentAreaFilled(false);
-        histogramsButton.setFont(getMainFont());
+        histogramsButton.setFont(mainFont);
         histogramsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         histogramsButtonPanel.add(histogramsButton);
@@ -118,7 +108,7 @@ public class AdAuctionGUI extends JFrame{
         JButton compareButton = new JButton("Compare");
         compareButton.setBorderPainted(false);
         compareButton.setContentAreaFilled(false);
-        compareButton.setFont(getMainFont());
+        compareButton.setFont(mainFont);
         compareButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         compareButtonPanel.add(compareButton);
@@ -132,7 +122,7 @@ public class AdAuctionGUI extends JFrame{
         JButton settingsButton = new JButton("Settings");
         settingsButton.setBorderPainted(false);
         settingsButton.setContentAreaFilled(false);
-        settingsButton.setFont(getMainFont());
+        settingsButton.setFont(mainFont);
         settingsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         settingsButtonPanel.add(settingsButton);
@@ -173,19 +163,19 @@ public class AdAuctionGUI extends JFrame{
         });
     }
 
-    public static void createTopMenu(){
+    public void createTopMenu(){
         JLayeredPane topMenu = new JLayeredPane();
         topMenu.setSize(gui.getWidth(),100);
         topMenu.setOpaque(true);
         topMenu.setBackground(new Color(14,139,229));
 
         JLabel productName = new JLabel("Ad Monitor");
-        productName.setBackground(getPrimaryColor());
+        productName.setBackground(primaryColor);
         productName.setSize(100,100);
         productName.setAlignmentX(20);
         productName.setBounds(20,0,100,100);
         productName.setForeground(Color.WHITE);
-        productName.setFont(getMainFont());
+        productName.setFont(mainFont);
 
         JLabel customerName = new JLabel("Customer Name");
         productName.setSize(100,100);
@@ -198,10 +188,10 @@ public class AdAuctionGUI extends JFrame{
 
     }
 
-    public static void createInsightsGrid(MetricCalculator calculator){
+    public void createInsightsGrid(MetricCalculator calculator){
         Font fontOfText = new Font("Impact", Font.PLAIN, 25);
         Font fontOfValue = new Font("Impact", Font.BOLD, 30);
-        Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(grey, 1));
+        Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(tertiaryColor, 1));
 
         insightsGrid = new JPanel(new GridLayout(4,3));
         insightsGrid.setBounds(200,100,gui.getWidth()-200,gui.getHeight()-100);
@@ -218,7 +208,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel impressions = new JLabel("Impressions");
         impressions.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        impressions.setForeground(getSecondaryColor());
+        impressions.setForeground(secondaryColor);
         impressions.setFont(fontOfText);
 
         JLabel impressionsValue = new JLabel(toString(calculator.getImpressionsNo()));
@@ -238,7 +228,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel clicks = new JLabel("Clicks");
         clicks.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        clicks.setForeground(getSecondaryColor());
+        clicks.setForeground(secondaryColor);
         clicks.setFont(fontOfText);
 
         JLabel clicksValue = new JLabel(toString(calculator.getClicksNo()));
@@ -258,7 +248,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel uniques = new JLabel("Uniques");
         uniques.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        uniques.setForeground(getSecondaryColor());
+        uniques.setForeground(secondaryColor);
         uniques.setFont(fontOfText);
 
         JLabel uniquesValue = new JLabel(toString(calculator.getUniquesNo()));
@@ -278,7 +268,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel ctr = new JLabel("CTR");
         ctr.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        ctr.setForeground(getSecondaryColor());
+        ctr.setForeground(secondaryColor);
         ctr.setFont(fontOfText);
 
         JLabel ctrValues = new JLabel(toString(calculator.getCtr()));
@@ -298,7 +288,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel cpa = new JLabel("CPA");
         cpa.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        cpa.setForeground(getSecondaryColor());
+        cpa.setForeground(secondaryColor);
         cpa.setFont(fontOfText);
 
         JLabel cpaValues = new JLabel(toString(calculator.getCpa()));
@@ -318,7 +308,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel cpc = new JLabel("CPC");
         cpc.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        cpc.setForeground(getSecondaryColor());
+        cpc.setForeground(secondaryColor);
         cpc.setFont(fontOfText);
 
         JLabel cpcValues = new JLabel(toString(calculator.getCpc()));
@@ -338,7 +328,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel cpm = new JLabel("CPM");
         cpm.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        cpm.setForeground(getSecondaryColor());
+        cpm.setForeground(secondaryColor);
         cpm.setFont(fontOfText);
 
         JLabel cpmValues = new JLabel(toString(calculator.getCpm()));
@@ -358,7 +348,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel conversions = new JLabel("Conversions");
         conversions.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        conversions.setForeground(getSecondaryColor());
+        conversions.setForeground(secondaryColor);
         conversions.setFont(fontOfText);
 
         JLabel conversionsValues = new JLabel(toString(calculator.getConversionsNo()));
@@ -378,7 +368,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel totalCost = new JLabel("Total Cost");
         totalCost.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        totalCost.setForeground(getSecondaryColor());
+        totalCost.setForeground(secondaryColor);
         totalCost.setFont(fontOfText);
 
         JLabel totalCostValues = new JLabel(toString(calculator.getTotalImpressionCost()));
@@ -398,7 +388,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel bounce = new JLabel("Bounces");
         bounce.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounce.setForeground(getSecondaryColor());
+        bounce.setForeground(secondaryColor);
         bounce.setFont(fontOfText);
 
         JLabel bounceValues = new JLabel(toString(calculator.getBouncesNo()));
@@ -418,7 +408,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel bounceRate = new JLabel("Bounce Rate");
         bounceRate.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceRate.setForeground(getSecondaryColor());
+        bounceRate.setForeground(secondaryColor);
         bounceRate.setFont(fontOfText);
 
         JLabel bounceRateValues = new JLabel(toString(calculator.getBr()));
@@ -442,7 +432,7 @@ public class AdAuctionGUI extends JFrame{
 
         JLabel bounceTimeValues = new JLabel("Bounce Type");
         bounceTimeValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceTimeValues.setForeground(getSecondaryColor());
+        bounceTimeValues.setForeground(secondaryColor);
         bounceTimeValues.setFont(fontOfText);
 
         Box bounceTimeBox = Box.createVerticalBox();
@@ -468,8 +458,7 @@ public class AdAuctionGUI extends JFrame{
         menu.add(insightsGrid);
     }
 
-
-    public static void createChartNorthBox(){
+    public void createChartNorthBox(){
         Font comboBoxFont = new Font(chartsButton.getFont().getName(), Font.PLAIN, 14);
 
         //start Box
@@ -606,8 +595,8 @@ public class AdAuctionGUI extends JFrame{
         //end box
 
         JButton createChartButton = new JButton("Create Chart");
-        createChartButton.setFont(getMainFont());
-        createChartButton.setBackground(blue);
+        createChartButton.setFont(mainFont);
+        createChartButton.setBackground(primaryColor);
         createChartButton.setForeground(Color.WHITE);
         createChartButton.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         createChartButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -643,7 +632,7 @@ public class AdAuctionGUI extends JFrame{
         chartsGrid.add(chartNorthBox,BorderLayout.NORTH);
     }
 
-    public static void createChartSouthGrid(){
+    public void createChartSouthGrid(){
         chartSlider = new JSlider(JSlider.HORIZONTAL,0,50,25);
         chartSlider.setVisible(true);
         chartSlider.setMajorTickSpacing(10);
@@ -669,20 +658,18 @@ public class AdAuctionGUI extends JFrame{
             arrayOfChoicesChart.set(6, String.valueOf(sliderValue));
         });
 
-
         JPanel addToComparePanel = new JPanel(new GridBagLayout());
         addToComparePanel.setOpaque(false);
         addToComparePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
         JButton addToCompareButton = new JButton("Add to Compare");
-        addToCompareButton.setFont(getMainFont());
-        addToCompareButton.setBackground(blue);
+        addToCompareButton.setFont(mainFont);
+        addToCompareButton.setBackground(primaryColor);
         addToCompareButton.setForeground(Color.WHITE);
         addToCompareButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addToCompareButton.setPreferredSize(new Dimension(400,40));
 
         addToComparePanel.add(addToCompareButton);
-
 
         JPanel chartSouthGrid = new JPanel(new GridLayout(1, 2));
         chartSouthGrid.setPreferredSize(new Dimension(chartsGrid.getWidth(),200));
@@ -694,7 +681,7 @@ public class AdAuctionGUI extends JFrame{
         chartsGrid.add(chartSouthGrid,BorderLayout.SOUTH);
     }
 
-    public static void createChartsGrid(JFreeChart chart){
+    public void createChartsGrid(JFreeChart chart){
         arrayOfChoicesChart.add("Metrics");
         arrayOfChoicesChart.add("Any");
         arrayOfChoicesChart.add("Any");
@@ -725,7 +712,7 @@ public class AdAuctionGUI extends JFrame{
     }
 
     // converts a metric to a readable string
-    public static String toString(float metric)
+    public String toString(float metric)
     {
         if (metric == (int) metric)
             return String.format("%d", (int) metric);
@@ -734,10 +721,10 @@ public class AdAuctionGUI extends JFrame{
     }
 
     public void setMetricCalculator(MetricCalculator metricCalculator) {
-        AdAuctionGUI.metricCalculator = metricCalculator;
+        this.metricCalculator = metricCalculator;
     }
 
     public void setChart(Chart chart) {
-        AdAuctionGUI.chart = chart;
+        this.chart = chart;
     }
 }

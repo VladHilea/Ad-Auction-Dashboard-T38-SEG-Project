@@ -12,28 +12,60 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Chart extends ApplicationFrame{
-	private final JFreeChart daysChart;
-	private final JFreeChart weeksChart;
-	private final JFreeChart monthsChart;
-	public Chart( String applicationTitle , String chartTitle, String metric, ChartCalculator daysCalculator, ChartCalculator weeksCalculator, ChartCalculator monthsCalculator) {
+	private final ChartCalculator daysCalculator;
+	private final ChartCalculator weeksCalculator;
+	private final ChartCalculator monthsCalculator;
+
+	public Chart(String applicationTitle, ChartCalculator daysCalculator, ChartCalculator weeksCalculator, ChartCalculator monthsCalculator) {
 		super(applicationTitle);
 
-		daysChart = ChartFactory.createLineChart(
-	         chartTitle,
-	         "Time (Day) ","Number of " + metric,
-	         createDataset(metric, daysCalculator),
-	         PlotOrientation.VERTICAL,
-	         true,true,false);
+		this.daysCalculator = daysCalculator;
+		this.weeksCalculator = weeksCalculator;
+		this.monthsCalculator = monthsCalculator;
+	}
 
-		weeksChart = null;
-		monthsChart = null;
+	public JFreeChart getDaysChart(String chartTitle, String metric) {
+		JFreeChart daysChart = ChartFactory.createLineChart(chartTitle,
+				"Time (Day) ","Number of " + metric,
+				createDataset(metric, daysCalculator),
+				PlotOrientation.VERTICAL,
+				true,true,false);
 
 		ChartPanel chartPanel = new ChartPanel( daysChart );
 		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
 		setContentPane( chartPanel );
+
+		return daysChart;
 	}
-	
-	
+
+	public JFreeChart getWeeksChart(String chartTitle, String metric) {
+		JFreeChart weeksChart = ChartFactory.createLineChart(chartTitle,
+				"Time (Week) ","Number of " + metric,
+				createDataset(metric, weeksCalculator),
+				PlotOrientation.VERTICAL,
+				true,true,false);
+
+		ChartPanel chartPanel = new ChartPanel( weeksChart );
+		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+		setContentPane( chartPanel );
+
+		return weeksChart;
+	}
+
+	public JFreeChart getMonthsChart(String chartTitle, String metric) {
+		JFreeChart monthsChart = ChartFactory.createLineChart(chartTitle,
+				"Time (Day) ","Number of " + metric,
+				createDataset(metric, monthsCalculator),
+				PlotOrientation.VERTICAL,
+				true,true,false);
+
+		ChartPanel chartPanel = new ChartPanel( monthsChart );
+		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+		setContentPane( chartPanel );
+
+		return monthsChart;
+	}
+
 	// creates and adds to the dataset using values from the chartCalculator lists 
 	private DefaultCategoryDataset createDataset(String metric, ChartCalculator calculator) {
 	      DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
@@ -142,16 +174,4 @@ public class Chart extends ApplicationFrame{
 		   }
 	      return dataset;
 	   }
-
-	public JFreeChart getDaysChart() {
-		return daysChart;
-	}
-
-	public JFreeChart getWeeksChart() {
-		return weeksChart;
-	}
-
-	public JFreeChart getMonthsChart() {
-		return monthsChart;
-	}
 }

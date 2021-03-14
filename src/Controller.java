@@ -18,7 +18,7 @@ public class Controller {
         adAuctionGUI.setChart(campaign.newChart());
 
         // load gui
-        SwingUtilities.invokeLater(AdAuctionGUI::prepareGui);
+        SwingUtilities.invokeLater(adAuctionGUI::prepareGui);
 
         /*
          * to do:
