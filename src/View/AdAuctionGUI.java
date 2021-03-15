@@ -735,16 +735,34 @@ public class AdAuctionGUI extends JFrame{
     }
 
     // recalculates chart, no time range
-    public void recalculateChart(String metric) {
+    public void recalculateChart(String granularity, String metric) {
         chart.recalculateChart();
-        menu.remove(chartsGrid);
-        createChartsGrid(chart.getDaysChart(metric + " over time", metric));
+        updateChart(granularity, metric);
     }
 
     // recalculates chart, with time range
-    public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate, String metric) {
+    public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate, String granularity, String metric) {
         chart.recalculateChart(startDate, endDate);
+        updateChart(granularity, metric);
+    }
+
+    // updates the chart in the gui
+    public void updateChart(String granularity, String metric) {
         menu.remove(chartsGrid);
-        createChartsGrid(chart.getDaysChart(metric + " over time", metric));
+
+        switch (granularity) {
+            case "Days": {
+                createChartsGrid(chart.getDaysChart(metric + " over time", metric));
+                break;
+            }
+            case "Weeks": {
+                createChartsGrid(chart.getWeeksChart(metric + " over time", metric));
+                break;
+            }
+            case "Months": {
+                createChartsGrid(chart.getMonthsChart(metric + " over time", metric));
+                break;
+            }
+        }
     }
 }
