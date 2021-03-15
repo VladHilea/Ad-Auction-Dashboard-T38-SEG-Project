@@ -24,6 +24,7 @@ public class Chart extends ApplicationFrame{
 		this.monthsCalculator = monthsCalculator;
 	}
 
+	// displays a chart (days) paired with a calculator
 	public JFreeChart getDaysChart(String chartTitle, String metric) {
 		JFreeChart daysChart = ChartFactory.createLineChart(chartTitle,
 				"Time (Day) ","Number of " + metric,
@@ -38,6 +39,7 @@ public class Chart extends ApplicationFrame{
 		return daysChart;
 	}
 
+	// displays a chart (weeks) paired with a calculator
 	public JFreeChart getWeeksChart(String chartTitle, String metric) {
 		JFreeChart weeksChart = ChartFactory.createLineChart(chartTitle,
 				"Time (Week) ","Number of " + metric,
@@ -52,6 +54,7 @@ public class Chart extends ApplicationFrame{
 		return weeksChart;
 	}
 
+	// displays a chart (months) paired with a calculator
 	public JFreeChart getMonthsChart(String chartTitle, String metric) {
 		JFreeChart monthsChart = ChartFactory.createLineChart(chartTitle,
 				"Time (Day) ","Number of " + metric,

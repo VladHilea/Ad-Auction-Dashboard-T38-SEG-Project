@@ -7,6 +7,7 @@ import org.jfree.chart.JFreeChart;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -582,7 +583,6 @@ public class AdAuctionGUI extends JFrame{
             JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
             String itemName = (String) cb.getSelectedItem();
             arrayOfChoicesChart.set(5, itemName);
-            //createChartsGrid(chart.getWeeksChart());
         });
 
         JLabel timeLabel = new JLabel("TIME");
@@ -726,5 +726,13 @@ public class AdAuctionGUI extends JFrame{
 
     public void setChart(Chart chart) {
         this.chart = chart;
+    }
+
+    public void recalculateMetrics() {
+        metricCalculator.calculateMetrics();
+    }
+
+    public void recalculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
+        metricCalculator.calculateMetrics(startDate, endDate);
     }
 }

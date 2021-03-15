@@ -46,4 +46,16 @@ public class ClickLog extends Log {
     public ArrayList<Click> getClicksList() {
         return clicksList;
     }
+
+    public ArrayList<Click> getClicksList(LocalDateTime startDate, LocalDateTime endDate) {
+        ArrayList<Click> rangedClicksList = new ArrayList<>();
+
+        for (Click click : clicksList) {
+            if (!click.getDate().isBefore(startDate) && !click.getDate().isAfter(endDate)) {
+                rangedClicksList.add(click);
+            }
+        }
+
+        return rangedClicksList;
+    }
 }

@@ -51,4 +51,16 @@ public class ServerLog extends Log {
     public ArrayList<Server> getServerList() {
         return serverList;
     }
+
+    public ArrayList<Server> getServerList(LocalDateTime startDate, LocalDateTime endDate) {
+        ArrayList<Server> rangedClicksList = new ArrayList<>();
+
+        for (Server server : serverList) {
+            if (!server.getEntryDate().isBefore(startDate) && !server.getEntryDate().isAfter(endDate)) {
+                rangedClicksList.add(server);
+            }
+        }
+
+        return rangedClicksList;
+    }
 }

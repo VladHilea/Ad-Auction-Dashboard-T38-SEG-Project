@@ -30,7 +30,7 @@ public class ImpressionLog extends Log {
         setDates();
     }
 
-    // constructor for an exisiting list of impressions
+    // constructor for an existing list of impressions
     public ImpressionLog(ArrayList<Impression> impressionsList) {
         this.impressionsList = impressionsList; // list of impressions
     }
@@ -49,5 +49,17 @@ public class ImpressionLog extends Log {
 
     public ArrayList<Impression> getImpressionsList() {
         return impressionsList;
+    }
+
+    public ArrayList<Impression> getImpressionsList(LocalDateTime startDate, LocalDateTime endDate) {
+        ArrayList<Impression> rangedImpressionsList = new ArrayList<>();
+
+        for (Impression impression : impressionsList) {
+            if (!impression.getDate().isBefore(startDate) && !impression.getDate().isAfter(endDate)) {
+                rangedImpressionsList.add(impression);
+            }
+        }
+
+        return rangedImpressionsList;
     }
 }

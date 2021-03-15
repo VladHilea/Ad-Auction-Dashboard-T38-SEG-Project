@@ -34,13 +34,49 @@ public class MetricCalculator extends Calculator {
 
     // calculates metrics
     public void calculateMetrics() {
+        ArrayList<Impression> impressionList = getImpressionLog().getImpressionsList(); // list of impressions
+        ArrayList<Click> clickList = getClickLog().getClicksList(); // list of clicks
+        ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
+
+        resetMetrics();
+        calculate(impressionList, clickList, serverList);
+    }
+
+    // calculates metrics within a given range
+    public void calculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
+        ArrayList<Impression> impressionList = getImpressionLog().getImpressionsList(startDate, endDate); // list of impressions
+        ArrayList<Click> clickList = getClickLog().getClicksList(startDate, endDate); // list of clicks
+        ArrayList<Server> serverList = getServerLog().getServerList(startDate, endDate); // list of server entries
+
+        resetMetrics();
+        calculate(impressionList, clickList, serverList);
+    }
+
+    // resets the metrics
+    public void resetMetrics() {
+        impressionsNo = 0;
+        uniquesNo = 0;
+        clicksNo = 0;
+        bouncesNo = 0;
+        conversionsNo = 0;
+        totalImpressionsCost = 0;
+        totalClicksCost = 0;
+
+        ctr = 0;
+        cpa = 0;
+        cpc = 0;
+        cpm = 0;
+        br = 0;
+    }
+
+    // the actual calculations
+    public void calculate(ArrayList<Impression> impressionList, ArrayList<Click> clickList, ArrayList<Server> serverList) {
         // calculates the number of impressions
-        this.impressionsNo = getImpressionLog().getImpressionsList().size();
+        this.impressionsNo = impressionList.size();
 
         // calculates the number of impressions from unique users and the total cost of impressions
-        ArrayList<Impression> impressionsList = getImpressionLog().getImpressionsList(); // list of impressions
         HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
-        for (Impression impression : impressionsList) {
+        for (Impression impression : impressionList) {
             if (!uniqueIds.contains(impression.getId())) {
                 uniqueIds.add(impression.getId());
                 this.uniquesNo++;
@@ -49,16 +85,14 @@ public class MetricCalculator extends Calculator {
         }
 
         // calculates the number of clicks
-        this.clicksNo = getClickLog().getClicksList().size();
+        this.clicksNo = clickList.size();
 
         // calculates the total cost of clicks
-        ArrayList<Click> clickList = getClickLog().getClicksList(); // list of clicks
         for (Click click : clickList) {
             this.totalClicksCost += click.getClickCost();
         }
 
         // calculates the number of bounces and the number of conversions
-        ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
         for (Server server : serverList) {
             if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
                 this.bouncesNo++;
