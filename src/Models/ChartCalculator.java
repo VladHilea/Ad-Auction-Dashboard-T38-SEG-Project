@@ -6,28 +6,43 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ChartCalculator extends Calculator {
-    private final ArrayList<Integer> impressionsNoList = new ArrayList<>(); // number of impressions - people who saw the ad
-    private final ArrayList<Integer> uniquesNoList = new ArrayList<>(); // number of unique impressions - unique people who saw the ad
-    private final ArrayList<Integer> clicksNoList = new ArrayList<>(); // number of clicks - people who clicked the ad
-    private final ArrayList<Integer> bouncesNoList = new ArrayList<>(); // number of bounces - people who clicked away after a while
-    private final ArrayList<Integer> conversionsNoList = new ArrayList<>(); // number of conversions - people who click then acts on ad
-    private final ArrayList<Float> totalImpressionCostList = new ArrayList<>(); // total impression cost - cost of impressions
-    private final ArrayList<Float> totalClickCostList = new ArrayList<>(); // total click cost - cost of clicks
+    private ArrayList<Integer> impressionsNoList = new ArrayList<>(); // number of impressions - people who saw the ad
+    private ArrayList<Integer> uniquesNoList = new ArrayList<>(); // number of unique impressions - unique people who saw the ad
+    private ArrayList<Integer> clicksNoList = new ArrayList<>(); // number of clicks - people who clicked the ad
+    private ArrayList<Integer> bouncesNoList = new ArrayList<>(); // number of bounces - people who clicked away after a while
+    private ArrayList<Integer> conversionsNoList = new ArrayList<>(); // number of conversions - people who click then acts on ad
+    private ArrayList<Float> totalImpressionCostList = new ArrayList<>(); // total impression cost - cost of impressions
+    private ArrayList<Float> totalClickCostList = new ArrayList<>(); // total click cost - cost of clicks
 
-    private final ArrayList<Float> ctrList = new ArrayList<>(); // click-through-rate - clicks per impression
-    private final ArrayList<Float> cpaList = new ArrayList<>(); // cost-per-acquisition
-    private final ArrayList<Float> cpcList = new ArrayList<>(); // cost-per-click
-    private final ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
-    private final ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
+    private ArrayList<Float> ctrList = new ArrayList<>(); // click-through-rate - clicks per impression
+    private ArrayList<Float> cpaList = new ArrayList<>(); // cost-per-acquisition
+    private ArrayList<Float> cpcList = new ArrayList<>(); // cost-per-click
+    private ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
+    private ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
     public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog, String intervalLength) {
         super(impressionLog, clickLog, serverLog);
 
-        calculateCharts(intervalLength, getImpressionLog().getFirstDate(), getImpressionLog().getLastDate());
+        calculateCharts(intervalLength, impressionLog.getFirstDate(), impressionLog.getLastDate());
     }
 
     // produces a list of metric calculators that stores all the logs split into a set interval
     public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
+        // resets the array lists
+        impressionsNoList = new ArrayList<>();
+        uniquesNoList = new ArrayList<>();
+        clicksNoList = new ArrayList<>();
+        bouncesNoList = new ArrayList<>();
+        conversionsNoList = new ArrayList<>();
+        totalImpressionCostList = new ArrayList<>();
+        totalClickCostList = new ArrayList<>();
+
+        ctrList = new ArrayList<>();
+        cpaList = new ArrayList<>();
+        cpcList = new ArrayList<>();
+        cpmList = new ArrayList<>();
+        brList = new ArrayList<>();
+
         // creates a list of dates separated by a constant interval
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startDate);
@@ -38,29 +53,37 @@ public class ChartCalculator extends Calculator {
                 for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusHours(i));
                 }
-                System.out.println(interval);
+                break;
             }
             case "Days": {
                 for (long i = 1; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusDays(i));
                 }
+                break;
             }
             case "Weeks": {
                 for (long i = 1; i <= ChronoUnit.WEEKS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusWeeks(i));
                 }
+                break;
             }
             case "Months": {
                 for (long i = 1; i <= ChronoUnit.MONTHS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusMonths(i));
                 }
+                break;
             }
             case "Years": {
                 for (long i = 1; i <= ChronoUnit.YEARS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusYears(i));
                 }
+                break;
             }
         }
+
+        ArrayList<Impression> impressionList = getImpressionLog().getImpressionsList(startDate, endDate); // list of impressions
+        ArrayList<Click> clickList = getClickLog().getClicksList(startDate, endDate); // list of clicks
+        ArrayList<Server> serverList = getServerLog().getServerList(startDate, endDate); // list of server entries
 
         ArrayList<MetricCalculator> intervalCalculators = new ArrayList<>(); // list of calculators for log entries in each interval
         ArrayList<ImpressionLog> intervalImpressionLogs = new ArrayList<>(); // list of impression logs in each interval
@@ -76,10 +99,11 @@ public class ChartCalculator extends Calculator {
         int count = 1;
 
         // Creates a list of impression logs for each interval
-        Iterator<Impression> impressionIterator = getImpressionLog().getImpressionsList().iterator();
+        Iterator<Impression> impressionIterator = impressionList.iterator();
         while (impressionIterator.hasNext()) {
             Impression impression = impressionIterator.next();
-            if (!impression.date.isBefore(lastDate)) { // if its the first log in a new interval
+
+            if (impression.date.isAfter(lastDate)) { // if its the first log in a new interval
                 // completes the current interval log
                 currentImpressionLog.setDates();
                 intervalImpressionLogs.add(currentImpressionLog);
@@ -105,10 +129,11 @@ public class ChartCalculator extends Calculator {
         count = 1;
 
         // Creates a list of click logs for each interval
-        Iterator<Click> clickIterator = getClickLog().getClicksList().iterator();
+        Iterator<Click> clickIterator = clickList.iterator();
         while (clickIterator.hasNext()) {
             Click click = clickIterator.next();
-            if (!click.date.isBefore(lastDate)) { // if its the first log in a new interval
+
+            if (click.date.isAfter(lastDate)) { // if its the first log in a new interval
                 // completes the current interval log
                 currentClickLog.setDates();
                 intervalClickLogs.add(currentClickLog);
@@ -134,10 +159,11 @@ public class ChartCalculator extends Calculator {
         count = 1;
 
         // Creates a list of server logs for each interval
-        Iterator<Server> serverIterator = getServerLog().getServerList().iterator();
+        Iterator<Server> serverIterator = serverList.iterator();
         while (serverIterator.hasNext()) {
             Server server = serverIterator.next();
-            if (!server.entryDate.isBefore(lastDate)) { // if its the first log in a new interval
+
+            if (server.entryDate.isAfter(lastDate)) { // if its the first log in a new interval
                 // completes the current interval log
                 currentServerLog.setDates();
                 intervalServerLogs.add(currentServerLog);
@@ -169,7 +195,7 @@ public class ChartCalculator extends Calculator {
 
         // calculating metrics for every interval
         for (MetricCalculator calculator : intervalCalculators) {
-            calculator.calculateMetrics();
+            calculator.calculateMetrics(startDate, endDate);
             this.impressionsNoList.add(calculator.getImpressionsNo());
             this.uniquesNoList.add(calculator.getUniquesNo());
             this.totalImpressionCostList.add(calculator.getTotalImpressionCost());

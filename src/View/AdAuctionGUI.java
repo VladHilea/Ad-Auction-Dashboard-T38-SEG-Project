@@ -735,4 +735,8 @@ public class AdAuctionGUI extends JFrame{
     public void recalculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
         metricCalculator.calculateMetrics(startDate, endDate);
     }
+
+    public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate) {
+        chart.recalculateChart(startDate, endDate);
+    }
 }
