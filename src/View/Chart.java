@@ -191,6 +191,14 @@ public class Chart extends ApplicationFrame{
 		return dataset;
 	}
 
+	// recalculates chart, no time range
+	public void recalculateChart() {
+		daysCalculator.calculateCharts("Days");
+		weeksCalculator.calculateCharts("Weeks");
+		monthsCalculator.calculateCharts("Months");
+	}
+
+	// recalculates chart, with time range
 	public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate) {
 		daysCalculator.calculateCharts("Days", startDate, endDate);
 		weeksCalculator.calculateCharts("Weeks", startDate, endDate);

@@ -23,12 +23,24 @@ public class ChartCalculator extends Calculator {
     public ChartCalculator(ImpressionLog impressionLog, ClickLog clickLog, ServerLog serverLog, String intervalLength) {
         super(impressionLog, clickLog, serverLog);
 
-        calculateCharts(intervalLength, impressionLog.getFirstDate(), impressionLog.getLastDate());
+        resetChart();
+        calculateCharts(intervalLength);
     }
 
-    // produces a list of metric calculators that stores all the logs split into a set interval
-    public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
-        // resets the array lists
+    // recalculates intervals, no time range
+    public void calculateCharts(String interval) {
+        resetChart();
+        calculate(interval, getImpressionLog().getFirstDate(), getServerLog().getLastDate());
+    }
+
+    // recalculates intervals, with time range
+    public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate) {
+        resetChart();
+        calculate(interval, startDate, endDate);
+    }
+
+    // resets the array lists
+    public void resetChart() {
         impressionsNoList = new ArrayList<>();
         uniquesNoList = new ArrayList<>();
         clicksNoList = new ArrayList<>();
@@ -42,7 +54,10 @@ public class ChartCalculator extends Calculator {
         cpcList = new ArrayList<>();
         cpmList = new ArrayList<>();
         brList = new ArrayList<>();
+    }
 
+    // produces a list of metric calculators that stores all the logs split into a set interval
+    public void calculate(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
         // creates a list of dates separated by a constant interval
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startDate);

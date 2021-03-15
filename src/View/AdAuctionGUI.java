@@ -21,8 +21,8 @@ public class AdAuctionGUI extends JFrame{
 
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
-    private MetricCalculator metricCalculator;
-    private Chart chart;
+    private final MetricCalculator metricCalculator;
+    private final Chart chart;
 
     private final Color primaryColor = new Color(14,139,229);
     private final Color secondaryColor = new Color(220,120,27);
@@ -30,17 +30,22 @@ public class AdAuctionGUI extends JFrame{
 
     private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
 
+    public AdAuctionGUI(MetricCalculator metricCalculator, Chart chart) {
+        this.metricCalculator = metricCalculator;
+        this.chart = chart;
+    }
+
     public void prepareGui() {
         gui = new JFrame("Ad Auction Monitor");
         gui.setVisible(true);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        createMenu(metricCalculator, chart);
+        createMenu();
         gui.add(menu);
     }
 
-    public void createMenu(MetricCalculator calculator, Chart chart){
+    public void createMenu(){
         menu = new JLayeredPane();
         menu.setSize(gui.getWidth(),gui.getHeight());
         menu.setOpaque(true);
@@ -48,8 +53,8 @@ public class AdAuctionGUI extends JFrame{
 
         createTopMenu();
         createVerticalMenu();
-        createInsightsGrid(calculator);
-        createChartsGrid(chart.getDaysChart("impressions vs time", "impressions"));
+        createInsightsGrid();
+        createChartsGrid(chart.getDaysChart("impressions over time", "impressions"));
     }
 
     public void createVerticalMenu(){
@@ -186,10 +191,9 @@ public class AdAuctionGUI extends JFrame{
         topMenu.add(productName,BorderLayout.WEST,0);
         topMenu.add(customerName,BorderLayout.EAST,1);
         menu.add(topMenu,BorderLayout.NORTH,1);
-
     }
 
-    public void createInsightsGrid(MetricCalculator calculator){
+    public void createInsightsGrid(){
         Font fontOfText = new Font("Impact", Font.PLAIN, 25);
         Font fontOfValue = new Font("Impact", Font.BOLD, 30);
         Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(tertiaryColor, 1));
@@ -212,7 +216,7 @@ public class AdAuctionGUI extends JFrame{
         impressions.setForeground(secondaryColor);
         impressions.setFont(fontOfText);
 
-        JLabel impressionsValue = new JLabel(toString(calculator.getImpressionsNo()));
+        JLabel impressionsValue = new JLabel(toString(metricCalculator.getImpressionsNo()));
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressionsValue.setFont(fontOfValue);
 
@@ -232,7 +236,7 @@ public class AdAuctionGUI extends JFrame{
         clicks.setForeground(secondaryColor);
         clicks.setFont(fontOfText);
 
-        JLabel clicksValue = new JLabel(toString(calculator.getClicksNo()));
+        JLabel clicksValue = new JLabel(toString(metricCalculator.getClicksNo()));
         clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         clicksValue.setFont(fontOfValue);
 
@@ -252,7 +256,7 @@ public class AdAuctionGUI extends JFrame{
         uniques.setForeground(secondaryColor);
         uniques.setFont(fontOfText);
 
-        JLabel uniquesValue = new JLabel(toString(calculator.getUniquesNo()));
+        JLabel uniquesValue = new JLabel(toString(metricCalculator.getUniquesNo()));
         uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniquesValue.setFont(fontOfValue);
 
@@ -272,7 +276,7 @@ public class AdAuctionGUI extends JFrame{
         ctr.setForeground(secondaryColor);
         ctr.setFont(fontOfText);
 
-        JLabel ctrValues = new JLabel(toString(calculator.getCtr()));
+        JLabel ctrValues = new JLabel(toString(metricCalculator.getCtr()));
         ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         ctrValues.setFont(fontOfValue);
 
@@ -292,7 +296,7 @@ public class AdAuctionGUI extends JFrame{
         cpa.setForeground(secondaryColor);
         cpa.setFont(fontOfText);
 
-        JLabel cpaValues = new JLabel(toString(calculator.getCpa()));
+        JLabel cpaValues = new JLabel(toString(metricCalculator.getCpa()));
         cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpaValues.setFont(fontOfValue);
 
@@ -312,7 +316,7 @@ public class AdAuctionGUI extends JFrame{
         cpc.setForeground(secondaryColor);
         cpc.setFont(fontOfText);
 
-        JLabel cpcValues = new JLabel(toString(calculator.getCpc()));
+        JLabel cpcValues = new JLabel(toString(metricCalculator.getCpc()));
         cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpcValues.setFont(fontOfValue);
 
@@ -332,7 +336,7 @@ public class AdAuctionGUI extends JFrame{
         cpm.setForeground(secondaryColor);
         cpm.setFont(fontOfText);
 
-        JLabel cpmValues = new JLabel(toString(calculator.getCpm()));
+        JLabel cpmValues = new JLabel(toString(metricCalculator.getCpm()));
         cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpmValues.setFont(fontOfValue);
 
@@ -352,7 +356,7 @@ public class AdAuctionGUI extends JFrame{
         conversions.setForeground(secondaryColor);
         conversions.setFont(fontOfText);
 
-        JLabel conversionsValues = new JLabel(toString(calculator.getConversionsNo()));
+        JLabel conversionsValues = new JLabel(toString(metricCalculator.getConversionsNo()));
         conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         conversionsValues.setFont(fontOfValue);
 
@@ -372,7 +376,7 @@ public class AdAuctionGUI extends JFrame{
         totalCost.setForeground(secondaryColor);
         totalCost.setFont(fontOfText);
 
-        JLabel totalCostValues = new JLabel(toString(calculator.getTotalImpressionCost()));
+        JLabel totalCostValues = new JLabel(toString(metricCalculator.getTotalImpressionCost()));
         totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalCostValues.setFont(fontOfValue);
 
@@ -392,7 +396,7 @@ public class AdAuctionGUI extends JFrame{
         bounce.setForeground(secondaryColor);
         bounce.setFont(fontOfText);
 
-        JLabel bounceValues = new JLabel(toString(calculator.getBouncesNo()));
+        JLabel bounceValues = new JLabel(toString(metricCalculator.getBouncesNo()));
         bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceValues.setFont(fontOfValue);
 
@@ -412,7 +416,7 @@ public class AdAuctionGUI extends JFrame{
         bounceRate.setForeground(secondaryColor);
         bounceRate.setFont(fontOfText);
 
-        JLabel bounceRateValues = new JLabel(toString(calculator.getBr()));
+        JLabel bounceRateValues = new JLabel(toString(metricCalculator.getBr()));
         bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceRateValues.setFont(fontOfValue);
 
@@ -720,23 +724,27 @@ public class AdAuctionGUI extends JFrame{
             return String.format("%.4g%n", metric); // change the 4 to change the dp
     }
 
-    public void setMetricCalculator(MetricCalculator metricCalculator) {
-        this.metricCalculator = metricCalculator;
-    }
-
-    public void setChart(Chart chart) {
-        this.chart = chart;
-    }
-
+    // recalculates metrics on main page, no time range
     public void recalculateMetrics() {
         metricCalculator.calculateMetrics();
     }
 
+    // recalculates metrics on main page, with time range
     public void recalculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
         metricCalculator.calculateMetrics(startDate, endDate);
     }
 
-    public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate) {
+    // recalculates chart, no time range
+    public void recalculateChart(String metric) {
+        chart.recalculateChart();
+        menu.remove(chartsGrid);
+        createChartsGrid(chart.getDaysChart(metric + " over time", metric));
+    }
+
+    // recalculates chart, with time range
+    public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate, String metric) {
         chart.recalculateChart(startDate, endDate);
+        menu.remove(chartsGrid);
+        createChartsGrid(chart.getDaysChart(metric + " over time", metric));
     }
 }
