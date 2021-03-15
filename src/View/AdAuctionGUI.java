@@ -6,6 +6,8 @@ import org.jfree.chart.JFreeChart;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -637,29 +639,26 @@ public class AdAuctionGUI extends JFrame{
     }
 
     public void createChartSouthGrid(){
-        chartSlider = new JSlider(JSlider.HORIZONTAL,0,50,25);
+        chartSlider = new JSlider(JSlider.HORIZONTAL,0,4,1);
         chartSlider.setVisible(true);
-        chartSlider.setMajorTickSpacing(10);
-        chartSlider.setMinorTickSpacing(5);
+        chartSlider.setMajorTickSpacing(1);
         chartSlider.setPaintTicks(true);
         chartSlider.setPaintLabels(true);
-        chartSlider.setValue(13);
-        chartSlider.setValue(13);
-        chartSlider.setValue(13);
 
         Hashtable<Integer, JLabel> position = new Hashtable<>();
-        position.put(0, new JLabel("0"));
-        position.put(10, new JLabel("10"));
-        position.put(20, new JLabel("20"));
-        position.put(30, new JLabel("30"));
-        position.put(40, new JLabel("40"));
-        position.put(50, new JLabel("50"));
+        position.put(0, new JLabel("Hours"));
+        position.put(1, new JLabel("Days"));
+        position.put(2, new JLabel("Weeks"));
+        position.put(3, new JLabel("Months"));
+        position.put(4, new JLabel("Years"));
 
         chartSlider.setLabelTable(position);
 
         chartSlider.addChangeListener(e -> {
             int sliderValue = chartSlider.getValue();
-            arrayOfChoicesChart.set(6, String.valueOf(sliderValue));
+            arrayOfChoicesChart.set(1, String.valueOf(sliderValue));
+
+            recalculateChart(position.get(sliderValue).getText(), "impressions");
         });
 
         JPanel addToComparePanel = new JPanel(new GridBagLayout());
@@ -707,10 +706,10 @@ public class AdAuctionGUI extends JFrame{
         JPanel panel = new JPanel(new GridBagLayout());
         JPanel chartJPanel = new JPanel(new BorderLayout());
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartJPanel.add(chartPanel,BorderLayout.CENTER);
+        chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.validate();
         panel.add(chartJPanel);
-        chartsGrid.add(panel,BorderLayout.CENTER);
+        chartsGrid.add(panel, BorderLayout.CENTER);
 
         menu.add(chartsGrid);
     }
@@ -736,7 +735,6 @@ public class AdAuctionGUI extends JFrame{
 
     // recalculates chart, no time range
     public void recalculateChart(String granularity, String metric) {
-        chart.recalculateChart();
         updateChart(granularity, metric);
     }
 
@@ -748,19 +746,72 @@ public class AdAuctionGUI extends JFrame{
 
     // updates the chart in the gui
     public void updateChart(String granularity, String metric) {
-        menu.remove(chartsGrid);
+        chartsGrid.remove(2);
 
         switch (granularity) {
+            case "Hours": {
+                JPanel panel = new JPanel(new GridBagLayout());
+                JPanel chartJPanel = new JPanel(new BorderLayout());
+                ChartPanel chartPanel = new ChartPanel(chart.getHoursChart(metric + " over time", metric));
+                chartJPanel.add(chartPanel, BorderLayout.CENTER);
+                chartJPanel.validate();
+                panel.add(chartJPanel);
+                chartsGrid.add(panel, BorderLayout.CENTER);
+
+                menu.remove(3);
+                menu.add(chartsGrid);
+                break;
+            }
             case "Days": {
-                createChartsGrid(chart.getDaysChart(metric + " over time", metric));
+                JPanel panel = new JPanel(new GridBagLayout());
+                JPanel chartJPanel = new JPanel(new BorderLayout());
+                ChartPanel chartPanel = new ChartPanel(chart.getDaysChart(metric + " over time", metric));
+                chartJPanel.add(chartPanel, BorderLayout.CENTER);
+                chartJPanel.validate();
+                panel.add(chartJPanel);
+                chartsGrid.add(panel, BorderLayout.CENTER);
+
+                menu.remove(3);
+                menu.add(chartsGrid);
                 break;
             }
             case "Weeks": {
-                createChartsGrid(chart.getWeeksChart(metric + " over time", metric));
+                JPanel panel = new JPanel(new GridBagLayout());
+                JPanel chartJPanel = new JPanel(new BorderLayout());
+                ChartPanel chartPanel = new ChartPanel(chart.getWeeksChart(metric + " over time", metric));
+                chartJPanel.add(chartPanel, BorderLayout.CENTER);
+                chartJPanel.validate();
+                panel.add(chartJPanel);
+                chartsGrid.add(panel, BorderLayout.CENTER);
+
+                menu.remove(3);
+                menu.add(chartsGrid);
                 break;
             }
             case "Months": {
-                createChartsGrid(chart.getMonthsChart(metric + " over time", metric));
+                JPanel panel = new JPanel(new GridBagLayout());
+                JPanel chartJPanel = new JPanel(new BorderLayout());
+                ChartPanel chartPanel = new ChartPanel(chart.getMonthsChart(metric + " over time", metric));
+                chartJPanel.add(chartPanel, BorderLayout.CENTER);
+                chartJPanel.validate();
+                panel.add(chartJPanel);
+                chartsGrid.add(panel, BorderLayout.CENTER);
+
+                menu.remove(3);
+                menu.add(chartsGrid);
+                break;
+            }
+            case "Years": {
+                JPanel panel = new JPanel(new GridBagLayout());
+                JPanel chartJPanel = new JPanel(new BorderLayout());
+                ChartPanel chartPanel = new ChartPanel(chart.getYearsChart(metric + " over time", metric));
+                chartJPanel.add(chartPanel, BorderLayout.CENTER);
+                chartJPanel.validate();
+                panel.add(chartJPanel);
+                chartsGrid.add(panel, BorderLayout.CENTER);
+
+                menu.remove(3);
+                menu.add(chartsGrid);
                 break;
             }
         }

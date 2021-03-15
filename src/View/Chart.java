@@ -13,16 +13,35 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Chart extends ApplicationFrame{
+	private final ChartCalculator hoursCalculator;
 	private final ChartCalculator daysCalculator;
 	private final ChartCalculator weeksCalculator;
 	private final ChartCalculator monthsCalculator;
+	private final ChartCalculator yearsCalculator;
 
-	public Chart(String applicationTitle, ChartCalculator daysCalculator, ChartCalculator weeksCalculator, ChartCalculator monthsCalculator) {
+	public Chart(String applicationTitle, ChartCalculator hoursCalculator, ChartCalculator daysCalculator, ChartCalculator weeksCalculator, ChartCalculator monthsCalculator, ChartCalculator yearsCalculator) {
 		super(applicationTitle);
 
+		this.hoursCalculator = hoursCalculator;
 		this.daysCalculator = daysCalculator;
 		this.weeksCalculator = weeksCalculator;
 		this.monthsCalculator = monthsCalculator;
+		this.yearsCalculator = yearsCalculator;
+	}
+
+	// displays a chart (hours) paired with a calculator
+	public JFreeChart getHoursChart(String chartTitle, String metric) {
+		JFreeChart hoursChart = ChartFactory.createLineChart(chartTitle,
+				"Time (Day) ","Number of " + metric,
+				createDataset(metric, hoursCalculator),
+				PlotOrientation.VERTICAL,
+				true,true,false);
+
+		ChartPanel chartPanel = new ChartPanel( hoursChart );
+		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+		setContentPane( chartPanel );
+
+		return hoursChart;
 	}
 
 	// displays a chart (days) paired with a calculator
@@ -68,6 +87,21 @@ public class Chart extends ApplicationFrame{
 		setContentPane( chartPanel );
 
 		return monthsChart;
+	}
+
+	// displays a chart (years) paired with a calculator
+	public JFreeChart getYearsChart(String chartTitle, String metric) {
+		JFreeChart yearsChart = ChartFactory.createLineChart(chartTitle,
+				"Time (Day) ","Number of " + metric,
+				createDataset(metric, yearsCalculator),
+				PlotOrientation.VERTICAL,
+				true,true,false);
+
+		ChartPanel chartPanel = new ChartPanel( yearsChart );
+		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+		setContentPane( chartPanel );
+
+		return yearsChart;
 	}
 
 	// creates and adds to the dataset using values from the chartCalculator lists
@@ -189,13 +223,6 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 		return dataset;
-	}
-
-	// recalculates chart, no time range
-	public void recalculateChart() {
-		daysCalculator.calculateCharts("Days");
-		weeksCalculator.calculateCharts("Weeks");
-		monthsCalculator.calculateCharts("Months");
 	}
 
 	// recalculates chart, with time range

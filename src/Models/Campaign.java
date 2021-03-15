@@ -20,10 +20,12 @@ public class Campaign {
     }
 
     public Chart newChart() {
+        ChartCalculator hoursCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Hours");
         ChartCalculator daysCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Days");
         ChartCalculator weeksCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Weeks");
         ChartCalculator monthsCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Months");
+        ChartCalculator yearsCalculator = new ChartCalculator(impressionLog, clicksLog, serversLog, "Years");
 
-        return new Chart("Metrics vs Time", daysCalculator, weeksCalculator, monthsCalculator);
+        return new Chart("Metrics vs Time", hoursCalculator, daysCalculator, weeksCalculator, monthsCalculator, yearsCalculator);
     }
 }
