@@ -21,8 +21,8 @@ public class CampaignController {
         LocalDateTime date1 = LocalDateTime.parse("2015-01-01 12:00:00", formatter); // start date
         LocalDateTime date2 = LocalDateTime.parse("2015-01-07 12:00:00", formatter); // end date
 
-        //adAuctionGUI.recalculateMetrics(date1, date2);
-        //adAuctionGUI.recalculateChart(date1, date2, "Days", "clicks");
+        // adAuctionGUI.recalculateMetrics(date1, date2);
+        // adAuctionGUI.recalculateChart(date1, date2, "Days", "clicks");
         // there are also methods of the same name with no parameters to show the whole range
 
         /*

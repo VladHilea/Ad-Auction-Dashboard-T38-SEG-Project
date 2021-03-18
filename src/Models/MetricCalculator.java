@@ -23,8 +23,8 @@ public class MetricCalculator extends Calculator {
     private final int pageLimit; // max number of pages to be counted as a bounce
     private final int bounceTime; // max amount of time to be counted as a bounce
 
-    public MetricCalculator(ImpressionLog impressions, ClickLog clickLog, ServerLog serverLog) {
-        super(impressions, clickLog, serverLog);
+    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog) {
+        super(impressionLog, clickLog, serverLog);
 
         this.pageLimit = 1;
         this.bounceTime = 500;
@@ -33,21 +33,21 @@ public class MetricCalculator extends Calculator {
         calculateMetrics();
     }
 
-    // calculates metrics
+    // calculates metrics from the entire dataset
     public void calculateMetrics() {
-        ArrayList<Impression> impressionList = getImpressionLog().getImpressionsList(); // list of impressions
-        ArrayList<Click> clickList = getClickLog().getClicksList(); // list of clicks
-        ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
+        ArrayList<ImpressionEntry> impressionList = getImpressionLog(); // list of impressions
+        ArrayList<ClickEntry> clickList = getClickLog(); // list of clicks
+        ArrayList<ServerEntry> serverList = getServerLog(); // list of server entries
 
         resetMetrics();
         calculate(impressionList, clickList, serverList);
     }
 
-    // calculates metrics within a given range
+    // calculates metrics within filters
     public void calculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
-        ArrayList<Impression> impressionList = getImpressionLog().getImpressionsList(startDate, endDate); // list of impressions
-        ArrayList<Click> clickList = getClickLog().getClicksList(startDate, endDate); // list of clicks
-        ArrayList<Server> serverList = getServerLog().getServerList(startDate, endDate); // list of server entries
+        ArrayList<ImpressionEntry> impressionList = getImpressionLog(startDate, endDate); // list of impressions
+        ArrayList<ClickEntry> clickList = getClickLog(startDate, endDate); // list of clicks
+        ArrayList<ServerEntry> serverList = getServerLog(startDate, endDate); // list of server entries
 
         resetMetrics();
         calculate(impressionList, clickList, serverList);
@@ -71,30 +71,31 @@ public class MetricCalculator extends Calculator {
     }
 
     // the actual calculations
-    public void calculate(ArrayList<Impression> impressionList, ArrayList<Click> clickList, ArrayList<Server> serverList) {
+    public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList) {
         // calculates the number of impressions
         this.impressionsNo = impressionList.size();
 
         // calculates the number of impressions from unique users and the total cost of impressions
-        HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
-        for (Impression impression : impressionList) {
-            if (!uniqueIds.contains(impression.getId())) {
-                uniqueIds.add(impression.getId());
+        HashSet<Long> uniqueIds = new HashSet<>();
+
+        for (ImpressionEntry impression : impressionList) {
+            if (!uniqueIds.contains(impression.getUserId())) {
+                uniqueIds.add(impression.getUserId());
                 this.uniquesNo++;
-                this.totalImpressionsCost += impression.getImpressionCost();
             }
+            this.totalImpressionsCost += impression.getImpressionCost();
         }
 
         // calculates the number of clicks
         this.clicksNo = clickList.size();
 
         // calculates the total cost of clicks
-        for (Click click : clickList) {
+        for (ClickEntry click : clickList) {
             this.totalClicksCost += click.getClickCost();
         }
 
         // calculates the number of bounces and the number of conversions
-        for (Server server : serverList) {
+        for (ServerEntry server : serverList) {
             if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
                 this.bouncesNo++;
             }
