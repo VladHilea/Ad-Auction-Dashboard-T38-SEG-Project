@@ -102,12 +102,11 @@ public class Campaign {
         return users.getOrDefault(id, null);
     }
 
-    // modular function for later
-    public MetricCalculator newMetrics() {
+    public MetricCalculator createMetrics() {
         return new MetricCalculator(impressionLog, clickLog, serverLog);
     }
 
-    public ChartCalculator newCharts() {
+    public ChartCalculator createCharts() {
         return new ChartCalculator(impressionLog, clickLog, serverLog);
     }
 }

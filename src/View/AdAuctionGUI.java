@@ -1,6 +1,7 @@
 package View;
 
 import Controllers.ChartController;
+import Controllers.MetricController;
 import Models.*;
 import org.jfree.chart.ChartPanel;
 
@@ -23,8 +24,8 @@ public class AdAuctionGUI extends JFrame{
 
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
-    private ChartController chartController;
-    private MetricCalculator metricCalculator;
+    private final ChartController chartController;
+    private final MetricController metricController;
 
     private final Color primaryColor = new Color(14,139,229);
     private final Color secondaryColor = new Color(220,120,27);
@@ -32,13 +33,15 @@ public class AdAuctionGUI extends JFrame{
 
     private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
 
+    // initialises the display controllers
     public AdAuctionGUI() {
         this.chartController = new ChartController();
-        this.metricCalculator = new MetricCalculator();
+        this.metricController = new MetricController();
 
-        chartPanel = new ChartPanel(new Chart("Base Chart", "Impressions vs Time", "Impressions").getChart());
+        chartPanel = new ChartPanel(new Chart("No Data", "Load Campaign To Display Charts", "Impressions").getChart());
     }
 
+    // displays the main window
     public void prepareGui() {
         gui = new JFrame("Ad Auction Monitor");
         gui.setVisible(true);
@@ -50,6 +53,7 @@ public class AdAuctionGUI extends JFrame{
         gui.add(menu);
     }
 
+    // displays the main structure
     public void createMenu(){
         menu = new JLayeredPane();
         menu.setSize(gui.getWidth(),gui.getHeight());
@@ -62,6 +66,7 @@ public class AdAuctionGUI extends JFrame{
         createChartsGrid();
     }
 
+    // displays the constant vertical menu on the lift hand size
     public void createVerticalMenu(){
         JPanel verticalMenu = new JPanel(new GridLayout(5, 1));
         verticalMenu.setBounds(0,100,200,gui.getHeight()-100);
@@ -173,6 +178,7 @@ public class AdAuctionGUI extends JFrame{
         });
     }
 
+    // displays the constant horizontal menu at the top
     public void createTopMenu(){
         JLayeredPane topMenu = new JLayeredPane();
         topMenu.setSize(gui.getWidth(),100);
@@ -197,6 +203,7 @@ public class AdAuctionGUI extends JFrame{
         menu.add(topMenu,BorderLayout.NORTH,1);
     }
 
+    // displays the metrics page
     public void createInsightsGrid(){
         Font fontOfText = new Font("Impact", Font.PLAIN, 25);
         Font fontOfValue = new Font("Impact", Font.BOLD, 30);
@@ -220,7 +227,7 @@ public class AdAuctionGUI extends JFrame{
         impressions.setForeground(secondaryColor);
         impressions.setFont(fontOfText);
 
-        JLabel impressionsValue = new JLabel(toString(metricCalculator.getImpressionsNo()));
+        JLabel impressionsValue = new JLabel(toString(metricController.getImpressionsNo()));
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressionsValue.setFont(fontOfValue);
 
@@ -240,7 +247,7 @@ public class AdAuctionGUI extends JFrame{
         clicks.setForeground(secondaryColor);
         clicks.setFont(fontOfText);
 
-        JLabel clicksValue = new JLabel(toString(metricCalculator.getClicksNo()));
+        JLabel clicksValue = new JLabel(toString(metricController.getClicksNo()));
         clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         clicksValue.setFont(fontOfValue);
 
@@ -260,7 +267,7 @@ public class AdAuctionGUI extends JFrame{
         uniques.setForeground(secondaryColor);
         uniques.setFont(fontOfText);
 
-        JLabel uniquesValue = new JLabel(toString(metricCalculator.getUniquesNo()));
+        JLabel uniquesValue = new JLabel(toString(metricController.getUniquesNo()));
         uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniquesValue.setFont(fontOfValue);
 
@@ -280,7 +287,7 @@ public class AdAuctionGUI extends JFrame{
         ctr.setForeground(secondaryColor);
         ctr.setFont(fontOfText);
 
-        JLabel ctrValues = new JLabel(toString(metricCalculator.getCtr()));
+        JLabel ctrValues = new JLabel(toString(metricController.getCtr()));
         ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         ctrValues.setFont(fontOfValue);
 
@@ -300,7 +307,7 @@ public class AdAuctionGUI extends JFrame{
         cpa.setForeground(secondaryColor);
         cpa.setFont(fontOfText);
 
-        JLabel cpaValues = new JLabel(toString(metricCalculator.getCpa()));
+        JLabel cpaValues = new JLabel(toString(metricController.getCpa()));
         cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpaValues.setFont(fontOfValue);
 
@@ -320,7 +327,7 @@ public class AdAuctionGUI extends JFrame{
         cpc.setForeground(secondaryColor);
         cpc.setFont(fontOfText);
 
-        JLabel cpcValues = new JLabel(toString(metricCalculator.getCpc()));
+        JLabel cpcValues = new JLabel(toString(metricController.getCpc()));
         cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpcValues.setFont(fontOfValue);
 
@@ -340,7 +347,7 @@ public class AdAuctionGUI extends JFrame{
         cpm.setForeground(secondaryColor);
         cpm.setFont(fontOfText);
 
-        JLabel cpmValues = new JLabel(toString(metricCalculator.getCpm()));
+        JLabel cpmValues = new JLabel(toString(metricController.getCpm()));
         cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpmValues.setFont(fontOfValue);
 
@@ -360,7 +367,7 @@ public class AdAuctionGUI extends JFrame{
         conversions.setForeground(secondaryColor);
         conversions.setFont(fontOfText);
 
-        JLabel conversionsValues = new JLabel(toString(metricCalculator.getConversionsNo()));
+        JLabel conversionsValues = new JLabel(toString(metricController.getConversionsNo()));
         conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         conversionsValues.setFont(fontOfValue);
 
@@ -380,7 +387,7 @@ public class AdAuctionGUI extends JFrame{
         totalCost.setForeground(secondaryColor);
         totalCost.setFont(fontOfText);
 
-        JLabel totalCostValues = new JLabel(toString(metricCalculator.getTotalImpressionCost()));
+        JLabel totalCostValues = new JLabel(toString(metricController.getTotalImpressionCost()));
         totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalCostValues.setFont(fontOfValue);
 
@@ -400,7 +407,7 @@ public class AdAuctionGUI extends JFrame{
         bounce.setForeground(secondaryColor);
         bounce.setFont(fontOfText);
 
-        JLabel bounceValues = new JLabel(toString(metricCalculator.getBouncesNo()));
+        JLabel bounceValues = new JLabel(toString(metricController.getBouncesNo()));
         bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceValues.setFont(fontOfValue);
 
@@ -420,7 +427,7 @@ public class AdAuctionGUI extends JFrame{
         bounceRate.setForeground(secondaryColor);
         bounceRate.setFont(fontOfText);
 
-        JLabel bounceRateValues = new JLabel(toString(metricCalculator.getBr()));
+        JLabel bounceRateValues = new JLabel(toString(metricController.getBr()));
         bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceRateValues.setFont(fontOfValue);
 
@@ -467,6 +474,7 @@ public class AdAuctionGUI extends JFrame{
         menu.add(insightsGrid);
     }
 
+    // displays the chart filters
     public void createChartNorthBox(){
         Font comboBoxFont = new Font(chartsButton.getFont().getName(), Font.PLAIN, 14);
 
@@ -478,9 +486,9 @@ public class AdAuctionGUI extends JFrame{
         metricsBox.setFont(comboBoxFont);
 
         metricsBox.addActionListener(e -> {
-            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
-            String itemName = (String) cb.getSelectedItem();
+            String itemName = e.getSource().getClass().getName();
             arrayOfChoicesChart.set(0, itemName);
+            updateCharts();
         });
 
         JLabel metricsLabel = new JLabel("METRICS");
@@ -500,9 +508,9 @@ public class AdAuctionGUI extends JFrame{
         genderBox.setFont(comboBoxFont);
 
         genderBox.addActionListener(e -> {
-            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
-            String itemName = (String) cb.getSelectedItem();
+            String itemName = e.getSource().getClass().getName();
             arrayOfChoicesChart.set(1, itemName);
+            updateCharts();
         });
 
         JLabel genderLabel = new JLabel("GENDER");
@@ -522,9 +530,9 @@ public class AdAuctionGUI extends JFrame{
         ageBox.setFont(comboBoxFont);
 
         ageBox.addActionListener(e -> {
-            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
-            String itemName = (String) cb.getSelectedItem();
+            String itemName = e.getSource().getClass().getName();
             arrayOfChoicesChart.set(2, itemName);
+            updateCharts();
         });
 
         JLabel ageLabel = new JLabel("AGE");
@@ -544,9 +552,9 @@ public class AdAuctionGUI extends JFrame{
         contextBox.setFont(comboBoxFont);
 
         contextBox.addActionListener(e -> {
-            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
-            String itemName = (String) cb.getSelectedItem();
+            String itemName = e.getSource().getClass().getName();
             arrayOfChoicesChart.set(3, itemName);
+            updateCharts();
         });
 
         JLabel contextLabel = new JLabel("CONTEXT");
@@ -566,9 +574,9 @@ public class AdAuctionGUI extends JFrame{
         incomeBox.setFont(comboBoxFont);
 
         incomeBox.addActionListener(e -> {
-            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
-            String itemName = (String) cb.getSelectedItem();
+            String itemName = e.getSource().getClass().getName();
             arrayOfChoicesChart.set(4, itemName);
+            updateCharts();
         });
 
         JLabel incomeLabel = new JLabel("INCOME");
@@ -580,52 +588,6 @@ public class AdAuctionGUI extends JFrame{
         incomeVerticalBox.add(incomeBox);
         //end box
 
-        //start Box
-        String[] timeChoices = new String[]{"Days", "Weeks", "Months"};
-        JComboBox<String> timeBox = new JComboBox<>(timeChoices);
-        timeBox.setVisible(true);
-        timeBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-        timeBox.setFont(comboBoxFont);
-
-        timeBox.addActionListener(e -> {
-            JComboBox<String> cb = new JComboBox<>((String[]) e.getSource());
-            String itemName = (String) cb.getSelectedItem();
-            arrayOfChoicesChart.set(5, itemName);
-        });
-
-        JLabel timeLabel = new JLabel("TIME");
-        timeLabel.setFont(mainFont);
-        timeLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box timeVerticalBox = Box.createVerticalBox();
-        timeVerticalBox.add(timeLabel);
-        timeVerticalBox.add(timeBox);
-        //end box
-
-        JButton createChartButton = new JButton("Create Chart");
-        createChartButton.setFont(mainFont);
-        createChartButton.setBackground(primaryColor);
-        createChartButton.setForeground(Color.WHITE);
-        createChartButton.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-        createChartButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        createChartButton.setPreferredSize(new Dimension(200,40));
-        createChartButton.setAlignmentY(CENTER_ALIGNMENT);
-
-        createChartButton.addActionListener(e -> {
-            if(! (arrayOfChoicesChart.get(0).equals("Metrics"))){
-                JOptionPane.showMessageDialog(null, "No Filter ability has been implemented yet");
-                for (String i: arrayOfChoicesChart
-                ) {
-                    System.out.println(i);
-                }
-            } else {
-                //JOptionPane.showMessageDialog(null, "Metrics choice can't be empty");
-                JOptionPane.showMessageDialog(null, "No Filter ability has been implemented yet");
-                System.out.println(arrayOfChoicesChart.get(0));
-            }
-            System.out.println("---------------------------");
-        });
-
         Box chartNorthBox = Box.createHorizontalBox();
         chartNorthBox.setPreferredSize(new Dimension(chartsGrid.getWidth(),72));
         chartNorthBox.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -634,12 +596,11 @@ public class AdAuctionGUI extends JFrame{
         chartNorthBox.add(ageVerticalBox);
         chartNorthBox.add(contextVerticalBox);
         chartNorthBox.add(incomeVerticalBox);
-        chartNorthBox.add(timeVerticalBox);
-        chartNorthBox.add(createChartButton);
 
         chartsGrid.add(chartNorthBox,BorderLayout.NORTH);
     }
 
+    // displays the chart slider (time granularity)
     public void createChartSouthGrid(){
         chartSlider = new JSlider(JSlider.HORIZONTAL,0,4,1);
         chartSlider.setVisible(true);
@@ -657,11 +618,11 @@ public class AdAuctionGUI extends JFrame{
         chartSlider.setLabelTable(position);
 
         chartSlider.addChangeListener(e -> {
-            int sliderValue = chartSlider.getValue();
+            String sliderValue = position.get(chartSlider.getValue()).getText();
 
-            if (!arrayOfChoicesChart.get(5).equals(position.get(sliderValue).getText())) {
-                arrayOfChoicesChart.set(5, String.valueOf(sliderValue));
-                updateCharts(position.get(sliderValue).getText());
+            if (!arrayOfChoicesChart.get(7).equals(sliderValue)) {
+                arrayOfChoicesChart.set(7, sliderValue);
+                updateCharts();
             }
         });
 
@@ -688,14 +649,16 @@ public class AdAuctionGUI extends JFrame{
         chartsGrid.add(chartSouthGrid,BorderLayout.SOUTH);
     }
 
+    // displays the chart
     public void createChartsGrid(){
-        arrayOfChoicesChart.add("Metrics");
-        arrayOfChoicesChart.add("Any");
-        arrayOfChoicesChart.add("Any");
-        arrayOfChoicesChart.add("Any");
-        arrayOfChoicesChart.add("Any");
-        arrayOfChoicesChart.add("Days");
-        arrayOfChoicesChart.add("25");
+        arrayOfChoicesChart.add("Impressions"); // metrics
+        arrayOfChoicesChart.add("Any"); // gender
+        arrayOfChoicesChart.add("Any"); // age
+        arrayOfChoicesChart.add("Any"); // context
+        arrayOfChoicesChart.add("Any"); // income
+        arrayOfChoicesChart.add("Any"); // start date
+        arrayOfChoicesChart.add("Any"); // end date
+        arrayOfChoicesChart.add("Days"); // granularity
 
         chartsGrid = new JPanel(new BorderLayout());
         chartsGrid.setBounds(200,100,gui.getWidth()-210,gui.getHeight()-100);
@@ -705,12 +668,7 @@ public class AdAuctionGUI extends JFrame{
 
         createChartNorthBox();
         createChartSouthGrid();
-        createChartPanel();
-        menu.add(chartsGrid);
-    }
 
-    // creates multiple panels of charts
-    private void createChartPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         chartJPanel = new JPanel(new BorderLayout());
 
@@ -719,6 +677,8 @@ public class AdAuctionGUI extends JFrame{
         panel.add(chartJPanel);
 
         chartsGrid.add(panel, BorderLayout.CENTER);
+
+        menu.add(chartsGrid);
     }
 
     // converts a metric to a readable string
@@ -730,14 +690,21 @@ public class AdAuctionGUI extends JFrame{
             return String.format("%.4g%n", metric); // change the 4 to change the dp
     }
 
-    // creates the charts in the gui when the file is loaded
+    // displays the metrics when loaded
+    public void createMetrics(MetricCalculator metricCalculator) {
+        this.metricController.createMetrics(metricCalculator);
+    }
+
+    // displays the initial chart when loaded
     public void createCharts(ChartCalculator calculator) {
         chartController.createCharts(calculator);
     }
 
-    // updates the chart in the gui
-    public void updateCharts(String granularity) {
-        switch (granularity) {
+    // displays the updated charts when changing the time granularity
+    public void updateCharts() {
+        chartController.updateCharts(arrayOfChoicesChart.get(5), arrayOfChoicesChart.get(6));
+
+        switch (arrayOfChoicesChart.get(7)) {
             case "Hours": {
                 chartPanel = new ChartPanel(chartController.getHoursChart());
                 break;
@@ -762,9 +729,5 @@ public class AdAuctionGUI extends JFrame{
         chartJPanel.remove(0);
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.validate();
-    }
-
-    public void updateMetrics(MetricCalculator metricCalculator) {
-        this.metricCalculator = metricCalculator;
     }
 }

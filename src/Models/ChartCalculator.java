@@ -33,6 +33,11 @@ public class ChartCalculator extends Calculator {
         calculate(interval, getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
     }
 
+    // recalculates intervals
+    public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate) {
+        calculate(interval, startDate, endDate);
+    }
+
     // produces a list of metric calculators that stores all the logs split into a set interval
     public void calculate(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
         // resets the array lists
