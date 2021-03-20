@@ -20,44 +20,36 @@ public class ChartCalculator extends Calculator {
     private ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
-    public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, String intervalLength) {
+    public ChartCalculator() {
+        super(null, null, null);
+    }
+
+    public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog) {
         super(impressionLog, clickLog, serverLog);
-
-        resetChart();
-        calculateCharts(intervalLength);
     }
 
-    // recalculates intervals, no time range
+    // recalculates intervals
     public void calculateCharts(String interval) {
-        resetChart();
         calculate(interval, getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
-    }
-
-    // recalculates intervals, with time range
-    public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate) {
-        resetChart();
-        calculate(interval, startDate, endDate);
-    }
-
-    // resets the array lists
-    public void resetChart() {
-        impressionsNoList = new ArrayList<>();
-        uniquesNoList = new ArrayList<>();
-        clicksNoList = new ArrayList<>();
-        bouncesNoList = new ArrayList<>();
-        conversionsNoList = new ArrayList<>();
-        totalImpressionCostList = new ArrayList<>();
-        totalClickCostList = new ArrayList<>();
-
-        ctrList = new ArrayList<>();
-        cpaList = new ArrayList<>();
-        cpcList = new ArrayList<>();
-        cpmList = new ArrayList<>();
-        brList = new ArrayList<>();
     }
 
     // produces a list of metric calculators that stores all the logs split into a set interval
     public void calculate(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
+        // resets the array lists
+        this.impressionsNoList = new ArrayList<>();
+        this.uniquesNoList = new ArrayList<>();
+        this.clicksNoList = new ArrayList<>();
+        this.bouncesNoList = new ArrayList<>();
+        this.conversionsNoList = new ArrayList<>();
+        this.totalImpressionCostList = new ArrayList<>();
+        this.totalClickCostList = new ArrayList<>();
+
+        this.ctrList = new ArrayList<>();
+        this.cpaList = new ArrayList<>();
+        this.cpcList = new ArrayList<>();
+        this.cpmList = new ArrayList<>();
+        this.brList = new ArrayList<>();
+
         // creates a list of dates separated by a constant interval
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         dates.add(startDate);
@@ -207,7 +199,7 @@ public class ChartCalculator extends Calculator {
 
         // calculating metrics for every interval
         for (MetricCalculator calculator : intervalCalculators) {
-            calculator.calculateMetrics(startDate, endDate);
+            calculator.calculateMetrics();
 
             this.impressionsNoList.add(calculator.getImpressionsNo());
             this.uniquesNoList.add(calculator.getUniquesNo());

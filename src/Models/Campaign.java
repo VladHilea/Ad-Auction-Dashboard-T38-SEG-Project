@@ -1,7 +1,5 @@
 package Models;
 
-import View.Chart;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -104,18 +102,12 @@ public class Campaign {
         return users.getOrDefault(id, null);
     }
 
-    // modular functions for later
+    // modular function for later
     public MetricCalculator newMetrics() {
         return new MetricCalculator(impressionLog, clickLog, serverLog);
     }
 
-    public Chart newChart() {
-        ChartCalculator hoursCalculator = new ChartCalculator(impressionLog, clickLog, serverLog, "Hours");
-        ChartCalculator daysCalculator = new ChartCalculator(impressionLog, clickLog, serverLog, "Days");
-        ChartCalculator weeksCalculator = new ChartCalculator(impressionLog, clickLog, serverLog, "Weeks");
-        ChartCalculator monthsCalculator = new ChartCalculator(impressionLog, clickLog, serverLog, "Months");
-        ChartCalculator yearsCalculator = new ChartCalculator(impressionLog, clickLog, serverLog, "Years");
-
-        return new Chart("Metrics vs Time", hoursCalculator, daysCalculator, weeksCalculator, monthsCalculator, yearsCalculator);
+    public ChartCalculator newCharts() {
+        return new ChartCalculator(impressionLog, clickLog, serverLog);
     }
 }

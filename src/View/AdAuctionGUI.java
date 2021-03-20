@@ -1,15 +1,12 @@
 package View;
 
-import Models.MetricCalculator;
+import Controllers.ChartController;
+import Models.*;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -17,14 +14,17 @@ public class AdAuctionGUI extends JFrame{
     private JFrame gui;
     private JLayeredPane menu;
     private JPanel insightsGrid;
+
+    private JPanel chartJPanel;
+    private ChartPanel chartPanel;
     private JPanel chartsGrid;
     private JButton chartsButton;
     private JSlider chartSlider;
 
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
-    private final MetricCalculator metricCalculator;
-    private final Chart chart;
+    private ChartController chartController;
+    private MetricCalculator metricCalculator;
 
     private final Color primaryColor = new Color(14,139,229);
     private final Color secondaryColor = new Color(220,120,27);
@@ -32,9 +32,11 @@ public class AdAuctionGUI extends JFrame{
 
     private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
 
-    public AdAuctionGUI(MetricCalculator metricCalculator, Chart chart) {
-        this.metricCalculator = metricCalculator;
-        this.chart = chart;
+    public AdAuctionGUI() {
+        this.chartController = new ChartController();
+        this.metricCalculator = new MetricCalculator();
+
+        chartPanel = new ChartPanel(new Chart("Base Chart", "Impressions vs Time", "Impressions").getChart());
     }
 
     public void prepareGui() {
@@ -43,6 +45,7 @@ public class AdAuctionGUI extends JFrame{
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         createMenu();
         gui.add(menu);
     }
@@ -56,7 +59,7 @@ public class AdAuctionGUI extends JFrame{
         createTopMenu();
         createVerticalMenu();
         createInsightsGrid();
-        createChartsGrid(chart.getDaysChart("impressions over time", "impressions"));
+        createChartsGrid();
     }
 
     public void createVerticalMenu(){
@@ -147,7 +150,6 @@ public class AdAuctionGUI extends JFrame{
         insightsButton.addActionListener(e -> {
             insightsGrid.setVisible(true);
             chartsGrid.setVisible(false);
-
         });
 
         chartsButton.addActionListener(e -> {
@@ -656,9 +658,11 @@ public class AdAuctionGUI extends JFrame{
 
         chartSlider.addChangeListener(e -> {
             int sliderValue = chartSlider.getValue();
-            arrayOfChoicesChart.set(1, String.valueOf(sliderValue));
 
-            recalculateChart(position.get(sliderValue).getText(), "impressions");
+            if (!arrayOfChoicesChart.get(5).equals(position.get(sliderValue).getText())) {
+                arrayOfChoicesChart.set(5, String.valueOf(sliderValue));
+                updateCharts(position.get(sliderValue).getText());
+            }
         });
 
         JPanel addToComparePanel = new JPanel(new GridBagLayout());
@@ -684,7 +688,7 @@ public class AdAuctionGUI extends JFrame{
         chartsGrid.add(chartSouthGrid,BorderLayout.SOUTH);
     }
 
-    public void createChartsGrid(JFreeChart chart){
+    public void createChartsGrid(){
         arrayOfChoicesChart.add("Metrics");
         arrayOfChoicesChart.add("Any");
         arrayOfChoicesChart.add("Any");
@@ -701,17 +705,20 @@ public class AdAuctionGUI extends JFrame{
 
         createChartNorthBox();
         createChartSouthGrid();
+        createChartPanel();
+        menu.add(chartsGrid);
+    }
 
-        //create panel for chart
+    // creates multiple panels of charts
+    private void createChartPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        JPanel chartJPanel = new JPanel(new BorderLayout());
-        ChartPanel chartPanel = new ChartPanel(chart);
+        chartJPanel = new JPanel(new BorderLayout());
+
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.validate();
         panel.add(chartJPanel);
-        chartsGrid.add(panel, BorderLayout.CENTER);
 
-        menu.add(chartsGrid);
+        chartsGrid.add(panel, BorderLayout.CENTER);
     }
 
     // converts a metric to a readable string
@@ -723,97 +730,41 @@ public class AdAuctionGUI extends JFrame{
             return String.format("%.4g%n", metric); // change the 4 to change the dp
     }
 
-    // recalculates metrics on main page, no time range
-    public void recalculateMetrics() {
-        metricCalculator.calculateMetrics();
-    }
-
-    // recalculates metrics on main page, with time range
-    public void recalculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
-        metricCalculator.calculateMetrics(startDate, endDate);
-    }
-
-    // recalculates chart, no time range
-    public void recalculateChart(String granularity, String metric) {
-        updateChart(granularity, metric);
-    }
-
-    // recalculates chart, with time range
-    public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate, String granularity, String metric) {
-        chart.recalculateChart(startDate, endDate);
-        updateChart(granularity, metric);
+    // creates the charts in the gui when the file is loaded
+    public void createCharts(ChartCalculator calculator) {
+        chartController.createCharts(calculator);
     }
 
     // updates the chart in the gui
-    public void updateChart(String granularity, String metric) {
-        chartsGrid.remove(2);
-
+    public void updateCharts(String granularity) {
         switch (granularity) {
             case "Hours": {
-                JPanel panel = new JPanel(new GridBagLayout());
-                JPanel chartJPanel = new JPanel(new BorderLayout());
-                ChartPanel chartPanel = new ChartPanel(chart.getHoursChart(metric + " over time", metric));
-                chartJPanel.add(chartPanel, BorderLayout.CENTER);
-                chartJPanel.validate();
-                panel.add(chartJPanel);
-                chartsGrid.add(panel, BorderLayout.CENTER);
-
-                menu.remove(3);
-                menu.add(chartsGrid);
+                chartPanel = new ChartPanel(chartController.getHoursChart());
                 break;
             }
             case "Days": {
-                JPanel panel = new JPanel(new GridBagLayout());
-                JPanel chartJPanel = new JPanel(new BorderLayout());
-                ChartPanel chartPanel = new ChartPanel(chart.getDaysChart(metric + " over time", metric));
-                chartJPanel.add(chartPanel, BorderLayout.CENTER);
-                chartJPanel.validate();
-                panel.add(chartJPanel);
-                chartsGrid.add(panel, BorderLayout.CENTER);
-
-                menu.remove(3);
-                menu.add(chartsGrid);
+                chartPanel = new ChartPanel(chartController.getDaysChart());
                 break;
             }
             case "Weeks": {
-                JPanel panel = new JPanel(new GridBagLayout());
-                JPanel chartJPanel = new JPanel(new BorderLayout());
-                ChartPanel chartPanel = new ChartPanel(chart.getWeeksChart(metric + " over time", metric));
-                chartJPanel.add(chartPanel, BorderLayout.CENTER);
-                chartJPanel.validate();
-                panel.add(chartJPanel);
-                chartsGrid.add(panel, BorderLayout.CENTER);
-
-                menu.remove(3);
-                menu.add(chartsGrid);
+                chartPanel = new ChartPanel(chartController.getWeeksChart());
                 break;
             }
             case "Months": {
-                JPanel panel = new JPanel(new GridBagLayout());
-                JPanel chartJPanel = new JPanel(new BorderLayout());
-                ChartPanel chartPanel = new ChartPanel(chart.getMonthsChart(metric + " over time", metric));
-                chartJPanel.add(chartPanel, BorderLayout.CENTER);
-                chartJPanel.validate();
-                panel.add(chartJPanel);
-                chartsGrid.add(panel, BorderLayout.CENTER);
-
-                menu.remove(3);
-                menu.add(chartsGrid);
+                chartPanel = new ChartPanel(chartController.getMonthsChart());
                 break;
             }
             case "Years": {
-                JPanel panel = new JPanel(new GridBagLayout());
-                JPanel chartJPanel = new JPanel(new BorderLayout());
-                ChartPanel chartPanel = new ChartPanel(chart.getYearsChart(metric + " over time", metric));
-                chartJPanel.add(chartPanel, BorderLayout.CENTER);
-                chartJPanel.validate();
-                panel.add(chartJPanel);
-                chartsGrid.add(panel, BorderLayout.CENTER);
-
-                menu.remove(3);
-                menu.add(chartsGrid);
+                chartPanel = new ChartPanel(chartController.getYearsChart());
                 break;
             }
         }
+        chartJPanel.remove(0);
+        chartJPanel.add(chartPanel, BorderLayout.CENTER);
+        chartJPanel.validate();
+    }
+
+    public void updateMetrics(MetricCalculator metricCalculator) {
+        this.metricCalculator = metricCalculator;
     }
 }

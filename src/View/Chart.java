@@ -1,114 +1,52 @@
 package View;
 
 import Models.ChartCalculator;
-import org.jfree.chart.ChartPanel;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.ui.ApplicationFrame;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-public class Chart extends ApplicationFrame{
-	private final ChartCalculator hoursCalculator;
-	private final ChartCalculator daysCalculator;
-	private final ChartCalculator weeksCalculator;
-	private final ChartCalculator monthsCalculator;
-	private final ChartCalculator yearsCalculator;
+public class Chart extends ApplicationFrame {
+	private JFreeChart chart;
 
-	public Chart(String applicationTitle, ChartCalculator hoursCalculator, ChartCalculator daysCalculator, ChartCalculator weeksCalculator, ChartCalculator monthsCalculator, ChartCalculator yearsCalculator) {
+	private final String chartTitle;
+	private final String metric;
+
+	public Chart(String applicationTitle, String chartTitle, String metric) {
 		super(applicationTitle);
 
-		this.hoursCalculator = hoursCalculator;
-		this.daysCalculator = daysCalculator;
-		this.weeksCalculator = weeksCalculator;
-		this.monthsCalculator = monthsCalculator;
-		this.yearsCalculator = yearsCalculator;
+		this.chartTitle = chartTitle;
+		this.metric = metric;
+
+		updateChart(new ChartCalculator());
+
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(560 , 367));
+		setContentPane(chartPanel);
 	}
 
-	// displays a chart (hours) paired with a calculator
-	public JFreeChart getHoursChart(String chartTitle, String metric) {
-		JFreeChart hoursChart = ChartFactory.createLineChart(chartTitle,
+	public void updateChart(ChartCalculator calculator) {
+		this.chart = ChartFactory.createLineChart(chartTitle,
 				"Time (Day) ","Number of " + metric,
-				createDataset(metric, hoursCalculator),
+				createDataset(metric, calculator),
 				PlotOrientation.VERTICAL,
 				true,true,false);
-
-		ChartPanel chartPanel = new ChartPanel( hoursChart );
-		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-		setContentPane( chartPanel );
-
-		return hoursChart;
 	}
 
-	// displays a chart (days) paired with a calculator
-	public JFreeChart getDaysChart(String chartTitle, String metric) {
-		JFreeChart daysChart = ChartFactory.createLineChart(chartTitle,
-				"Time (Day) ","Number of " + metric,
-				createDataset(metric, daysCalculator),
-				PlotOrientation.VERTICAL,
-				true,true,false);
-
-		ChartPanel chartPanel = new ChartPanel( daysChart );
-		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-		setContentPane( chartPanel );
-
-		return daysChart;
-	}
-
-	// displays a chart (weeks) paired with a calculator
-	public JFreeChart getWeeksChart(String chartTitle, String metric) {
-		JFreeChart weeksChart = ChartFactory.createLineChart(chartTitle,
-				"Time (Week) ","Number of " + metric,
-				createDataset(metric, weeksCalculator),
-				PlotOrientation.VERTICAL,
-				true,true,false);
-
-		ChartPanel chartPanel = new ChartPanel( weeksChart );
-		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-		setContentPane( chartPanel );
-
-		return weeksChart;
-	}
-
-	// displays a chart (months) paired with a calculator
-	public JFreeChart getMonthsChart(String chartTitle, String metric) {
-		JFreeChart monthsChart = ChartFactory.createLineChart(chartTitle,
-				"Time (Day) ","Number of " + metric,
-				createDataset(metric, monthsCalculator),
-				PlotOrientation.VERTICAL,
-				true,true,false);
-
-		ChartPanel chartPanel = new ChartPanel( monthsChart );
-		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-		setContentPane( chartPanel );
-
-		return monthsChart;
-	}
-
-	// displays a chart (years) paired with a calculator
-	public JFreeChart getYearsChart(String chartTitle, String metric) {
-		JFreeChart yearsChart = ChartFactory.createLineChart(chartTitle,
-				"Time (Day) ","Number of " + metric,
-				createDataset(metric, yearsCalculator),
-				PlotOrientation.VERTICAL,
-				true,true,false);
-
-		ChartPanel chartPanel = new ChartPanel( yearsChart );
-		chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-		setContentPane( chartPanel );
-
-		return yearsChart;
+	public JFreeChart getChart() {
+		return chart;
 	}
 
 	// creates and adds to the dataset using values from the chartCalculator lists
-	private DefaultCategoryDataset createDataset(String metric, ChartCalculator calculator) {
+	public DefaultCategoryDataset createDataset(String metric, ChartCalculator calculator) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
 
-		if (metric.equals("impressions")) {
+		if (metric.equals("Impressions")) {
 			ArrayList<Integer> impList = calculator.getImpressionsNoList();
 			int count = 1;
 			for (int i : impList) {
@@ -117,7 +55,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("uniques")) {
+		if (metric.equals("Uniques")) {
 			ArrayList<Integer> uniList = calculator.getUniquesNoList();
 			int count = 1;
 			for (int i : uniList) {
@@ -126,7 +64,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("clicks")) {
+		if (metric.equals("Clicks")) {
 			ArrayList<Integer> clickList = calculator.getClicksNoList();
 			int count = 1;
 			for (int i : clickList) {
@@ -135,7 +73,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("bounces")) {
+		if (metric.equals("Bounces")) {
 			ArrayList<Integer> bounceList = calculator.getBouncesNoList();
 			int count = 1;
 			for (int i : bounceList) {
@@ -144,7 +82,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("conversions")) {
+		if (metric.equals("Conversions")) {
 			ArrayList<Integer> conversionList = calculator.getConversionsNoList();
 			int count = 1;
 			for (int i : conversionList) {
@@ -153,7 +91,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("total impression cost")) {
+		if (metric.equals("Total Impression Cost")) {
 			ArrayList<Float> ticList = calculator.getTotalImpressionCostList();
 			int count = 1;
 
@@ -163,7 +101,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("total click cost")) {
+		if (metric.equals("Total Click Cost")) {
 			ArrayList<Float> tccList = calculator.getTotalClickCostList();
 			int count = 1;
 
@@ -173,7 +111,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("ctr")) {
+		if (metric.equals("CTR")) {
 			ArrayList<Float> ctrList = calculator.getCtrList();
 			int count = 1;
 
@@ -183,7 +121,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("cpa")) {
+		if (metric.equals("CPA")) {
 			ArrayList<Float> cpaList = calculator.getCpaList();
 			int count = 1;
 
@@ -193,7 +131,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("cpc")) {
+		if (metric.equals("CPC")) {
 			ArrayList<Float> cpcList = calculator.getCpcList();
 			int count = 1;
 
@@ -203,7 +141,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("cpm")) {
+		if (metric.equals("CPM")) {
 			ArrayList<Float> cpmList = calculator.getCpmList();
 			int count = 1;
 
@@ -213,7 +151,7 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 
-		if (metric.equals("bounce rate")) {
+		if (metric.equals("Bounce Rate")) {
 			ArrayList<Float> brList = calculator.getBrList();
 			int count = 1;
 
@@ -223,12 +161,5 @@ public class Chart extends ApplicationFrame{
 			}
 		}
 		return dataset;
-	}
-
-	// recalculates chart, with time range
-	public void recalculateChart(LocalDateTime startDate, LocalDateTime endDate) {
-		daysCalculator.calculateCharts("Days", startDate, endDate);
-		weeksCalculator.calculateCharts("Weeks", startDate, endDate);
-		monthsCalculator.calculateCharts("Months", startDate, endDate);
 	}
 }

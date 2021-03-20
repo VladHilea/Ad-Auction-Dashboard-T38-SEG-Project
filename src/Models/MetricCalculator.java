@@ -20,58 +20,40 @@ public class MetricCalculator extends Calculator {
     private float cpm; // cost-per-thousand impressions
     private float br; // bounce rate - number of bounces per click
 
-    private final int pageLimit; // max number of pages to be counted as a bounce
-    private final int bounceTime; // max amount of time to be counted as a bounce
+    private final int pageLimit = 1; // max number of pages to be counted as a bounce
+    private final int bounceTime = 500; // max amount of time to be counted as a bounce
+
+    public MetricCalculator() {
+        super(null, null, null);
+    }
 
     public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog) {
         super(impressionLog, clickLog, serverLog);
-
-        this.pageLimit = 1;
-        this.bounceTime = 500;
-
-        resetMetrics();
         calculateMetrics();
     }
 
     // calculates metrics from the entire dataset
     public void calculateMetrics() {
-        ArrayList<ImpressionEntry> impressionList = getImpressionLog(); // list of impressions
-        ArrayList<ClickEntry> clickList = getClickLog(); // list of clicks
-        ArrayList<ServerEntry> serverList = getServerLog(); // list of server entries
-
-        resetMetrics();
-        calculate(impressionList, clickList, serverList);
-    }
-
-    // calculates metrics within filters
-    public void calculateMetrics(LocalDateTime startDate, LocalDateTime endDate) {
-        ArrayList<ImpressionEntry> impressionList = getImpressionLog(startDate, endDate); // list of impressions
-        ArrayList<ClickEntry> clickList = getClickLog(startDate, endDate); // list of clicks
-        ArrayList<ServerEntry> serverList = getServerLog(startDate, endDate); // list of server entries
-
-        resetMetrics();
-        calculate(impressionList, clickList, serverList);
-    }
-
-    // resets the metrics
-    public void resetMetrics() {
-        impressionsNo = 0;
-        uniquesNo = 0;
-        clicksNo = 0;
-        bouncesNo = 0;
-        conversionsNo = 0;
-        totalImpressionsCost = 0;
-        totalClicksCost = 0;
-
-        ctr = 0;
-        cpa = 0;
-        cpc = 0;
-        cpm = 0;
-        br = 0;
+        calculate(getImpressionLog(), getClickLog(), getServerLog());
     }
 
     // the actual calculations
     public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList) {
+        // resets the metrics
+        this.impressionsNo = 0;
+        this.uniquesNo = 0;
+        this.clicksNo = 0;
+        this.bouncesNo = 0;
+        this.conversionsNo = 0;
+        this.totalImpressionsCost = 0;
+        this.totalClicksCost = 0;
+
+        this.ctr = 0;
+        this.cpa = 0;
+        this.cpc = 0;
+        this.cpm = 0;
+        this.br = 0;
+
         // calculates the number of impressions
         this.impressionsNo = impressionList.size();
 
