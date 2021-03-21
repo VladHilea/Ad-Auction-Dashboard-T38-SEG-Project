@@ -2,19 +2,14 @@ package Models;
 
 import java.time.LocalDateTime;
 
-public class ClickEntry {
-    private final long userId; // ~19 digit unique user id
+public class ClickEntry extends Entry {
     private final LocalDateTime date; // date and time
     private final double clickCost; // 6 d.p. value (>0)
 
     public ClickEntry(long userId, LocalDateTime date, double clickCost) {
-        this.userId = userId;
+        super(userId);
         this.date = date;
         this.clickCost = clickCost;
-    }
-
-    public long getUserId() {
-        return userId;
     }
 
     public LocalDateTime getDate() {

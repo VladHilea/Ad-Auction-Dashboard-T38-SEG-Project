@@ -3,7 +3,9 @@ package Models;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class ChartCalculator extends Calculator {
     private ArrayList<Integer> impressionsNoList = new ArrayList<>(); // number of impressions - people who saw the ad
@@ -20,26 +22,40 @@ public class ChartCalculator extends Calculator {
     private ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
+    private Map<Long, User> users = new HashMap<>(); // list of unique users
+
     public ChartCalculator() {
         super(null, null, null);
     }
 
-    public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog) {
+    public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
         super(impressionLog, clickLog, serverLog);
+        this.users = users;
     }
 
-    // recalculates intervals
-    public void calculateCharts(String interval) {
-        calculate(interval, getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
+    // recalculates intervals from whole time range and no filters
+    public void calculateCharts(String granularity) {
+        calculate(granularity, "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
     }
 
-    // recalculates intervals
-    public void calculateCharts(String interval, LocalDateTime startDate, LocalDateTime endDate) {
-        calculate(interval, startDate, endDate);
+    // recalculates intervals from given time range
+    public void calculateCharts(String granularity, LocalDateTime startDate, LocalDateTime endDate) {
+        calculate(granularity, "Any", "Any", "Any", "Any", startDate, endDate);
     }
+
+    // recalculates intervals from given time range and filters
+    public void calculateCharts(String granularity, String gender, String age, String context, String income) {
+        calculate(granularity, gender, age, context, income, getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
+    }
+
+    // recalculates intervals from given time range and filters
+    public void calculateCharts(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
+        calculate(granularity, gender, age, context, income, startDate, endDate);
+    }
+
 
     // produces a list of metric calculators that stores all the logs split into a set interval
-    public void calculate(String interval, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
+    public void calculate(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
         // resets the array lists
         this.impressionsNoList = new ArrayList<>();
         this.uniquesNoList = new ArrayList<>();
@@ -60,7 +76,7 @@ public class ChartCalculator extends Calculator {
         dates.add(startDate);
 
         // calculates time difference and gets dates at every interval
-        switch (interval) {
+        switch (granularity) {
             case "Hours": {
                 for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
                     dates.add(startDate.plusHours(i));
@@ -122,12 +138,20 @@ public class ChartCalculator extends Calculator {
 
                 // resets the current interval log
                 currentImpressionLog = new ArrayList<>();
-                currentImpressionLog.add(impression);
 
+                // adds to the next log
+                if (filterEntry(impression, gender, age, context, income)) {
+                    currentImpressionLog.add(impression);
+                }
+
+                // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
-            currentImpressionLog.add(impression); // adds the log entry to the current interval log
+            // adds the log entry to the current interval log
+            if (filterEntry(impression, gender, age, context, income)) {
+                currentImpressionLog.add(impression);
+            }
 
             // completes the last interval log
             if (!impressionIterator.hasNext()) {
@@ -151,12 +175,20 @@ public class ChartCalculator extends Calculator {
 
                 // resets the current interval log
                 currentClickLog = new ArrayList<>();
-                currentClickLog.add(click);
 
+                // adds to the next log
+                if (filterEntry(click, gender, age, context, income)) {
+                    currentClickLog.add(click);
+                }
+
+                // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
-            currentClickLog.add(click); // adds the log entry to the current interval log
+            // adds the log entry to the current interval log
+            if (filterEntry(click, gender, age, context, income)) {
+                currentClickLog.add(click);
+            }
 
             // completes the last interval log
             if (!clickIterator.hasNext()) {
@@ -180,12 +212,20 @@ public class ChartCalculator extends Calculator {
 
                 // resets the current interval log
                 currentServerLog = new ArrayList<>();
-                currentServerLog.add(server);
 
+                // adds to the next log
+                if (filterEntry(server, gender, age, context, income)) {
+                    currentServerLog.add(server);
+                }
+
+                // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
-            currentServerLog.add(server); // adds the log entry to the current interval log
+            // adds the log entry to the current interval log
+            if (filterEntry(server, gender, age, context, income)) {
+                currentServerLog.add(server);
+            }
 
             // completes the last interval log
             if (!serverIterator.hasNext()) {
@@ -220,6 +260,18 @@ public class ChartCalculator extends Calculator {
             this.cpmList.add(calculator.getCpm());
             this.brList.add(calculator.getBr());
         }
+    }
+
+    // allows the entry to be counted if it matches the filters
+    public boolean filterEntry(Entry entry, String gender, String age, String context, String income) {
+        User user = users.get(entry.getUserId());
+
+        if (user.getGender().equals(gender) || gender.equals("Any")) {
+            if (user.getAge().equals(age) || age.equals("Any")) {
+                return user.getIncome().equals(income) || income.equals("Any");
+            }
+        }
+        return false;
     }
 
     public ArrayList<Integer> getImpressionsNoList() {
@@ -268,5 +320,9 @@ public class ChartCalculator extends Calculator {
 
     public ArrayList<Float> getBrList() {
         return brList;
+    }
+
+    public Map<Long, User> getUsers() {
+        return users;
     }
 }

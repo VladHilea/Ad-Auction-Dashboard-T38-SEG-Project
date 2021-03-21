@@ -107,6 +107,6 @@ public class Campaign {
     }
 
     public ChartCalculator createCharts() {
-        return new ChartCalculator(impressionLog, clickLog, serverLog);
+        return new ChartCalculator(impressionLog, clickLog, serverLog, users);
     }
 }
