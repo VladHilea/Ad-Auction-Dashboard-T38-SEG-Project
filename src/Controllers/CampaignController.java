@@ -11,10 +11,9 @@ public class CampaignController {
         AdAuctionGUI adAuctionGUI = new AdAuctionGUI();
         Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
 
-        adAuctionGUI.createMetrics(campaign.createMetrics()); // find a way to put this after invoking the gui
-
         SwingUtilities.invokeLater(adAuctionGUI::prepareGui);
 
+        adAuctionGUI.createMetrics(campaign.createMetrics());
         adAuctionGUI.createCharts(campaign.createCharts());
 
         /*

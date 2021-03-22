@@ -55,7 +55,7 @@ public class ChartCalculator extends Calculator {
 
 
     // produces a list of metric calculators that stores all the logs split into a set interval
-    public void calculate(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate /*in future filtering for time granularity to be added*/) {
+    public void calculate(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
         // resets the array lists
         this.impressionsNoList = new ArrayList<>();
         this.uniquesNoList = new ArrayList<>();

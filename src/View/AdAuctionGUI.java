@@ -16,11 +16,16 @@ public class AdAuctionGUI extends JFrame{
     private JLayeredPane menu;
     private JPanel insightsGrid;
 
+    // components for metrics
+    private JLabel impressionsValue, clicksValue, uniquesValue, ctrValues, cpaValues, cpcValues, cpmValues, conversionsValues, totalCostValues, bounceValues, bounceRateValues;
+    private Box impressionsBox, clicksBox, uniquesBox, ctrBox, cpaBox, cpcBox, cpmBox, conversionsBox, totalCostBox, bouncesBox, bounceRateBox;
+
+    // components for charts
     private JPanel chartJPanel;
     private ChartPanel chartPanel;
-    private JPanel chartsGrid;
     private JButton chartsButton;
     private JSlider chartSlider;
+    private JPanel chartsGrid;
 
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
 
@@ -32,6 +37,8 @@ public class AdAuctionGUI extends JFrame{
     private final Color tertiaryColor = new Color(242,236,236);
 
     private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
+    private final Font fontOfText = new Font("Impact", Font.PLAIN, 25);
+    private final Font fontOfValue = new Font("Impact", Font.BOLD, 30);
 
     // initialises the display controllers
     public AdAuctionGUI() {
@@ -205,8 +212,6 @@ public class AdAuctionGUI extends JFrame{
 
     // displays the metrics page
     public void createInsightsGrid(){
-        Font fontOfText = new Font("Impact", Font.PLAIN, 25);
-        Font fontOfValue = new Font("Impact", Font.BOLD, 30);
         Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(tertiaryColor, 1));
 
         insightsGrid = new JPanel(new GridLayout(4,3));
@@ -227,14 +232,14 @@ public class AdAuctionGUI extends JFrame{
         impressions.setForeground(secondaryColor);
         impressions.setFont(fontOfText);
 
-        JLabel impressionsValue = new JLabel(toString(metricController.getImpressionsNo()));
+        impressionsValue = new JLabel("0");
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressionsValue.setFont(fontOfValue);
 
-        Box insightsVBox = Box.createVerticalBox();
-        insightsVBox.add(impressionsValue);
-        insightsVBox.add(impressions);
-        impressionsPanel.add(insightsVBox);
+        impressionsBox = Box.createVerticalBox();
+        impressionsBox.add(impressionsValue);
+        impressionsBox.add(impressions);
+        impressionsPanel.add(impressionsBox);
         //end panel
 
         //start panel
@@ -247,14 +252,14 @@ public class AdAuctionGUI extends JFrame{
         clicks.setForeground(secondaryColor);
         clicks.setFont(fontOfText);
 
-        JLabel clicksValue = new JLabel(toString(metricController.getClicksNo()));
+        clicksValue = new JLabel("0");
         clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         clicksValue.setFont(fontOfValue);
 
-        Box clicksVbox = Box.createVerticalBox();
-        clicksVbox.add(clicksValue);
-        clicksVbox.add(clicks);
-        clicksPanel.add(clicksVbox);
+        clicksBox = Box.createVerticalBox();
+        clicksBox.add(clicksValue);
+        clicksBox.add(clicks);
+        clicksPanel.add(clicksBox);
         //end panel
 
         //start panel
@@ -267,11 +272,11 @@ public class AdAuctionGUI extends JFrame{
         uniques.setForeground(secondaryColor);
         uniques.setFont(fontOfText);
 
-        JLabel uniquesValue = new JLabel(toString(metricController.getUniquesNo()));
+        uniquesValue = new JLabel("0");
         uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         uniquesValue.setFont(fontOfValue);
 
-        Box uniquesBox = Box.createVerticalBox();
+        uniquesBox = Box.createVerticalBox();
         uniquesBox.add(uniquesValue);
         uniquesBox.add(uniques);
         uniquesPanel.add(uniquesBox);
@@ -287,11 +292,11 @@ public class AdAuctionGUI extends JFrame{
         ctr.setForeground(secondaryColor);
         ctr.setFont(fontOfText);
 
-        JLabel ctrValues = new JLabel(toString(metricController.getCtr()));
+        ctrValues = new JLabel("0");
         ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         ctrValues.setFont(fontOfValue);
 
-        Box ctrBox = Box.createVerticalBox();
+        ctrBox = Box.createVerticalBox();
         ctrBox.add(ctrValues);
         ctrBox.add(ctr);
         ctrPanel.add(ctrBox);
@@ -307,11 +312,11 @@ public class AdAuctionGUI extends JFrame{
         cpa.setForeground(secondaryColor);
         cpa.setFont(fontOfText);
 
-        JLabel cpaValues = new JLabel(toString(metricController.getCpa()));
+        cpaValues = new JLabel("0");
         cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpaValues.setFont(fontOfValue);
 
-        Box cpaBox = Box.createVerticalBox();
+        cpaBox = Box.createVerticalBox();
         cpaBox.add(cpaValues);
         cpaBox.add(cpa);
         cpaPanel.add(cpaBox);
@@ -327,11 +332,11 @@ public class AdAuctionGUI extends JFrame{
         cpc.setForeground(secondaryColor);
         cpc.setFont(fontOfText);
 
-        JLabel cpcValues = new JLabel(toString(metricController.getCpc()));
+        cpcValues = new JLabel("0");
         cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpcValues.setFont(fontOfValue);
 
-        Box cpcBox = Box.createVerticalBox();
+        cpcBox = Box.createVerticalBox();
         cpcBox.add(cpcValues);
         cpcBox.add(cpc);
         cpcPanel.add(cpcBox);
@@ -347,11 +352,11 @@ public class AdAuctionGUI extends JFrame{
         cpm.setForeground(secondaryColor);
         cpm.setFont(fontOfText);
 
-        JLabel cpmValues = new JLabel(toString(metricController.getCpm()));
+        cpmValues = new JLabel("0");
         cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         cpmValues.setFont(fontOfValue);
 
-        Box cpmBox = Box.createVerticalBox();
+        cpmBox = Box.createVerticalBox();
         cpmBox.add(cpmValues);
         cpmBox.add(cpm);
         cpmPanel.add(cpmBox);
@@ -367,11 +372,11 @@ public class AdAuctionGUI extends JFrame{
         conversions.setForeground(secondaryColor);
         conversions.setFont(fontOfText);
 
-        JLabel conversionsValues = new JLabel(toString(metricController.getConversionsNo()));
+        conversionsValues = new JLabel("0");
         conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         conversionsValues.setFont(fontOfValue);
 
-        Box conversionsBox = Box.createVerticalBox();
+        conversionsBox = Box.createVerticalBox();
         conversionsBox.add(conversionsValues);
         conversionsBox.add(conversions);
         conversionsPanel.add(conversionsBox);
@@ -387,34 +392,34 @@ public class AdAuctionGUI extends JFrame{
         totalCost.setForeground(secondaryColor);
         totalCost.setFont(fontOfText);
 
-        JLabel totalCostValues = new JLabel(toString(metricController.getTotalImpressionCost()));
+        totalCostValues = new JLabel("0");
         totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         totalCostValues.setFont(fontOfValue);
 
-        Box totalCostBox = Box.createVerticalBox();
+        totalCostBox = Box.createVerticalBox();
         totalCostBox.add(totalCostValues);
         totalCostBox.add(totalCost);
         totalCostPanel.add(totalCostBox);
         //end panel
 
         //start panel
-        JPanel bouncePanel = new JPanel(new GridBagLayout());
-        bouncePanel.setBorder(blackBorder);
-        bouncePanel.setOpaque(false);
+        JPanel bouncesPanel = new JPanel(new GridBagLayout());
+        bouncesPanel.setBorder(blackBorder);
+        bouncesPanel.setOpaque(false);
 
-        JLabel bounce = new JLabel("Bounces");
-        bounce.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounce.setForeground(secondaryColor);
-        bounce.setFont(fontOfText);
+        JLabel bounces = new JLabel("Bounces");
+        bounces.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        bounces.setForeground(secondaryColor);
+        bounces.setFont(fontOfText);
 
-        JLabel bounceValues = new JLabel(toString(metricController.getBouncesNo()));
+        bounceValues = new JLabel("0");
         bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceValues.setFont(fontOfValue);
 
-        Box bounceBox = Box.createVerticalBox();
-        bounceBox.add(bounceValues);
-        bounceBox.add(bounce);
-        bouncePanel.add(bounceBox);
+        bouncesBox = Box.createVerticalBox();
+        bouncesBox.add(bounceValues);
+        bouncesBox.add(bounces);
+        bouncesPanel.add(bouncesBox);
         //end panel
 
         //start panel
@@ -427,11 +432,11 @@ public class AdAuctionGUI extends JFrame{
         bounceRate.setForeground(secondaryColor);
         bounceRate.setFont(fontOfText);
 
-        JLabel bounceRateValues = new JLabel(toString(metricController.getBr()));
+        bounceRateValues = new JLabel("0");
         bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceRateValues.setFont(fontOfValue);
 
-        Box bounceRateBox = Box.createVerticalBox();
+        bounceRateBox = Box.createVerticalBox();
         bounceRateBox.add(bounceRateValues);
         bounceRateBox.add(bounceRate);
         bounceRatePanel.add(bounceRateBox);
@@ -446,14 +451,14 @@ public class AdAuctionGUI extends JFrame{
         bounceTime.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         bounceTime.setFont(fontOfValue);
 
-        JLabel bounceTimeValues = new JLabel("Bounce Type");
-        bounceTimeValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceTimeValues.setForeground(secondaryColor);
-        bounceTimeValues.setFont(fontOfText);
+        JLabel bouncesTimeValues = new JLabel("Bounce Type");
+        bouncesTimeValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        bouncesTimeValues.setForeground(secondaryColor);
+        bouncesTimeValues.setFont(fontOfText);
 
         Box bounceTimeBox = Box.createVerticalBox();
         bounceTimeBox.add(bounceTime);
-        bounceTimeBox.add(bounceTimeValues);
+        bounceTimeBox.add(bouncesTimeValues);
 
         bounceTimePanel.add(bounceTimeBox);
         //end panel
@@ -467,7 +472,7 @@ public class AdAuctionGUI extends JFrame{
         insightsGrid.add(cpmPanel);
         insightsGrid.add(conversionsPanel);
         insightsGrid.add(totalCostPanel);
-        insightsGrid.add(bouncePanel);
+        insightsGrid.add(bouncesPanel);
         insightsGrid.add(bounceRatePanel);
         insightsGrid.add(bounceTimePanel);
 
@@ -692,7 +697,88 @@ public class AdAuctionGUI extends JFrame{
 
     // displays the metrics when loaded
     public void createMetrics(MetricCalculator metricCalculator) {
-        this.metricController.createMetrics(metricCalculator);
+        metricController.createMetrics(metricCalculator);
+        updateMetrics();
+    }
+
+    // displays the updated metrics
+    public void updateMetrics() {
+        impressionsValue = new JLabel(String.valueOf(metricController.getImpressionsNo()));
+        impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        impressionsValue.setFont(fontOfValue);
+        impressionsBox.remove(0);
+        impressionsBox.add(impressionsValue, 0);
+        impressionsBox.revalidate();
+
+        clicksValue = new JLabel(toString(metricController.getClicksNo()));
+        clicksValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        clicksValue.setFont(fontOfValue);
+        clicksBox.remove(0);
+        clicksBox.add(clicksValue, 0);
+        clicksBox.revalidate();
+
+        uniquesValue = new JLabel(toString(metricController.getUniquesNo()));
+        uniquesValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        uniquesValue.setFont(fontOfValue);
+        uniquesBox.remove(0);
+        uniquesBox.add(uniquesValue, 0);
+        uniquesBox.revalidate();
+
+        ctrValues = new JLabel(toString(metricController.getCtr()));
+        ctrValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        ctrValues.setFont(fontOfValue);
+        ctrBox.remove(0);
+        ctrBox.add(ctrValues, 0);
+        ctrBox.revalidate();
+
+        cpaValues = new JLabel(toString(metricController.getCpa()));
+        cpaValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        cpaValues.setFont(fontOfValue);
+        cpaBox.remove(0);
+        cpaBox.add(cpaValues, 0);
+        cpaBox.revalidate();
+
+        cpcValues = new JLabel(toString(metricController.getCpc()));
+        cpcValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        cpcValues.setFont(fontOfValue);
+        cpcBox.remove(0);
+        cpcBox.add(cpcValues, 0);
+        cpcBox.revalidate();
+
+        cpmValues = new JLabel(toString(metricController.getCpm()));
+        cpmValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        cpmValues.setFont(fontOfValue);
+        cpmBox.remove(0);
+        cpmBox.add(cpmValues, 0);
+        cpmBox.revalidate();
+
+        conversionsValues = new JLabel(toString(metricController.getConversionsNo()));
+        conversionsValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        conversionsValues.setFont(fontOfValue);
+        conversionsBox.remove(0);
+        conversionsBox.add(conversionsValues, 0);
+        conversionsBox.revalidate();
+
+        totalCostValues = new JLabel(toString(metricController.getTotalImpressionCost()));
+        totalCostValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        totalCostValues.setFont(fontOfValue);
+        totalCostBox.remove(0);
+        totalCostBox.add(totalCostValues, 0);
+        totalCostBox.revalidate();
+
+        bounceValues = new JLabel(toString(metricController.getBouncesNo()));
+        bounceValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        bounceValues.setFont(fontOfValue);
+        bouncesBox.remove(0);
+        bouncesBox.add(bounceValues, 0);
+        bouncesBox.revalidate();
+
+        bounceRateValues = new JLabel(toString(metricController.getBr()));
+        bounceRateValues.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        bounceRateValues.setFont(fontOfValue);
+        bounceRateBox.remove(0);
+        bounceRateBox.add(bounceRateValues, 0);
+        bounceRateBox.revalidate();
     }
 
     // displays the initial chart when loaded
@@ -743,6 +829,6 @@ public class AdAuctionGUI extends JFrame{
         }
         chartJPanel.remove(0);
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
-        chartJPanel.validate();
+        chartJPanel.revalidate();
     }
 }
