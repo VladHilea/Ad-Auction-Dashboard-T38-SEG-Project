@@ -11,8 +11,8 @@ public class CampaignController {
         this.campaign = new Campaign();
     }
 
-    public void createCampaign() {
-        this.campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
+    public void createCampaign(String impressionFileLocation, String clickFileLocation, String serverFileLocation) {
+        this.campaign = new Campaign(impressionFileLocation, clickFileLocation, serverFileLocation);
     }
 
     public MetricCalculator createMetrics() {

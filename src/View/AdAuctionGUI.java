@@ -9,7 +9,9 @@ import org.jfree.chart.ChartPanel;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -18,6 +20,12 @@ public class AdAuctionGUI extends JFrame {
     private JFrame gui;
     private JLayeredPane menu;
     private JPanel insightsGrid;
+
+    // components for campaigns
+    private JPanel filesMenu;
+    private JLabel impressionFileLabel, clickFileLabel, serverFileLabel;
+    private String impressionsFileLocation, clickFileLocation, serverFileLocation;
+    private JFileChooser fileChooser;
 
     // components for metrics
     private JLabel impressionsValue, clicksValue, uniquesValue, ctrValues, cpaValues, cpcValues, cpmValues, conversionsValues, totalCostValues, bounceValues, bounceRateValues;
@@ -193,10 +201,10 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the constant horizontal menu at the top
     public void createTopMenu(){
-        JPanel topMenu = new JPanel(new GridLayout(1, 2));
+        JPanel topMenu = new JPanel(new GridLayout(1, 3));
         topMenu.setSize(gui.getWidth(),100);
         topMenu.setOpaque(true);
-        topMenu.setBackground(new Color(14,139,229));
+        topMenu.setBackground(primaryColor);
         topMenu.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // product title
@@ -222,11 +230,160 @@ public class AdAuctionGUI extends JFrame {
         loadCampaignButtonPanel.add(loadCampaignButton, BorderLayout.EAST);
 
         // load files of campaign
-        loadCampaignButton.addActionListener(e -> createCampaign());
+        loadCampaignButton.addActionListener(e -> {
+            createFileLoadBox();
+        });
+
+        // TESTING ONLY
+        // fast load campaign button
+        JPanel fastCampaignButtonPanel = new JPanel(new BorderLayout());
+        fastCampaignButtonPanel.setOpaque(false);
+
+        JButton fastCampaignButton = new JButton("Fast Load Campaign (TESTING/DEMONSTRATION ONLY!)");
+        fastCampaignButton.setFont(mainFont);
+        fastCampaignButton.setBorderPainted(false);
+        fastCampaignButton.setContentAreaFilled(false);
+        fastCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        fastCampaignButton.setForeground(Color.WHITE);
+
+        fastCampaignButtonPanel.add(fastCampaignButton);
+
+        // fast load files of campaign
+        fastCampaignButton.addActionListener(e -> {
+            fastCreateCampaign();
+        });
+        // TESTING ONLY
 
         topMenu.add(productName, BorderLayout.WEST,0);
         topMenu.add(loadCampaignButtonPanel, BorderLayout.CENTER,1);
+        topMenu.add(fastCampaignButtonPanel, BorderLayout.CENTER,2); // TEMPORARY FOR TESTING ONLY
         menu.add(topMenu, BorderLayout.NORTH,1);
+    }
+
+    // displays the load files page
+    public void createFileLoadBox() {
+        GridLayout filesMenuLayout = new GridLayout(7, 1);
+        filesMenuLayout.setVgap(10);
+
+        filesMenu = new JPanel(filesMenuLayout);
+        filesMenu.setSize(gui.getWidth() / 2, gui.getHeight() / 2);
+        filesMenu.setLocation(gui.getWidth() / 4, gui.getHeight() / 4);
+        filesMenu.setBorder(new EmptyBorder(10, 10, 10, 10));
+        filesMenu.setBackground(primaryColor);
+        filesMenu.setVisible(true);
+
+        // select impressions file button
+        JButton impressionFileButton = new JButton("Select Impression Log");
+        impressionFileButton.setFont(mainFont);
+        impressionFileButton.setBorderPainted(false);
+        impressionFileButton.setBackground(Color.WHITE);
+        impressionFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // select clicks files button
+        JButton clickFileButton = new JButton("Select Click Log");
+        clickFileButton.setFont(mainFont);
+        clickFileButton.setBorderPainted(false);
+        clickFileButton.setBackground(Color.WHITE);
+        clickFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // select server file button
+        JButton serverFileButton = new JButton("Select Server Log");
+        serverFileButton.setFont(mainFont);
+        serverFileButton.setBorderPainted(false);
+        serverFileButton.setBackground(Color.WHITE);
+        serverFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // files selection button functions
+        impressionFileButton.addActionListener(e -> {
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new JFileChooser().getFileSystemView().getDefaultDirectory());
+            fileChooser.setDialogTitle("Select Impressions Log CSV");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Excel", "csv"));
+
+            int result = fileChooser.showOpenDialog(filesMenu);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                impressionsFileLocation = selectedFile.getAbsolutePath();
+            }
+
+            impressionFileLabel = new JLabel(impressionsFileLocation);
+            filesMenu.remove(3);
+            filesMenu.add(impressionFileLabel, 3);
+            filesMenu.validate();
+        });
+
+        clickFileButton.addActionListener(e -> {
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new JFileChooser().getFileSystemView().getDefaultDirectory());
+            fileChooser.setDialogTitle("Select Click Log CSV");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Excel", "csv"));
+
+            int result = fileChooser.showOpenDialog(filesMenu);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                clickFileLocation = selectedFile.getAbsolutePath();
+            }
+
+            clickFileLabel = new JLabel(clickFileLocation);
+            filesMenu.remove(4);
+            filesMenu.add(clickFileLabel, 4);
+            filesMenu.validate();
+        });
+
+        serverFileButton.addActionListener(e -> {
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new JFileChooser().getFileSystemView().getDefaultDirectory());
+            fileChooser.setDialogTitle("Select Server Log CSV");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Excel", "csv"));
+
+            int result = fileChooser.showOpenDialog(filesMenu);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                serverFileLocation = selectedFile.getAbsolutePath();
+            }
+
+            serverFileLabel = new JLabel(serverFileLocation);
+            filesMenu.remove(5);
+            filesMenu.add(serverFileLabel, 5);
+            filesMenu.validate();
+        });
+
+        // load campaign button
+        JButton loadCampaignButton = new JButton("LoadCampaign");
+        loadCampaignButton.setFont(mainFont);
+        loadCampaignButton.setBorderPainted(false);
+        loadCampaignButton.setBackground(Color.WHITE);
+        loadCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // loads the campaign
+        loadCampaignButton.addActionListener(e -> {
+            try {
+                createCampaign();
+                filesMenu.setVisible(false);
+            } catch (Exception invalidCampaignE) {
+                JOptionPane.showMessageDialog(null, "Invalid campaign files!");
+            }
+        });
+
+        impressionFileLabel = new JLabel("No File");
+        impressionFileLabel.setForeground(Color.WHITE);
+        clickFileLabel = new JLabel("No File");
+        clickFileLabel.setForeground(Color.WHITE);
+        serverFileLabel = new JLabel("No File");
+        serverFileLabel.setForeground(Color.WHITE);
+
+        filesMenu.add(impressionFileButton, 0);
+        filesMenu.add(clickFileButton, 1);
+        filesMenu.add(serverFileButton, 2);
+        filesMenu.add(impressionFileLabel, 3);
+        filesMenu.add(clickFileLabel, 4);
+        filesMenu.add(serverFileLabel, 5);
+        filesMenu.add(loadCampaignButton, 6);
+
+        menu.add(filesMenu, 100);
     }
 
     // displays the metrics page
@@ -715,7 +872,14 @@ public class AdAuctionGUI extends JFrame {
 
     // loads the files
     public void createCampaign() {
-        campaignController.createCampaign();
+        campaignController.createCampaign(impressionsFileLocation, clickFileLocation, serverFileLocation);
+        createMetrics(campaignController.createMetrics());
+        createCharts(campaignController.createCharts());
+    }
+
+    // fast load the campaign
+    public void fastCreateCampaign() {
+        campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
         createMetrics(campaignController.createMetrics());
         createCharts(campaignController.createCharts());
     }
