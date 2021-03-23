@@ -32,6 +32,7 @@ public class Chart extends ApplicationFrame {
 		setContentPane(chartPanel);
 	}
 
+	// updates the chart with no metric change
 	public void updateChart(ChartCalculator calculator) {
 		this.chart = ChartFactory.createLineChart(chartTitle,
 				"Time (" + granularity + ") ","Number of " + metric,
@@ -40,6 +41,7 @@ public class Chart extends ApplicationFrame {
 				true,true,false);
 	}
 
+	// updates the chart with a metric change
 	public void updateChart(ChartCalculator calculator, String metric) {
 		this.chartTitle = metric + " vs Time (" + granularity + ")";
 		this.metric = metric;
@@ -49,10 +51,6 @@ public class Chart extends ApplicationFrame {
 				createDataset(calculator, metric),
 				PlotOrientation.VERTICAL,
 				true,true,false);
-	}
-
-	public JFreeChart getChart() {
-		return chart;
 	}
 
 	// creates and adds to the dataset using values from the chartCalculator lists
@@ -183,4 +181,9 @@ public class Chart extends ApplicationFrame {
 		}
 		return dataset;
 	}
+
+	public JFreeChart getChart() {
+		return chart;
+	}
+
 }

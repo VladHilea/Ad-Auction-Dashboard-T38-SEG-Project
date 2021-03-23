@@ -1,29 +1,25 @@
 package Controllers;
 
 import Models.Campaign;
-import View.AdAuctionGUI;
-
-import javax.swing.*;
+import Models.ChartCalculator;
+import Models.MetricCalculator;
 
 public class CampaignController {
-    public static void main(String[] args) {
-        // gui
-        AdAuctionGUI adAuctionGUI = new AdAuctionGUI();
-        SwingUtilities.invokeLater(adAuctionGUI::prepareGui);
+    public Campaign campaign;
 
-        // campaign
-        Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
-        adAuctionGUI.createMetrics(campaign.createMetrics());
-        adAuctionGUI.createCharts(campaign.createCharts());
+    public CampaignController() {
+        this.campaign = new Campaign();
+    }
 
-        /*
-         * to do:
-         * significant speed improvements
-         * not every metric is being calculated/displayed properly
-         * load campaign from files button
-         * update commenting for GUI
-         * improve file reading with anomalous data
-         * merge histogram and compare features
-         */
+    public void createCampaign() {
+        this.campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
+    }
+
+    public MetricCalculator createMetrics() {
+        return new MetricCalculator(campaign.getImpressionLog(), campaign.getClickLog(), campaign.getServerLog());
+    }
+
+    public ChartCalculator createCharts() {
+        return new ChartCalculator(campaign.getImpressionLog(), campaign.getClickLog(), campaign.getServerLog(), campaign.getUsers());
     }
 }

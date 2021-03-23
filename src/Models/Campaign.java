@@ -12,6 +12,12 @@ public class Campaign {
     private final ArrayList<ClickEntry> clickLog; // list of clicks
     private final ArrayList<ServerEntry> serverLog; // list of successful and unsuccessful conversions
 
+    public Campaign() {
+        impressionLog = new ArrayList<>();
+        clickLog = new ArrayList<>();
+        serverLog = new ArrayList<>();
+    }
+
     public Campaign(String impressionFile, String clickFile, String serverFile) {
         // log construction
         ArrayList<ImpressionEntry> impressionLog = new ArrayList<>();
@@ -102,11 +108,19 @@ public class Campaign {
         return users.getOrDefault(id, null);
     }
 
-    public MetricCalculator createMetrics() {
-        return new MetricCalculator(impressionLog, clickLog, serverLog);
+    public ArrayList<ImpressionEntry> getImpressionLog() {
+        return impressionLog;
     }
 
-    public ChartCalculator createCharts() {
-        return new ChartCalculator(impressionLog, clickLog, serverLog, users);
+    public ArrayList<ClickEntry> getClickLog() {
+        return clickLog;
+    }
+
+    public ArrayList<ServerEntry> getServerLog() {
+        return serverLog;
+    }
+
+    public Map<Long, User> getUsers() {
+        return users;
     }
 }

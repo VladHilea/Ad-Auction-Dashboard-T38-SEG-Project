@@ -140,7 +140,7 @@ public class ChartCalculator extends Calculator {
                 currentImpressionLog = new ArrayList<>();
 
                 // adds to the next log
-                if (filterEntry(impression, gender, age, context, income)) {
+                if (filterEntry(impression, gender, age, income) && filterContext(impression, context)) {
                     currentImpressionLog.add(impression);
                 }
 
@@ -149,7 +149,7 @@ public class ChartCalculator extends Calculator {
                 lastDate = dates.get(count);
             }
             // adds the log entry to the current interval log
-            if (filterEntry(impression, gender, age, context, income)) {
+            if (filterEntry(impression, gender, age, income) && filterContext(impression, context)) {
                 currentImpressionLog.add(impression);
             }
 
@@ -177,7 +177,7 @@ public class ChartCalculator extends Calculator {
                 currentClickLog = new ArrayList<>();
 
                 // adds to the next log
-                if (filterEntry(click, gender, age, context, income)) {
+                if (filterEntry(click, gender, age, income)) {
                     currentClickLog.add(click);
                 }
 
@@ -186,7 +186,7 @@ public class ChartCalculator extends Calculator {
                 lastDate = dates.get(count);
             }
             // adds the log entry to the current interval log
-            if (filterEntry(click, gender, age, context, income)) {
+            if (filterEntry(click, gender, age, income)) {
                 currentClickLog.add(click);
             }
 
@@ -214,7 +214,7 @@ public class ChartCalculator extends Calculator {
                 currentServerLog = new ArrayList<>();
 
                 // adds to the next log
-                if (filterEntry(server, gender, age, context, income)) {
+                if (filterEntry(server, gender, age, income)) {
                     currentServerLog.add(server);
                 }
 
@@ -223,7 +223,7 @@ public class ChartCalculator extends Calculator {
                 lastDate = dates.get(count);
             }
             // adds the log entry to the current interval log
-            if (filterEntry(server, gender, age, context, income)) {
+            if (filterEntry(server, gender, age, income)) {
                 currentServerLog.add(server);
             }
 
@@ -263,7 +263,7 @@ public class ChartCalculator extends Calculator {
     }
 
     // allows the entry to be counted if it matches the filters
-    public boolean filterEntry(Entry entry, String gender, String age, String context, String income) {
+    public boolean filterEntry(Entry entry, String gender, String age, String income) {
         User user = users.get(entry.getUserId());
 
         if (user.getGender().equals(gender) || gender.equals("Any")) {
@@ -272,6 +272,11 @@ public class ChartCalculator extends Calculator {
             }
         }
         return false;
+    }
+
+    // filters the context for impressions only
+    public boolean filterContext(ImpressionEntry impressionEntry, String context) {
+        return impressionEntry.getContext().equals(context) || context.equals("Any");
     }
 
     public ArrayList<Integer> getImpressionsNoList() {
@@ -320,9 +325,5 @@ public class ChartCalculator extends Calculator {
 
     public ArrayList<Float> getBrList() {
         return brList;
-    }
-
-    public Map<Long, User> getUsers() {
-        return users;
     }
 }

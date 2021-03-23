@@ -16,6 +16,7 @@ public class ChartController {
     private final Chart monthsChart;
     private final Chart yearsChart;
 
+    // all charts have a default display
     public ChartController() {
         this.hoursChart = new Chart("Hours Chart","Impressions", "Hours");
         this.daysChart = new Chart("Days Chart", "Impressions", "Days");
@@ -24,6 +25,7 @@ public class ChartController {
         this.yearsChart = new Chart("Years Chart",  "Impressions", "Years");
     }
 
+    // populates charts with data and default filtering
     public void createCharts(ChartCalculator chartCalculator) {
         chartCalculator.calculateCharts("Hours");
         this.hoursChart.updateChart(chartCalculator);
