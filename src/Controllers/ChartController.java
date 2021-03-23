@@ -44,19 +44,19 @@ public class ChartController {
     }
 
     // filters the charts
-    public void updateCharts(String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
+    public void updateCharts(String metric, String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
         if (stringStartDate.equals("Any") || stringEndDate.equals("Any")) {
             chartCalculator.calculateCharts("Hours", gender, age, context, income);
-            this.hoursChart.updateChart(chartCalculator);
+            this.hoursChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Days", gender, age, context, income);
-            this.daysChart.updateChart(chartCalculator);
+            this.daysChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Weeks", gender, age, context, income);
-            this.weeksChart.updateChart(chartCalculator);
+            this.weeksChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Months", gender, age, context, income);
-            this.monthsChart.updateChart(chartCalculator);
+            this.monthsChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Years", gender, age, context, income);
         } else {
@@ -65,20 +65,20 @@ public class ChartController {
             LocalDateTime endDate = LocalDateTime.parse(stringEndDate, formatter);
 
             chartCalculator.calculateCharts("Hours", gender, age, context, income, startDate, endDate);
-            this.hoursChart.updateChart(chartCalculator);
+            this.hoursChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Days", gender, age, context, income, startDate, endDate);
-            this.daysChart.updateChart(chartCalculator);
+            this.daysChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Weeks", gender, age, context, income, startDate, endDate);
-            this.weeksChart.updateChart(chartCalculator);
+            this.weeksChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Months", gender, age, context, income, startDate, endDate);
-            this.monthsChart.updateChart(chartCalculator);
+            this.monthsChart.updateChart(chartCalculator, metric);
 
             chartCalculator.calculateCharts("Years", gender, age, context, income, startDate, endDate);
-            this.yearsChart.updateChart(chartCalculator);
         }
+        this.yearsChart.updateChart(chartCalculator, metric);
     }
 
     public JFreeChart getHoursChart() {

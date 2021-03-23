@@ -491,9 +491,9 @@ public class AdAuctionGUI extends JFrame{
         metricsBox.setFont(comboBoxFont);
 
         metricsBox.addActionListener(e -> {
-            String itemName = e.getSource().getClass().getName();
+            String itemName = String.valueOf(metricsBox.getSelectedItem());
             arrayOfChoicesChart.set(0, itemName);
-            updateChartMetrics();
+            recalculateCharts();
         });
 
         JLabel metricsLabel = new JLabel("METRICS");
@@ -787,14 +787,10 @@ public class AdAuctionGUI extends JFrame{
         updateCharts();
     }
 
-    // changes the metrics display of a chart
-    public void updateChartMetrics() {
-
-    }
-
     // calls the controller to recalculate the charts
     public void recalculateCharts() {
-        chartController.updateCharts(arrayOfChoicesChart.get(1), // gender
+        chartController.updateCharts(arrayOfChoicesChart.get(0), // metric
+                arrayOfChoicesChart.get(1), // gender
                 arrayOfChoicesChart.get(2), // age
                 arrayOfChoicesChart.get(3), // context
                 arrayOfChoicesChart.get(4), // income

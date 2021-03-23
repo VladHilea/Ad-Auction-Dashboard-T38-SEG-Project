@@ -9,20 +9,21 @@ public class CampaignController {
     public static void main(String[] args) {
         // gui
         AdAuctionGUI adAuctionGUI = new AdAuctionGUI();
-        Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
-
         SwingUtilities.invokeLater(adAuctionGUI::prepareGui);
 
+        // campaign
+        Campaign campaign = new Campaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
         adAuctionGUI.createMetrics(campaign.createMetrics());
         adAuctionGUI.createCharts(campaign.createCharts());
 
         /*
          * to do:
-         * blank gui
-         * load metrics and default chart button
+         * significant speed improvements
+         * not every metric is being calculated/displayed properly
+         * load campaign from files button
          * update commenting for GUI
-         * improve file reading with anomalous data - test on large dataset
-         * follow 2nd deliverable sprint plan
+         * improve file reading with anomalous data
+         * merge histogram and compare features
          */
     }
 }
