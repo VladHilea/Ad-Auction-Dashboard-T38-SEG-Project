@@ -25,30 +25,31 @@ public class AdAuctionGUI extends JFrame {
 
     // components for campaigns
     private JPanel filesMenu;
+    private JFileChooser fileChooser;
     private JLabel impressionFileLabel, clickFileLabel, serverFileLabel;
     private String impressionsFileLocation, clickFileLocation, serverFileLocation;
-    private JFileChooser fileChooser;
 
     // components for metrics
     private JLabel impressionsValue, clicksValue, uniquesValue, ctrValues, cpaValues, cpcValues, cpmValues, conversionsValues, totalCostValues, bounceValues, bounceRateValues;
     private Box impressionsBox, clicksBox, uniquesBox, ctrBox, cpaBox, cpcBox, cpmBox, conversionsBox, totalCostBox, bouncesBox, bounceRateBox;
 
     // components for charts
+    private JPanel chartsGrid;
     private JPanel chartJPanel;
     private ChartPanel chartPanel;
     private JSlider chartSlider;
-    private JPanel chartsGrid;
 
     // components for histograms
-    private JSlider histogramSlider;
     private JPanel histogramGrid;
+    private JSlider histogramSlider;
 
     private JPanel compareGrid;
+    private JPanel compareChartsGrid;
 
     private final ArrayList<String> arrayOfChoicesMetrics = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesHistogram = new ArrayList<>();
-    private final ArrayList<JFreeChart> chartsToCompare = new ArrayList<>();
+    // private final ArrayList<JFreeChart> chartsToCompare = new ArrayList<>();
 
     // model controllers
     private final CampaignController campaignController;
@@ -59,6 +60,7 @@ public class AdAuctionGUI extends JFrame {
     private final Color primaryColor = new Color(14,139,229);
     private final Color secondaryColor = new Color(220,120,27);
     private final Color tertiaryColor = new Color(242,236,236);
+    private final Color noColor = Color.WHITE;
     private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
     private final Font fontOfText = new Font("Impact", Font.PLAIN, 25);
     private final Font fontOfValue = new Font("Impact", Font.BOLD, 30);
@@ -90,7 +92,7 @@ public class AdAuctionGUI extends JFrame {
         menu = new JLayeredPane();
         menu.setSize(gui.getWidth(),gui.getHeight());
         menu.setOpaque(true);
-        menu.setBackground(Color.WHITE);
+        menu.setBackground(noColor);
 
         createTopMenu();
         createVerticalMenu();
@@ -111,7 +113,7 @@ public class AdAuctionGUI extends JFrame {
         //start panel
         JPanel metricsButtonPanel = new JPanel(new BorderLayout());
         metricsButtonPanel.setOpaque(false);
-        metricsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
+        metricsButtonPanel.setBorder(BorderFactory.createLineBorder(noColor,2));
 
         JButton metricsButton = new JButton("Metrics");
         metricsButton.setFont(mainFont);
@@ -125,7 +127,7 @@ public class AdAuctionGUI extends JFrame {
         //start panel
         JPanel chartsButtonPanel = new JPanel(new BorderLayout());
         chartsButtonPanel.setOpaque(false);
-        chartsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
+        chartsButtonPanel.setBorder(BorderFactory.createLineBorder(noColor,2));
 
         JButton chartsButton = new JButton("Charts");
         chartsButton.setBorderPainted(false);
@@ -139,7 +141,7 @@ public class AdAuctionGUI extends JFrame {
         //start panel
         JPanel histogramsButtonPanel = new JPanel(new BorderLayout());
         histogramsButtonPanel.setOpaque(false);
-        histogramsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
+        histogramsButtonPanel.setBorder(BorderFactory.createLineBorder(noColor,2));
 
         JButton histogramsButton = new JButton("Histograms");
         histogramsButton.setBorderPainted(false);
@@ -153,7 +155,7 @@ public class AdAuctionGUI extends JFrame {
         //start panel
         JPanel compareButtonPanel = new JPanel(new BorderLayout());
         compareButtonPanel.setOpaque(false);
-        compareButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
+        compareButtonPanel.setBorder(BorderFactory.createLineBorder(noColor,2));
 
         JButton compareButton = new JButton("Compare");
         compareButton.setBorderPainted(false);
@@ -167,7 +169,7 @@ public class AdAuctionGUI extends JFrame {
         //start panel
         JPanel settingsButtonPanel = new JPanel(new BorderLayout());
         settingsButtonPanel.setOpaque(false);
-        settingsButtonPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2));
+        settingsButtonPanel.setBorder(BorderFactory.createLineBorder(noColor,2));
 
         JButton settingsButton = new JButton("Settings");
         settingsButton.setBorderPainted(false);
@@ -236,7 +238,7 @@ public class AdAuctionGUI extends JFrame {
         productName.setSize(100,100);
         productName.setAlignmentX(20);
         productName.setBounds(20,0,100,100);
-        productName.setForeground(Color.WHITE);
+        productName.setForeground(noColor);
         productName.setFont(mainFont);
 
         // load campaign button
@@ -248,7 +250,7 @@ public class AdAuctionGUI extends JFrame {
         loadCampaignButton.setBorderPainted(false);
         loadCampaignButton.setContentAreaFilled(false);
         loadCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        loadCampaignButton.setForeground(Color.WHITE);
+        loadCampaignButton.setForeground(noColor);
 
         loadCampaignButtonPanel.add(loadCampaignButton, BorderLayout.EAST);
 
@@ -267,7 +269,7 @@ public class AdAuctionGUI extends JFrame {
         fastCampaignButton.setBorderPainted(false);
         fastCampaignButton.setContentAreaFilled(false);
         fastCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        fastCampaignButton.setForeground(Color.WHITE);
+        fastCampaignButton.setForeground(noColor);
 
         fastCampaignButtonPanel.add(fastCampaignButton);
 
@@ -299,13 +301,12 @@ public class AdAuctionGUI extends JFrame {
     }
 
     // displays a close button
-    public static class RoundButton extends JButton {
+    public class RoundButton extends JButton {
 
         public RoundButton(String label) {
             super(label);
-
             setBackground(Color.RED);
-            setForeground(Color.WHITE);
+            setForeground(noColor);
             setFocusable(false);
 
     /*
@@ -367,21 +368,21 @@ public class AdAuctionGUI extends JFrame {
         JButton impressionFileButton = new JButton("Select Impression Log");
         impressionFileButton.setFont(mainFont);
         impressionFileButton.setBorderPainted(false);
-        impressionFileButton.setBackground(Color.WHITE);
+        impressionFileButton.setBackground(noColor);
         impressionFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // select clicks files button
         JButton clickFileButton = new JButton("Select Click Log");
         clickFileButton.setFont(mainFont);
         clickFileButton.setBorderPainted(false);
-        clickFileButton.setBackground(Color.WHITE);
+        clickFileButton.setBackground(noColor);
         clickFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // select server file button
         JButton serverFileButton = new JButton("Select Server Log");
         serverFileButton.setFont(mainFont);
         serverFileButton.setBorderPainted(false);
-        serverFileButton.setBackground(Color.WHITE);
+        serverFileButton.setBackground(noColor);
         serverFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // files selection button functions
@@ -446,7 +447,7 @@ public class AdAuctionGUI extends JFrame {
         JButton loadCampaignButton = new JButton("LoadCampaign");
         loadCampaignButton.setFont(mainFont);
         loadCampaignButton.setBorderPainted(false);
-        loadCampaignButton.setBackground(Color.WHITE);
+        loadCampaignButton.setBackground(noColor);
         loadCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // loads the campaign
@@ -460,11 +461,11 @@ public class AdAuctionGUI extends JFrame {
         });
 
         impressionFileLabel = new JLabel("No File");
-        impressionFileLabel.setForeground(Color.WHITE);
+        impressionFileLabel.setForeground(noColor);
         clickFileLabel = new JLabel("No File");
-        clickFileLabel.setForeground(Color.WHITE);
+        clickFileLabel.setForeground(noColor);
         serverFileLabel = new JLabel("No File");
-        serverFileLabel.setForeground(Color.WHITE);
+        serverFileLabel.setForeground(noColor);
 
         filesMenu.add(impressionFileButton, 0);
         filesMenu.add(clickFileButton, 1);
@@ -483,7 +484,7 @@ public class AdAuctionGUI extends JFrame {
         String[] metricChoices = new String[] {"Metrics","Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
         JComboBox<String> metricsBox = new JComboBox<>(metricChoices);
         metricsBox.setVisible(true);
-        metricsBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        metricsBox.setBorder(new EmptyBorder(5,5,5,5));
         metricsBox.setFont(comboBoxFont);
 
         metricsBox.addActionListener(e -> {
@@ -504,7 +505,7 @@ public class AdAuctionGUI extends JFrame {
         String[] genderChoices = new String[] {"Any","Male","Female"};
         JComboBox<String> genderBox = new JComboBox<>(genderChoices);
         genderBox.setVisible(true);
-        genderBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        genderBox.setBorder(new EmptyBorder(5,5,5,5));
         genderBox.setFont(comboBoxFont);
 
         genderBox.addActionListener(e -> {
@@ -525,7 +526,7 @@ public class AdAuctionGUI extends JFrame {
         String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
         JComboBox<String> ageBox = new JComboBox<>(ageChoices);
         ageBox.setVisible(true);
-        ageBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        ageBox.setBorder(new EmptyBorder(5,5,5,5));
         ageBox.setFont(comboBoxFont);
 
         ageBox.addActionListener(e -> {
@@ -546,7 +547,7 @@ public class AdAuctionGUI extends JFrame {
         String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
         JComboBox<String> contextBox = new JComboBox<>(contextChoices);
         contextBox.setVisible(true);
-        contextBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        contextBox.setBorder(new EmptyBorder(5,5,5,5));
         contextBox.setFont(comboBoxFont);
 
         contextBox.addActionListener(e -> {
@@ -567,7 +568,7 @@ public class AdAuctionGUI extends JFrame {
         String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
         JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
         incomeBox.setVisible(true);
-        incomeBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        incomeBox.setBorder(new EmptyBorder(5,5,5,5));
         incomeBox.setFont(comboBoxFont);
 
         incomeBox.addActionListener(e -> {
@@ -586,7 +587,7 @@ public class AdAuctionGUI extends JFrame {
 
         Box metricsNorthBox = Box.createHorizontalBox();
         metricsNorthBox.setPreferredSize(new Dimension(metricsGrid.getWidth(),72));
-        metricsNorthBox.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        metricsNorthBox.setBorder(new EmptyBorder(10,10,10,10));
         metricsNorthBox.add(metricsVerticalBox);
         metricsNorthBox.add(genderVerticalBox);
         metricsNorthBox.add(ageVerticalBox);
@@ -598,7 +599,7 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the metrics values
     public void createMetricsBox() {
-        Border blackBorder = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,10,10), BorderFactory.createLineBorder(tertiaryColor, 1));
+        Border blackBorder = BorderFactory.createCompoundBorder(new EmptyBorder(10,10,10,10), BorderFactory.createLineBorder(tertiaryColor, 1));
 
         //start panel
         JPanel impressionsPanel = new JPanel(new GridBagLayout());
@@ -850,7 +851,7 @@ public class AdAuctionGUI extends JFrame {
 
         metricsGrid = new JPanel(new BorderLayout());
         metricsGrid.setBounds(200,100,gui.getWidth()-200,gui.getHeight()-100);
-        metricsGrid.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        metricsGrid.setBorder(new EmptyBorder(2,2,2,2));
         metricsGrid.setAlignmentY(100);
         metricsGrid.setVisible(true);
         metricsGrid.setOpaque(true);
@@ -867,7 +868,7 @@ public class AdAuctionGUI extends JFrame {
         String[] metricsChoices = new String[]{"Impressions", "CPA", "CPC", "CPM", "CTR", "Uniques", "Bounces", "Bounce Rate", "Clicks", "Conversions", "Total Impression Cost"};
         JComboBox<String> metricsBox = new JComboBox<>(metricsChoices);
         metricsBox.setVisible(true);
-        metricsBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        metricsBox.setBorder(new EmptyBorder(5,5,5,5));
         metricsBox.setFont(comboBoxFont);
 
         metricsBox.addActionListener(e -> {
@@ -889,7 +890,7 @@ public class AdAuctionGUI extends JFrame {
         String[] genderChoices = new String[]{"Any", "Male", "Female"};
         JComboBox<String> genderBox = new JComboBox<>(genderChoices);
         genderBox.setVisible(true);
-        genderBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        genderBox.setBorder(new EmptyBorder(5,5,5,5));
         genderBox.setFont(comboBoxFont);
 
         genderBox.addActionListener(e -> {
@@ -911,7 +912,7 @@ public class AdAuctionGUI extends JFrame {
         String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
         JComboBox<String> ageBox = new JComboBox<>(ageChoices);
         ageBox.setVisible(true);
-        ageBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        ageBox.setBorder(new EmptyBorder(5,5,5,5));
         ageBox.setFont(comboBoxFont);
 
         ageBox.addActionListener(e -> {
@@ -933,7 +934,7 @@ public class AdAuctionGUI extends JFrame {
         String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
         JComboBox<String> contextBox = new JComboBox<>(contextChoices);
         contextBox.setVisible(true);
-        contextBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        contextBox.setBorder(new EmptyBorder(5,5,5,5));
         contextBox.setFont(comboBoxFont);
 
         contextBox.addActionListener(e -> {
@@ -955,7 +956,7 @@ public class AdAuctionGUI extends JFrame {
         String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
         JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
         incomeBox.setVisible(true);
-        incomeBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        incomeBox.setBorder(new EmptyBorder(5,5,5,5));
         incomeBox.setFont(comboBoxFont);
 
         incomeBox.addActionListener(e -> {
@@ -975,7 +976,7 @@ public class AdAuctionGUI extends JFrame {
 
         Box chartNorthBox = Box.createHorizontalBox();
         chartNorthBox.setPreferredSize(new Dimension(metricsGrid.getWidth(),72));
-        chartNorthBox.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        chartNorthBox.setBorder(new EmptyBorder(10,10,10,10));
         chartNorthBox.add(metricsVerticalBox);
         chartNorthBox.add(genderVerticalBox);
         chartNorthBox.add(ageVerticalBox);
@@ -1014,37 +1015,65 @@ public class AdAuctionGUI extends JFrame {
         // components for compare
         JPanel addChartToComparePanel = new JPanel(new GridBagLayout());
         addChartToComparePanel.setOpaque(false);
-        addChartToComparePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        addChartToComparePanel.setBorder(new EmptyBorder(10,10,10,10));
 
         JButton addChartToCompareButton = new JButton("Add to Compare");
         addChartToCompareButton.setFont(mainFont);
         addChartToCompareButton.setBackground(primaryColor);
-        addChartToCompareButton.setForeground(Color.WHITE);
+        addChartToCompareButton.setForeground(noColor);
         addChartToCompareButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addChartToCompareButton.setPreferredSize(new Dimension(400,40));
 
         addChartToComparePanel.add(addChartToCompareButton);
 
         addChartToCompareButton.addActionListener(e -> {
+            JPanel panel = new JPanel(new GridBagLayout());
+            JPanel chartJPanel = new JPanel(new BorderLayout());
+
             switch (arrayOfChoicesChart.get(7)) {
                 case "Hours": {
-                    chartsToCompare.add(chartController.getHoursChart());
+                    ChartPanel chartPanel = new ChartPanel(chartController.getHoursChart());
+                    chartPanel.setPreferredSize(new Dimension(500, 300));
+                    chartJPanel.add(chartPanel);
+                    chartJPanel.validate();
+                    panel.add(chartJPanel);
+                    compareChartsGrid.add(panel);
                     break;
                 }
                 case "Days": {
-                    chartsToCompare.add(chartController.getDaysChart());
+                    ChartPanel chartPanel = new ChartPanel(chartController.getDaysChart());
+                    chartPanel.setPreferredSize(new Dimension(500, 300));
+                    chartJPanel.add(chartPanel);
+                    chartJPanel.validate();
+                    panel.add(chartJPanel);
+                    compareChartsGrid.add(panel);
                     break;
                 }
                 case "Weeks": {
-                    chartsToCompare.add(chartController.getWeeksChart());
+                    ChartPanel chartPanel = new ChartPanel(chartController.getWeeksChart());
+                    chartPanel.setPreferredSize(new Dimension(500, 300));
+                    chartJPanel.add(chartPanel);
+                    chartJPanel.validate();
+                    panel.add(chartJPanel);
+                    compareChartsGrid.add(panel);
                     break;
                 }
                 case "Months": {
-                    chartsToCompare.add(chartController.getMonthsChart());
+                    ChartPanel chartPanel = new ChartPanel(chartController.getMonthsChart());
+                    chartPanel.setPreferredSize(new Dimension(500, 300));
+                    chartJPanel.add(chartPanel);
+                    chartJPanel.validate();
+                    panel.add(chartJPanel);
+                    compareChartsGrid.add(panel);
                     break;
                 }
                 case "Years": {
-                    chartsToCompare.add(chartController.getYearsChart());
+                    ChartPanel chartPanel = new ChartPanel(chartController.getYearsChart());
+                    chartPanel.setPreferredSize(new Dimension(500, 300));
+                    chartJPanel.add(chartPanel);
+                    chartJPanel.validate();
+                    panel.add(chartJPanel);
+                    compareChartsGrid.add(panel);
                     break;
                 }
             }
@@ -1052,7 +1081,7 @@ public class AdAuctionGUI extends JFrame {
 
         JPanel chartSouthGrid = new JPanel(new GridLayout(1, 2));
         chartSouthGrid.setPreferredSize(new Dimension(chartsGrid.getWidth(),200));
-        chartSouthGrid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        chartSouthGrid.setBorder(new EmptyBorder(10,10,10,10));
 
         chartSouthGrid.add(chartSlider);
         chartSouthGrid.add(addChartToComparePanel);
@@ -1097,7 +1126,7 @@ public class AdAuctionGUI extends JFrame {
         String[] metricChoices = new String[] {"Metrics","Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
         JComboBox<String> metricsBox = new JComboBox<>(metricChoices);
         metricsBox.setVisible(true);
-        metricsBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        metricsBox.setBorder(new EmptyBorder(5,5,5,5));
         metricsBox.setFont(comboBoxFont);
 
         metricsBox.addActionListener(e -> {
@@ -1119,7 +1148,7 @@ public class AdAuctionGUI extends JFrame {
         String[] genderChoices = new String[] {"Any","Male","Female"};
         JComboBox<String> genderBox = new JComboBox<>(genderChoices);
         genderBox.setVisible(true);
-        genderBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        genderBox.setBorder(new EmptyBorder(5,5,5,5));
         genderBox.setFont(comboBoxFont);
 
         genderBox.addActionListener(e -> {
@@ -1140,7 +1169,7 @@ public class AdAuctionGUI extends JFrame {
         String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
         JComboBox<String> ageBox = new JComboBox<>(ageChoices);
         ageBox.setVisible(true);
-        ageBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        ageBox.setBorder(new EmptyBorder(5,5,5,5));
         ageBox.setFont(comboBoxFont);
 
         ageBox.addActionListener(e -> {
@@ -1161,7 +1190,7 @@ public class AdAuctionGUI extends JFrame {
         String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
         JComboBox<String> contextBox = new JComboBox<>(contextChoices);
         contextBox.setVisible(true);
-        contextBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        contextBox.setBorder(new EmptyBorder(5,5,5,5));
         contextBox.setFont(comboBoxFont);
 
         contextBox.addActionListener(e -> {
@@ -1182,7 +1211,7 @@ public class AdAuctionGUI extends JFrame {
         String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
         JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
         incomeBox.setVisible(true);
-        incomeBox.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        incomeBox.setBorder(new EmptyBorder(5,5,5,5));
         incomeBox.setFont(comboBoxFont);
 
         incomeBox.addActionListener(e -> {
@@ -1201,7 +1230,7 @@ public class AdAuctionGUI extends JFrame {
 
         Box histogramNorthBox = Box.createHorizontalBox();
         histogramNorthBox.setPreferredSize(new Dimension(metricsGrid.getWidth(),72));
-        histogramNorthBox.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        histogramNorthBox.setBorder(new EmptyBorder(10,10,10,10));
         histogramNorthBox.add(metricsVerticalBox);
         histogramNorthBox.add(genderVerticalBox);
         histogramNorthBox.add(ageVerticalBox);
@@ -1237,12 +1266,12 @@ public class AdAuctionGUI extends JFrame {
 
         JPanel addHistogramToComparePanel = new JPanel(new GridBagLayout());
         addHistogramToComparePanel.setOpaque(false);
-        addHistogramToComparePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        addHistogramToComparePanel.setBorder(new EmptyBorder(10,10,10,10));
 
         JButton addHistogramToCompareButton = new JButton("Add to Compare");
         addHistogramToCompareButton.setFont(mainFont);
         addHistogramToCompareButton.setBackground(primaryColor);
-        addHistogramToCompareButton.setForeground(Color.WHITE);
+        addHistogramToCompareButton.setForeground(noColor);
         addHistogramToCompareButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addHistogramToCompareButton.setPreferredSize(new Dimension(400,40));
 
@@ -1254,7 +1283,7 @@ public class AdAuctionGUI extends JFrame {
 
         JPanel histogramSouthGrid = new JPanel(new GridLayout(1, 2));
         histogramSouthGrid.setPreferredSize(new Dimension(histogramSouthGrid.getWidth(),200));
-        histogramSouthGrid.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        histogramSouthGrid.setBorder(new EmptyBorder(10,10,10,10));
 
         histogramSouthGrid.add(histogramSlider);
         histogramSouthGrid.add(addHistogramToComparePanel);
@@ -1286,37 +1315,36 @@ public class AdAuctionGUI extends JFrame {
     public void createCompareGrid(){
         compareGrid = new JPanel(new BorderLayout());
         compareGrid.setBounds(200 , 100 , gui.getWidth()-200 , gui.getHeight()-100);
-        compareGrid.setBorder(BorderFactory.createEmptyBorder(2 , 2 , 2 , 2));
+        compareGrid.setBorder(new EmptyBorder(2 , 2 , 2 , 2));
+        compareGrid.setBackground(metricsGrid.getBackground());
         compareGrid.setAlignmentY(100);
         compareGrid.setOpaque(true);
 
+        compareChartsGrid = new JPanel(new GridLayout(2, 2));
+
         JPanel resetComparePanel = new JPanel(new GridBagLayout());
-        resetComparePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        resetComparePanel.setBorder(new EmptyBorder(10,10,10,10));
+        resetComparePanel.setPreferredSize(new Dimension(metricsGrid.getWidth(),200));
         resetComparePanel.setOpaque(false);
 
         JButton resetCompareButton = new JButton("Reset Compare");
         resetCompareButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         resetCompareButton.setPreferredSize(new Dimension(400,40));
         resetCompareButton.setBackground(primaryColor);
-        resetCompareButton.setForeground(Color.WHITE);
+        resetCompareButton.setForeground(noColor);
         resetCompareButton.setFont(mainFont);
 
         resetComparePanel.add(resetCompareButton);
 
-        resetComparePanel.setPreferredSize(new Dimension(metricsGrid.getWidth(),200));
+        compareGrid.add(compareChartsGrid, BorderLayout.CENTER);
         compareGrid.add(resetComparePanel, BorderLayout.SOUTH);
 
+        menu.add(compareGrid);
+
         resetCompareButton.addActionListener(e -> {
-            getChartsToCompare().clear();
             menu.remove(compareGrid);
             createCompareGrid();
         });
-
-        menu.add(compareGrid);
-    }
-
-    public ArrayList<JFreeChart> getChartsToCompare() {
-        return chartsToCompare;
     }
 
     // converts a metric to a readable string
