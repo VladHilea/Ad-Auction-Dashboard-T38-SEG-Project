@@ -16,7 +16,7 @@ public class CampaignController {
     }
 
     public MetricCalculator createMetrics() {
-        return new MetricCalculator(campaign.getImpressionLog(), campaign.getClickLog(), campaign.getServerLog());
+        return new MetricCalculator(campaign.getImpressionLog(), campaign.getClickLog(), campaign.getServerLog(), campaign.getUsers());
     }
 
     public ChartCalculator createCharts() {

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 
 public class MetricCalculator extends Calculator {
     private int impressionsNo; // number of impressions - people who saw the ad
@@ -24,21 +25,26 @@ public class MetricCalculator extends Calculator {
     private final int bounceTime = 500; // max amount of time to be counted as a bounce
 
     public MetricCalculator() {
-        super(null, null, null);
+        super(null, null, null, null);
     }
 
-    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog) {
-        super(impressionLog, clickLog, serverLog);
+    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
+        super(impressionLog, clickLog, serverLog, users);
         calculateMetrics();
     }
 
     // calculates metrics from the entire dataset
     public void calculateMetrics() {
-        calculate(getImpressionLog(), getClickLog(), getServerLog());
+        calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", "Any", "Any");
+    }
+
+    // calculates metrics with filters
+    public void calculateMetrics(String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
+        calculate(getImpressionLog(), getClickLog(), getServerLog(), gender, age, context, income, stringStartDate, stringEndDate);
     }
 
     // the actual calculations
-    public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList) {
+    public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList, String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
         // resets the metrics
         this.impressionsNo = 0;
         this.uniquesNo = 0;
@@ -54,13 +60,54 @@ public class MetricCalculator extends Calculator {
         this.cpm = 0;
         this.br = 0;
 
+        ArrayList<ImpressionEntry> filteredImpressionList = new ArrayList<>();
+        ArrayList<ClickEntry> filteredClickList = new ArrayList<>();
+        ArrayList<ServerEntry> filteredServerList = new ArrayList<>();
+
+        // filtering the lists of impressions, clicks and server logs
+        for (ImpressionEntry impressionEntry : impressionList) {
+            User impressionUser = getUsers().get(impressionEntry.getUserId());
+
+            if (impressionUser.getGender().equals(gender) || gender.equals("Any")) {
+                if (impressionUser.getAge().equals(age) || age.equals("Any")) {
+                    if (impressionEntry.getContext().equals(context) || context.equals("Any")) {
+                        if (impressionUser.getIncome().equals(income) || income.equals("Any")) {
+                            filteredImpressionList.add(impressionEntry);
+                        }
+                    }
+                }
+            }
+        }
+        for (ClickEntry clickEntry : clickList) {
+            User clickUser = getUsers().get(clickEntry.getUserId());
+
+            if (clickUser.getGender().equals(gender) || gender.equals("Any")) {
+                if (clickUser.getAge().equals(age) || age.equals("Any")) {
+                    if (clickUser.getIncome().equals(income) || income.equals("Any")) {
+                        filteredClickList.add(clickEntry);
+                    }
+                }
+            }
+        }
+        for (ServerEntry serverEntry : serverList) {
+            User serverUser = getUsers().get(serverEntry.getUserId());
+
+            if (serverUser.getGender().equals(gender) || gender.equals("Any")) {
+                if (serverUser.getAge().equals(age) || age.equals("Any")) {
+                    if (serverUser.getIncome().equals(income) || income.equals("Any")) {
+                        filteredServerList.add(serverEntry);
+                    }
+                }
+            }
+        }
+
         // calculates the number of impressions
-        this.impressionsNo = impressionList.size();
+        this.impressionsNo = filteredImpressionList.size();
 
         // calculates the number of impressions from unique users and the total cost of impressions
         HashSet<Long> uniqueIds = new HashSet<>();
 
-        for (ImpressionEntry impression : impressionList) {
+        for (ImpressionEntry impression : filteredImpressionList) {
             if (!uniqueIds.contains(impression.getUserId())) {
                 uniqueIds.add(impression.getUserId());
                 this.uniquesNo++;
@@ -69,15 +116,15 @@ public class MetricCalculator extends Calculator {
         }
 
         // calculates the number of clicks
-        this.clicksNo = clickList.size();
+        this.clicksNo = filteredClickList.size();
 
         // calculates the total cost of clicks
-        for (ClickEntry click : clickList) {
+        for (ClickEntry click : filteredClickList) {
             this.totalClicksCost += click.getClickCost();
         }
 
         // calculates the number of bounces and the number of conversions
-        for (ServerEntry server : serverList) {
+        for (ServerEntry server : filteredServerList) {
             if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
                 this.bouncesNo++;
             }

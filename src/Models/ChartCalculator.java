@@ -22,15 +22,14 @@ public class ChartCalculator extends Calculator {
     private ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
-    private Map<Long, User> users = new HashMap<>(); // list of unique users
+
 
     public ChartCalculator() {
-        super(null, null, null);
+        super(null, null, null, null);
     }
 
     public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
-        super(impressionLog, clickLog, serverLog);
-        this.users = users;
+        super(impressionLog, clickLog, serverLog, users);
     }
 
     // recalculates intervals from whole time range and no filters
@@ -236,7 +235,7 @@ public class ChartCalculator extends Calculator {
         // creates all the calculators for the intervals (probably doesn't need the if from now on)
         if (intervalImpressionLogs.size() == intervalClickLogs.size() && intervalImpressionLogs.size() == intervalServerLogs.size()) {
             for (int i=0; i < intervalImpressionLogs.size(); i++) {
-                intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i)));
+                intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i), getUsers()));
             }
         } else {
             System.out.println("Error!");
@@ -264,7 +263,7 @@ public class ChartCalculator extends Calculator {
 
     // allows the entry to be counted if it matches the filters
     public boolean filterEntry(Entry entry, String gender, String age, String income) {
-        User user = users.get(entry.getUserId());
+        User user = getUsers().get(entry.getUserId());
 
         if (user.getGender().equals(gender) || gender.equals("Any")) {
             if (user.getAge().equals(age) || age.equals("Any")) {

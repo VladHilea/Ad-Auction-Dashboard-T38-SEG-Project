@@ -480,27 +480,6 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the metrics filters
     public void createMetricsNorthBox() {
-        // start Box
-        String[] metricChoices = new String[] {"Metrics","Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
-        JComboBox<String> metricsBox = new JComboBox<>(metricChoices);
-        metricsBox.setVisible(true);
-        metricsBox.setBorder(new EmptyBorder(5,5,5,5));
-        metricsBox.setFont(comboBoxFont);
-
-        metricsBox.addActionListener(e -> {
-            String itemName = String.valueOf(metricsBox.getSelectedItem());
-            arrayOfChoicesMetrics.set(0, itemName);
-        });
-
-        JLabel metricsLabel = new JLabel("METRICS");
-        metricsLabel.setFont(mainFont);
-        metricsLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box metricsVerticalBox = Box.createVerticalBox();
-        metricsVerticalBox.add(metricsLabel);
-        metricsVerticalBox.add(metricsBox);
-        //end box
-
         //start Box
         String[] genderChoices = new String[] {"Any","Male","Female"};
         JComboBox<String> genderBox = new JComboBox<>(genderChoices);
@@ -511,6 +490,7 @@ public class AdAuctionGUI extends JFrame {
         genderBox.addActionListener(e -> {
             String itemName = String.valueOf(genderBox.getSelectedItem());
             arrayOfChoicesMetrics.set(1, itemName);
+            recalculateMetrics();
         });
 
         JLabel genderLabel = new JLabel("GENDER");
@@ -532,6 +512,7 @@ public class AdAuctionGUI extends JFrame {
         ageBox.addActionListener(e -> {
             String itemName = String.valueOf(ageBox.getSelectedItem());
             arrayOfChoicesMetrics.set(2, itemName);
+            recalculateMetrics();
         });
 
         JLabel ageLabel = new JLabel("AGE");
@@ -553,6 +534,7 @@ public class AdAuctionGUI extends JFrame {
         contextBox.addActionListener(e -> {
             String itemName = String.valueOf(contextBox.getSelectedItem());
             arrayOfChoicesMetrics.set(3, itemName);
+            recalculateMetrics();
         });
 
         JLabel contextLabel = new JLabel("CONTEXT");
@@ -574,6 +556,7 @@ public class AdAuctionGUI extends JFrame {
         incomeBox.addActionListener(e -> {
             String itemName = String.valueOf(incomeBox.getSelectedItem());
             arrayOfChoicesMetrics.set(4, itemName);
+            recalculateMetrics();
         });
 
         JLabel incomeLabel = new JLabel("INCOME");
@@ -588,7 +571,6 @@ public class AdAuctionGUI extends JFrame {
         Box metricsNorthBox = Box.createHorizontalBox();
         metricsNorthBox.setPreferredSize(new Dimension(metricsGrid.getWidth(),72));
         metricsNorthBox.setBorder(new EmptyBorder(10,10,10,10));
-        metricsNorthBox.add(metricsVerticalBox);
         metricsNorthBox.add(genderVerticalBox);
         metricsNorthBox.add(ageVerticalBox);
         metricsNorthBox.add(contextVerticalBox);
@@ -1372,6 +1354,17 @@ public class AdAuctionGUI extends JFrame {
     // displays the metrics when loaded
     public void createMetrics(MetricCalculator metricCalculator) {
         metricController.createMetrics(metricCalculator);
+        updateMetrics();
+    }
+
+    // calls the controller to recalculate the metrics
+    public void recalculateMetrics() {
+        metricController.updateMetrics(arrayOfChoicesMetrics.get(1), // gender
+                arrayOfChoicesMetrics.get(2), // age
+                arrayOfChoicesMetrics.get(3), // context
+                arrayOfChoicesMetrics.get(4), // income
+                arrayOfChoicesMetrics.get(5), // start date
+                arrayOfChoicesMetrics.get(6)); // start date
         updateMetrics();
     }
 

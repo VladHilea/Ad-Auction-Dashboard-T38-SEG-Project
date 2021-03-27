@@ -13,6 +13,10 @@ public class MetricController {
         this.metricCalculator = metricCalculator;
     }
 
+    public void updateMetrics(String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
+        metricCalculator.calculateMetrics(gender, age, context, income, stringStartDate, stringEndDate);
+    }
+
     public int getImpressionsNo() {
         return metricCalculator.getImpressionsNo();
     }

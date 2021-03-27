@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Campaign {
-    private final Map<Long, User> users = new HashMap<>(); // list of unique users
     private final ArrayList<ImpressionEntry> impressionLog; // list of impressions
     private final ArrayList<ClickEntry> clickLog; // list of clicks
     private final ArrayList<ServerEntry> serverLog; // list of successful and unsuccessful conversions
+    private final Map<Long, User> users = new HashMap<>(); // list of unique users
 
     public Campaign() {
         impressionLog = new ArrayList<>();

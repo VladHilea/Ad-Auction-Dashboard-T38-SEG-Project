@@ -2,16 +2,19 @@ package Models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Calculator {
     private final ArrayList<ImpressionEntry> impressionLog;
     private final ArrayList<ClickEntry> clickLog;
     private final ArrayList<ServerEntry> serverLog;
+    private final Map<Long, User> users; // list of unique users
 
-    public Calculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog) {
+    public Calculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
         this.impressionLog = impressionLog;
         this.clickLog = clickLog;
         this.serverLog = serverLog;
+        this.users = users;
     }
 
     public ArrayList<ImpressionEntry> getImpressionLog() {
@@ -64,5 +67,9 @@ public class Calculator {
         }
 
         return rangedClicksLog;
+    }
+
+    public Map<Long, User> getUsers() {
+        return users;
     }
 }
