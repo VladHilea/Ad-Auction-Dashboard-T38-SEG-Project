@@ -24,6 +24,7 @@ public class AdAuctionGUI extends JFrame {
     private JPanel metricsGrid;
 
     JButton loadCampaignButton;
+    JLabel loadingImage = new JLabel();
 
     // components for campaigns
     private JPanel filesMenu;
@@ -245,6 +246,21 @@ public class AdAuctionGUI extends JFrame {
         productName.setForeground(noColor);
         productName.setFont(mainFont);
 
+        /*Image image = new ImageIcon(this.getClass().getResource("loading.gif")).getImage().getScaledInstance(40,40,Image.SCALE_DEFAULT);
+        ImageIcon imageIcon = new ImageIcon();
+        imageIcon.setImage(image);
+        loadingImage.setIcon(imageIcon);
+        loadingImage.setVisible(true);
+
+         */
+
+        Box topLeft = Box.createHorizontalBox();
+        topLeft.add(productName);
+        //topLeft.add(loadingImage);
+        //topLeft.setSize(200,100);
+        //topLeft.setBounds(20,0,200,100);
+        //topLeft.setAlignmentX(20);
+
         // load campaign button
         JPanel loadCampaignButtonPanel = new JPanel(new BorderLayout());
         loadCampaignButtonPanel.setOpaque(false);
@@ -300,7 +316,7 @@ public class AdAuctionGUI extends JFrame {
         topRight.add(closeButton);
         topRight.setBounds(gui.getWidth()-200,0,200,100);
 
-        topMenu.add(productName, BorderLayout.WEST,0);
+        topMenu.add(topLeft, BorderLayout.WEST,0);
         topMenu.add(topRight, BorderLayout.CENTER,1);
         menu.add(topMenu, BorderLayout.NORTH,1);
     }
@@ -1370,6 +1386,7 @@ public class AdAuctionGUI extends JFrame {
             menu.add(compareGrid);
 
         resetCompareButton.addActionListener(e -> {
+            countCharts = 0;
             menu.remove(compareGrid);
             createCompareGrid();
         });
@@ -1393,6 +1410,11 @@ public class AdAuctionGUI extends JFrame {
         campaignController.createCampaign(impressionsFileLocation, clickFileLocation, serverFileLocation);
         createMetrics(campaignController.createMetrics());
         createCharts(campaignController.createCharts());
+
+        metricsGrid.setVisible(true);
+        chartsGrid.setVisible(false);
+        histogramGrid.setVisible(false);
+        compareGrid.setVisible(false);
     }
 
     // fast load the campaign for testing only
@@ -1400,6 +1422,16 @@ public class AdAuctionGUI extends JFrame {
         campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
         createMetrics(campaignController.createMetrics());
         createCharts(campaignController.createCharts());
+        metricsGrid.setVisible(true);
+        chartsGrid.setVisible(false);
+        histogramGrid.setVisible(false);
+        compareGrid.setVisible(false);
+
+        if(compareGrid != null) {
+            menu.remove(compareGrid);
+        }
+        createCompareGrid();
+        countCharts = 0;
     }
 
     // displays the metrics when loaded
@@ -1544,5 +1576,18 @@ public class AdAuctionGUI extends JFrame {
         chartJPanel.remove(0);
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.revalidate();
+    }
+
+    public void loadingTime(){
+
+        loadingImage.setVisible(true);
+        menu.revalidate();
+        menu.repaint();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        loadingImage.setVisible(false);
     }
 }
