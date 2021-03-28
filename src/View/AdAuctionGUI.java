@@ -3,17 +3,15 @@ package View;
 import Controllers.CampaignController;
 import Controllers.ChartController;
 import Controllers.MetricController;
-import Models.*;
+import Models.ChartCalculator;
+import Models.MetricCalculator;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -24,6 +22,8 @@ public class AdAuctionGUI extends JFrame {
     private JFrame gui;
     private JLayeredPane menu;
     private JPanel metricsGrid;
+
+    JButton loadCampaignButton;
 
     // components for campaigns
     private JPanel filesMenu;
@@ -249,7 +249,7 @@ public class AdAuctionGUI extends JFrame {
         JPanel loadCampaignButtonPanel = new JPanel(new BorderLayout());
         loadCampaignButtonPanel.setOpaque(false);
 
-        JButton loadCampaignButton = new JButton("Load Campaign");
+        loadCampaignButton = new JButton("Load Campaign");
         loadCampaignButton.setFont(mainFont);
         loadCampaignButton.setBorderPainted(false);
         loadCampaignButton.setContentAreaFilled(false);
@@ -359,6 +359,8 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the load files page
     public void createFileLoadBox() {
+
+        loadCampaignButton.setEnabled(false);
         GridLayout filesMenuLayout = new GridLayout(8, 1);
         filesMenuLayout.setVgap(10);
 
@@ -455,19 +457,22 @@ public class AdAuctionGUI extends JFrame {
 
 
         // load campaign button
-        JButton loadCampaignButton = new JButton("LoadCampaign");
-        loadCampaignButton.setFont(mainFont);
-        loadCampaignButton.setBorderPainted(false);
-        loadCampaignButton.setBackground(noColor);
-        loadCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        JButton loadCampaignButtonLocalLocal = new JButton("LoadCampaign");
+        loadCampaignButtonLocalLocal.setFont(mainFont);
+        loadCampaignButtonLocalLocal.setBorderPainted(false);
+        loadCampaignButtonLocalLocal.setBackground(noColor);
+        loadCampaignButtonLocalLocal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // loads the campaign
-        loadCampaignButton.addActionListener(e -> {
+        loadCampaignButtonLocalLocal.addActionListener(e -> {
+            loadCampaignButton.setEnabled(false);
             try {
                 createCampaign();
                 menu.remove(filesMenu);
                 menu.revalidate();
                 menu.repaint();
+                loadCampaignButtonLocalLocal.setEnabled(true);
+
             } catch (Exception invalidCampaignE) {
                 JOptionPane.showMessageDialog(null, "Invalid campaign files!");
             }
@@ -498,18 +503,18 @@ public class AdAuctionGUI extends JFrame {
         filesMenu.add(impressionFileLabel, 3);
         filesMenu.add(clickFileLabel, 4);
         filesMenu.add(serverFileLabel, 5);
-        filesMenu.add(loadCampaignButton, 6);
+        filesMenu.add(loadCampaignButtonLocalLocal, 6);
         filesMenu.add(cancelLoadCampaign);
 
-        menu.add(filesMenu, 100);
+        menu.add(filesMenu, 0);
 
-        cancelLoadCampaign.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
+        cancelLoadCampaign.addActionListener(actionEvent -> {
+            loadCampaignButton.setEnabled(true);
+            menu.remove(filesMenu);
+            menu.revalidate();
+            menu.repaint();
+
+
         });
     }
 
