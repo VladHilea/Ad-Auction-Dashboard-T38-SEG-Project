@@ -296,7 +296,9 @@ public class AdAuctionGUI extends JFrame {
 
         // fast load files of campaign
         fastCampaignButton.addActionListener(e -> {
+            fastCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             fastCreateCampaign();
+            fastCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         });
         // TESTING ONLY
 
@@ -482,6 +484,7 @@ public class AdAuctionGUI extends JFrame {
         // loads the campaign
         loadCampaignButtonLocalLocal.addActionListener(e -> {
             loadCampaignButton.setEnabled(false);
+            loadCampaignButtonLocalLocal.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             try {
                 createCampaign();
                 menu.remove(filesMenu);
@@ -492,6 +495,8 @@ public class AdAuctionGUI extends JFrame {
             } catch (Exception invalidCampaignE) {
                 JOptionPane.showMessageDialog(null, "Invalid campaign files!");
             }
+
+            loadCampaignButtonLocalLocal.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         });
 
 
@@ -1422,15 +1427,19 @@ public class AdAuctionGUI extends JFrame {
         campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
         createMetrics(campaignController.createMetrics());
         createCharts(campaignController.createCharts());
+
+
+        if(compareGrid != null) {
+            menu.remove(compareGrid);
+            menu.revalidate();
+            menu.repaint();
+        }
+        createCompareGrid();
         metricsGrid.setVisible(true);
         chartsGrid.setVisible(false);
         histogramGrid.setVisible(false);
         compareGrid.setVisible(false);
 
-        if(compareGrid != null) {
-            menu.remove(compareGrid);
-        }
-        createCompareGrid();
         countCharts = 0;
     }
 
