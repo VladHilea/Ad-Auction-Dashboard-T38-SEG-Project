@@ -6,28 +6,32 @@ import java.util.ArrayList;
 
 public class ImpressionLog extends Log {
     private ArrayList<Impression> impressionsList = new ArrayList<>(); // list of logs
+    public boolean isSet = false;
 
     // constructor for the first time opening a campaign
     public ImpressionLog(String impressionFile) {
         Reader impressionReader = new Reader(impressionFile); // file reader
-        impressionReader.getLine(); // ignore first line
+        if (impressionReader.fileIsReady()) {
+            isSet = true;
+            impressionReader.getLine(); // ignore first line
 
-        // reading the file
-        while (impressionReader.fileIsReady()) {
-            String[] log = impressionReader.getLine().split(",");
+            // reading the file
+            while (impressionReader.fileIsReady()) {
+                String[] log = impressionReader.getLine().split(",");
 
-            // extracting an impression log's data
-            Impression impression = new Impression(parseDate(log[0]), // date
-                    Long.parseLong(log[1]), // id
-                    log[2], // gender
-                    log[3], // age
-                    log[4], // income
-                    log[5], // context
-                    Double.parseDouble(log[6])); // impression cost
+                // extracting an impression log's data
+                Impression impression = new Impression(parseDate(log[0]), // date
+                        Long.parseLong(log[1]), // id
+                        log[2], // gender
+                        log[3], // age
+                        log[4], // income
+                        log[5], // context
+                        Double.parseDouble(log[6])); // impression cost
 
-            impressionsList.add(impression);
+                impressionsList.add(impression);
+            }
+            setDates();
         }
-        setDates();
     }
 
     // constructor for an exisiting list of impressions
@@ -50,4 +54,10 @@ public class ImpressionLog extends Log {
     public ArrayList<Impression> getImpressionsList() {
         return impressionsList;
     }
+
+    public boolean isSet() {
+        return isSet;
+    }
+
+
 }

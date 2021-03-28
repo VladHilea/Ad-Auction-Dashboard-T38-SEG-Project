@@ -6,25 +6,29 @@ import java.util.ArrayList;
 
 public class ServerLog extends Log {
     private ArrayList<Server> serverList = new ArrayList<>(); // list of logs
+    public boolean isSet = false;
 
     public ServerLog(String serverFile) {
         Reader serverReader = new Reader(serverFile); // file reader
-        serverReader.getLine(); // ignore first line
+        if (serverReader.fileIsReady()) {
+            isSet = true;
+            serverReader.getLine(); // ignore first line
 
-        // Reading the file
-        while (serverReader.fileIsReady()) {
-            String[] log = serverReader.getLine().split(",");
+            // Reading the file
+            while (serverReader.fileIsReady()) {
+                String[] log = serverReader.getLine().split(",");
 
-            // Extracting a server log's data
-            Server server = new Server(parseDate(log[0]), // entry date
-                    Long.parseLong(log[1]), // id
-                    parseDate(log[2]), // exit date
-                    Integer.parseInt(log[3]), // pages viewed
-                    log[4].equalsIgnoreCase("Yes")); // conversion
+                // Extracting a server log's data
+                Server server = new Server(parseDate(log[0]), // entry date
+                        Long.parseLong(log[1]), // id
+                        parseDate(log[2]), // exit date
+                        Integer.parseInt(log[3]), // pages viewed
+                        log[4].equalsIgnoreCase("Yes")); // conversion
 
-            serverList.add(server);
+                serverList.add(server);
+            }
+            setDates();
         }
-        setDates();
     }
 
     // constructor for an existing list of server logs
@@ -50,5 +54,9 @@ public class ServerLog extends Log {
 
     public ArrayList<Server> getServerList() {
         return serverList;
+    }
+
+    public boolean isSet() {
+        return isSet;
     }
 }
