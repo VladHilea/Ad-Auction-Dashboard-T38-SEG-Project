@@ -12,6 +12,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -46,10 +48,12 @@ public class AdAuctionGUI extends JFrame {
     private JPanel compareGrid;
     private JPanel compareChartsGrid;
 
+
     private final ArrayList<String> arrayOfChoicesMetrics = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesHistogram = new ArrayList<>();
-    // private final ArrayList<JFreeChart> chartsToCompare = new ArrayList<>();
+    //private final ArrayList<JFreeChart> chartsToCompare = new ArrayList<>();
+    private int countCharts = 0;
 
     // model controllers
     private final CampaignController campaignController;
@@ -78,11 +82,11 @@ public class AdAuctionGUI extends JFrame {
     // displays the main window
     public void prepareGui() {
         gui = new JFrame("Ad Auction Monitor");
-        gui.setVisible(true);
+        gui.setUndecorated(true);
         gui.setResizable(false);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        gui.setVisible(true);
         createMenu();
         gui.add(menu);
     }
@@ -256,7 +260,8 @@ public class AdAuctionGUI extends JFrame {
 
         // load files of campaign
         loadCampaignButton.addActionListener(e -> {
-            createFileLoadBox();
+                createFileLoadBox();
+
         });
 
         // TESTING ONLY
@@ -354,7 +359,7 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the load files page
     public void createFileLoadBox() {
-        GridLayout filesMenuLayout = new GridLayout(7, 1);
+        GridLayout filesMenuLayout = new GridLayout(8, 1);
         filesMenuLayout.setVgap(10);
 
         filesMenu = new JPanel(filesMenuLayout);
@@ -363,6 +368,8 @@ public class AdAuctionGUI extends JFrame {
         filesMenu.setBorder(new EmptyBorder(10, 10, 10, 10));
         filesMenu.setBackground(primaryColor);
         filesMenu.setVisible(true);
+
+
 
         // select impressions file button
         JButton impressionFileButton = new JButton("Select Impression Log");
@@ -443,6 +450,10 @@ public class AdAuctionGUI extends JFrame {
             filesMenu.validate();
         });
 
+
+        
+
+
         // load campaign button
         JButton loadCampaignButton = new JButton("LoadCampaign");
         loadCampaignButton.setFont(mainFont);
@@ -454,11 +465,21 @@ public class AdAuctionGUI extends JFrame {
         loadCampaignButton.addActionListener(e -> {
             try {
                 createCampaign();
-                filesMenu.setVisible(false);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
             } catch (Exception invalidCampaignE) {
                 JOptionPane.showMessageDialog(null, "Invalid campaign files!");
             }
         });
+
+
+        JButton cancelLoadCampaign = new JButton("Cancel");
+        cancelLoadCampaign.setFont(mainFont);
+        cancelLoadCampaign.setBorderPainted(false);
+        cancelLoadCampaign.setBackground(noColor);
+        cancelLoadCampaign.setForeground(Color.RED);
+        cancelLoadCampaign.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         impressionFileLabel = new JLabel("No File");
         impressionFileLabel.setForeground(noColor);
@@ -467,6 +488,10 @@ public class AdAuctionGUI extends JFrame {
         serverFileLabel = new JLabel("No File");
         serverFileLabel.setForeground(noColor);
 
+
+
+
+
         filesMenu.add(impressionFileButton, 0);
         filesMenu.add(clickFileButton, 1);
         filesMenu.add(serverFileButton, 2);
@@ -474,8 +499,18 @@ public class AdAuctionGUI extends JFrame {
         filesMenu.add(clickFileLabel, 4);
         filesMenu.add(serverFileLabel, 5);
         filesMenu.add(loadCampaignButton, 6);
+        filesMenu.add(cancelLoadCampaign);
 
         menu.add(filesMenu, 100);
+
+        cancelLoadCampaign.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+        });
     }
 
     // displays the metrics filters
@@ -1009,9 +1044,10 @@ public class AdAuctionGUI extends JFrame {
         addChartToComparePanel.add(addChartToCompareButton);
 
         addChartToCompareButton.addActionListener(e -> {
-            JPanel panel = new JPanel(new GridBagLayout());
+            if (countCharts < 4){
+                JPanel panel = new JPanel(new GridBagLayout());
             JPanel chartJPanel = new JPanel(new BorderLayout());
-
+            countCharts++;
             switch (arrayOfChoicesChart.get(7)) {
                 case "Hours": {
                     ChartPanel chartPanel = new ChartPanel(chartController.getHoursChart());
@@ -1059,7 +1095,12 @@ public class AdAuctionGUI extends JFrame {
                     break;
                 }
             }
+        }
+            else {
+                JOptionPane.showMessageDialog(null, "Can't add more than 4 charts to compare");
+            }
         });
+
 
         JPanel chartSouthGrid = new JPanel(new GridLayout(1, 2));
         chartSouthGrid.setPreferredSize(new Dimension(chartsGrid.getWidth(),200));
@@ -1321,12 +1362,14 @@ public class AdAuctionGUI extends JFrame {
         compareGrid.add(compareChartsGrid, BorderLayout.CENTER);
         compareGrid.add(resetComparePanel, BorderLayout.SOUTH);
 
-        menu.add(compareGrid);
+            menu.add(compareGrid);
 
         resetCompareButton.addActionListener(e -> {
             menu.remove(compareGrid);
             createCompareGrid();
         });
+
+
     }
 
     // converts a metric to a readable string
@@ -1336,6 +1379,9 @@ public class AdAuctionGUI extends JFrame {
         else
             return String.format("%.4g%n", metric); // change the 4 to change the dp
     }
+
+    
+
 
     // loads the files
     public void createCampaign() {
