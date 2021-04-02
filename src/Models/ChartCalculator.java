@@ -22,8 +22,6 @@ public class ChartCalculator extends Calculator {
     private ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
-
-
     public ChartCalculator() {
         super(null, null, null, null);
     }
@@ -37,21 +35,10 @@ public class ChartCalculator extends Calculator {
         calculate(granularity, "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
     }
 
-    // recalculates intervals from given time range
-    public void calculateCharts(String granularity, LocalDateTime startDate, LocalDateTime endDate) {
-        calculate(granularity, "Any", "Any", "Any", "Any", startDate, endDate);
-    }
-
-    // recalculates intervals from given time range and filters
-    public void calculateCharts(String granularity, String gender, String age, String context, String income) {
-        calculate(granularity, gender, age, context, income, getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
-    }
-
     // recalculates intervals from given time range and filters
     public void calculateCharts(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
         calculate(granularity, gender, age, context, income, startDate, endDate);
     }
-
 
     // produces a list of metric calculators that stores all the logs split into a set interval
     public void calculate(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {

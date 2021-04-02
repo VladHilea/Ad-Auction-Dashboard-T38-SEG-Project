@@ -35,16 +35,16 @@ public class MetricCalculator extends Calculator {
 
     // calculates metrics from the entire dataset
     public void calculateMetrics() {
-        calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", "Any", "Any");
+        calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
     }
 
     // calculates metrics with filters
-    public void calculateMetrics(String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
-        calculate(getImpressionLog(), getClickLog(), getServerLog(), gender, age, context, income, stringStartDate, stringEndDate);
+    public void calculateMetrics(String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
+        calculate(getImpressionLog(startDate, endDate), getClickLog(startDate, endDate), getServerLog(startDate, endDate), gender, age, context, income, startDate, endDate);
     }
 
     // the actual calculations
-    public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList, String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
+    public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
         // resets the metrics
         this.impressionsNo = 0;
         this.uniquesNo = 0;
