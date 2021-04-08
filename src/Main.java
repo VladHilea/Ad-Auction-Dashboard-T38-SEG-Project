@@ -11,12 +11,10 @@ public class Main {
 
     /*
      * to do:
-     * significant speed improvements (now easier to measure with load button)
-     * start and end date selection (with calendars)
-     * check every metric is being calculated/displayed properly
-     * filter dropdowns for metrics page
+     * significant speed improvements - partially solved with multithreading - problems with metrics display!
      * improve file reading with anomalous data
-     * merge histogram and compare features
-     * convert histogram and compare features to MVC approach
+     * start and end date selection
+     * check every metric is being calculated/displayed properly - hours time granularity!
+     * histograms - controller and model should be fairly similar
      */
 }
