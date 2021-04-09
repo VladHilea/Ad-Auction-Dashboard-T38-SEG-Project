@@ -2,6 +2,9 @@ package Controllers;
 
 import Models.MetricCalculator;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class MetricController {
     private MetricCalculator metricCalculator;
 
@@ -14,7 +17,22 @@ public class MetricController {
     }
 
     public void updateMetrics(String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
-        metricCalculator.calculateMetrics(gender, age, context, income, stringStartDate, stringEndDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startDate;
+        LocalDateTime endDate;
+
+        if (stringStartDate.equals("Any")) {
+            startDate = metricCalculator.getImpressionLog().get(0).getDate();
+        } else {
+            startDate = LocalDateTime.parse(stringStartDate, formatter);
+        }
+        if (stringEndDate.equals("Any")){
+            endDate = metricCalculator.getImpressionLog().get(metricCalculator.getImpressionLog().size() - 1).getDate();
+        } else {
+            endDate = LocalDateTime.parse(stringEndDate, formatter);
+        }
+
+        metricCalculator.calculateMetrics(gender, age, context, income, startDate, endDate);
     }
 
     public int getImpressionsNo() {

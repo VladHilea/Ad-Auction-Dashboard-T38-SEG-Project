@@ -3,8 +3,7 @@ package View;
 import Controllers.CampaignController;
 import Controllers.ChartController;
 import Controllers.MetricController;
-import Models.ChartCalculator;
-import Models.MetricCalculator;
+import Models.*;
 import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
@@ -12,6 +11,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -22,10 +23,9 @@ public class AdAuctionGUI extends JFrame {
     private JFrame gui;
     private JLayeredPane menu;
     private JPanel metricsGrid;
+    private JPanel verticalMenu;
 
     JButton loadCampaignButton;
-    JLabel loadingImage = new JLabel();
-
     // components for campaigns
     private JPanel filesMenu;
     private JFileChooser fileChooser;
@@ -33,27 +33,26 @@ public class AdAuctionGUI extends JFrame {
     private String impressionsFileLocation, clickFileLocation, serverFileLocation;
 
     // components for metrics
+    private JComboBox<String> metricsGenderBox, metricsAgeBox, metricsContextBox, metricsIncomeBox, metricsStartDateBox, metricsEndDateBox;
     private JLabel impressionsValue, clicksValue, uniquesValue, ctrValues, cpaValues, cpcValues, cpmValues, conversionsValues, totalCostValues, bounceValues, bounceRateValues;
     private Box impressionsBox, clicksBox, uniquesBox, ctrBox, cpaBox, cpcBox, cpmBox, conversionsBox, totalCostBox, bouncesBox, bounceRateBox;
 
     // components for charts
-    private JPanel chartsGrid;
-    private JPanel chartJPanel;
+    private JComboBox<String> chartsMetricsBox, chartsGenderBox, chartsAgeBox, chartsContextBox, chartsIncomeBox, chartsStartDateBox, chartsEndDateBox;
+    private JPanel chartsGrid, chartJPanel;
     private ChartPanel chartPanel;
     private JSlider chartSlider;
 
     // components for histograms
+    private JComboBox<String> histogramMetricsBox, histogramGenderBox, histogramAgeBox, histogramContextBox, histogramIncomeBox, histogramStartDateBox, histogramEndDateBox;
     private JPanel histogramGrid;
     private JSlider histogramSlider;
 
-    private JPanel compareGrid;
-    private JPanel compareChartsGrid;
-
+    private JPanel compareGrid, compareChartsGrid;
 
     private final ArrayList<String> arrayOfChoicesMetrics = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesHistogram = new ArrayList<>();
-    //private final ArrayList<JFreeChart> chartsToCompare = new ArrayList<>();
     private int countCharts = 0;
 
     // model controllers
@@ -61,11 +60,13 @@ public class AdAuctionGUI extends JFrame {
     private final MetricController metricController;
     private final ChartController chartController;
 
-    // gui styling
+    // colours
     private final Color primaryColor = new Color(14,139,229);
     private final Color secondaryColor = new Color(220,120,27);
     private final Color tertiaryColor = new Color(242,236,236);
     private final Color noColor = Color.WHITE;
+
+    // fonts
     private final Font mainFont = new Font("Impact", Font.PLAIN, 15);
     private final Font fontOfText = new Font("Impact", Font.PLAIN, 25);
     private final Font fontOfValue = new Font("Impact", Font.BOLD, 30);
@@ -83,10 +84,11 @@ public class AdAuctionGUI extends JFrame {
     // displays the main window
     public void prepareGui() {
         gui = new JFrame("Ad Auction Monitor");
-        gui.setUndecorated(true);
         gui.setResizable(false);
+        gui.setUndecorated(true);
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         gui.setVisible(true);
         createMenu();
         gui.add(menu);
@@ -99,17 +101,27 @@ public class AdAuctionGUI extends JFrame {
         menu.setOpaque(true);
         menu.setBackground(noColor);
 
+
         createTopMenu();
         createVerticalMenu();
         createMetricsGrid();
         createChartsGrid();
         createHistogramsGrid();
         createCompareGrid();
+
+        metricsGrid.setVisible(true);
+        chartsGrid.setVisible(false);
+        histogramGrid.setVisible(false);
+        compareGrid.setVisible(false);
+
+
+
+        disableFilters();
     }
 
     // displays the constant vertical menu on the lift hand size
     public void createVerticalMenu(){
-        JPanel verticalMenu = new JPanel(new GridLayout(5, 1));
+        verticalMenu = new JPanel(new GridLayout(5, 1));
         verticalMenu.setBounds(0,100,200,gui.getHeight()-100);
         verticalMenu.setAlignmentY(100);
         verticalMenu.setOpaque(true);
@@ -198,6 +210,13 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
         });
 
         chartsButton.addActionListener(e -> {
@@ -205,6 +224,13 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(true);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
         });
 
         histogramsButton.addActionListener(e -> {
@@ -212,6 +238,13 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(true);
             compareGrid.setVisible(false);
+
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
         });
 
         compareButton.addActionListener(e -> {
@@ -219,6 +252,13 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(true);
+
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
         });
 
         settingsButton.addActionListener(e -> {
@@ -226,6 +266,13 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
         });
     }
 
@@ -246,21 +293,6 @@ public class AdAuctionGUI extends JFrame {
         productName.setForeground(noColor);
         productName.setFont(mainFont);
 
-        /*Image image = new ImageIcon(this.getClass().getResource("loading.gif")).getImage().getScaledInstance(40,40,Image.SCALE_DEFAULT);
-        ImageIcon imageIcon = new ImageIcon();
-        imageIcon.setImage(image);
-        loadingImage.setIcon(imageIcon);
-        loadingImage.setVisible(true);
-
-         */
-
-        Box topLeft = Box.createHorizontalBox();
-        topLeft.add(productName);
-        //topLeft.add(loadingImage);
-        //topLeft.setSize(200,100);
-        //topLeft.setBounds(20,0,200,100);
-        //topLeft.setAlignmentX(20);
-
         // load campaign button
         JPanel loadCampaignButtonPanel = new JPanel(new BorderLayout());
         loadCampaignButtonPanel.setOpaque(false);
@@ -275,10 +307,7 @@ public class AdAuctionGUI extends JFrame {
         loadCampaignButtonPanel.add(loadCampaignButton, BorderLayout.EAST);
 
         // load files of campaign
-        loadCampaignButton.addActionListener(e -> {
-                createFileLoadBox();
-
-        });
+        loadCampaignButton.addActionListener(e -> createFileLoadBox());
 
         // TESTING ONLY
         // fast load campaign button
@@ -318,12 +347,12 @@ public class AdAuctionGUI extends JFrame {
         topRight.add(closeButton);
         topRight.setBounds(gui.getWidth()-200,0,200,100);
 
-        topMenu.add(topLeft, BorderLayout.WEST,0);
+        topMenu.add(productName, BorderLayout.WEST,0);
         topMenu.add(topRight, BorderLayout.CENTER,1);
         menu.add(topMenu, BorderLayout.NORTH,1);
     }
 
-    // displays a close button
+    // creates a round button
     public class RoundButton extends JButton {
 
         public RoundButton(String label) {
@@ -377,7 +406,6 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the load files page
     public void createFileLoadBox() {
-
         loadCampaignButton.setEnabled(false);
         GridLayout filesMenuLayout = new GridLayout(8, 1);
         filesMenuLayout.setVgap(10);
@@ -388,8 +416,6 @@ public class AdAuctionGUI extends JFrame {
         filesMenu.setBorder(new EmptyBorder(10, 10, 10, 10));
         filesMenu.setBackground(primaryColor);
         filesMenu.setVisible(true);
-
-
 
         // select impressions file button
         JButton impressionFileButton = new JButton("Select Impression Log");
@@ -470,10 +496,6 @@ public class AdAuctionGUI extends JFrame {
             filesMenu.validate();
         });
 
-
-        
-
-
         // load campaign button
         JButton loadCampaignButtonLocalLocal = new JButton("LoadCampaign");
         loadCampaignButtonLocalLocal.setFont(mainFont);
@@ -483,22 +505,23 @@ public class AdAuctionGUI extends JFrame {
 
         // loads the campaign
         loadCampaignButtonLocalLocal.addActionListener(e -> {
+
             loadCampaignButton.setEnabled(false);
-            loadCampaignButtonLocalLocal.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             try {
+                gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 createCampaign();
                 menu.remove(filesMenu);
                 menu.revalidate();
                 menu.repaint();
-                loadCampaignButtonLocalLocal.setEnabled(true);
+                loadCampaignButton.setEnabled(true);
 
             } catch (Exception invalidCampaignE) {
                 JOptionPane.showMessageDialog(null, "Invalid campaign files!");
             }
 
-            loadCampaignButtonLocalLocal.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        });
+            gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
+        });
 
         JButton cancelLoadCampaign = new JButton("Cancel");
         cancelLoadCampaign.setFont(mainFont);
@@ -514,10 +537,6 @@ public class AdAuctionGUI extends JFrame {
         serverFileLabel = new JLabel("No File");
         serverFileLabel.setForeground(noColor);
 
-
-
-
-
         filesMenu.add(impressionFileButton, 0);
         filesMenu.add(clickFileButton, 1);
         filesMenu.add(serverFileButton, 2);
@@ -527,7 +546,7 @@ public class AdAuctionGUI extends JFrame {
         filesMenu.add(loadCampaignButtonLocalLocal, 6);
         filesMenu.add(cancelLoadCampaign);
 
-        menu.add(filesMenu, 0);
+        menu.add(filesMenu, 10);
 
         cancelLoadCampaign.addActionListener(actionEvent -> {
             loadCampaignButton.setEnabled(true);
@@ -537,19 +556,28 @@ public class AdAuctionGUI extends JFrame {
 
 
         });
+
+
     }
 
     // displays the metrics filters
     public void createMetricsNorthBox() {
         //start Box
         String[] genderChoices = new String[] {"Any","Male","Female"};
-        JComboBox<String> genderBox = new JComboBox<>(genderChoices);
-        genderBox.setVisible(true);
-        genderBox.setBorder(new EmptyBorder(5,5,5,5));
-        genderBox.setFont(comboBoxFont);
+        metricsGenderBox = new JComboBox<>(genderChoices);
+        metricsGenderBox.setVisible(true);
+        metricsGenderBox.setBorder(new EmptyBorder(5,5,5,5));
+        metricsGenderBox.setFont(comboBoxFont);
 
-        genderBox.addActionListener(e -> {
-            String itemName = String.valueOf(genderBox.getSelectedItem());
+        metricsGenderBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(metricsGenderBox.getSelectedItem());
             arrayOfChoicesMetrics.set(1, itemName);
             recalculateMetrics();
         });
@@ -560,20 +588,29 @@ public class AdAuctionGUI extends JFrame {
 
         Box genderVerticalBox = Box.createVerticalBox();
         genderVerticalBox.add(genderLabel);
-        genderVerticalBox.add(genderBox);
+        genderVerticalBox.add(metricsGenderBox);
         //end box
 
         //start Box
         String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
-        JComboBox<String> ageBox = new JComboBox<>(ageChoices);
-        ageBox.setVisible(true);
-        ageBox.setBorder(new EmptyBorder(5,5,5,5));
-        ageBox.setFont(comboBoxFont);
+        metricsAgeBox = new JComboBox<>(ageChoices);
+        metricsAgeBox.setVisible(true);
+        metricsAgeBox.setBorder(new EmptyBorder(5,5,5,5));
+        metricsAgeBox.setFont(comboBoxFont);
 
-        ageBox.addActionListener(e -> {
-            String itemName = String.valueOf(ageBox.getSelectedItem());
+        metricsAgeBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(metricsAgeBox.getSelectedItem());
             arrayOfChoicesMetrics.set(2, itemName);
             recalculateMetrics();
+
+
         });
 
         JLabel ageLabel = new JLabel("AGE");
@@ -582,18 +619,25 @@ public class AdAuctionGUI extends JFrame {
 
         Box ageVerticalBox = Box.createVerticalBox();
         ageVerticalBox.add(ageLabel);
-        ageVerticalBox.add(ageBox);
+        ageVerticalBox.add(metricsAgeBox);
         //end box
 
         //start Box
         String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
-        JComboBox<String> contextBox = new JComboBox<>(contextChoices);
-        contextBox.setVisible(true);
-        contextBox.setBorder(new EmptyBorder(5,5,5,5));
-        contextBox.setFont(comboBoxFont);
+        metricsContextBox = new JComboBox<>(contextChoices);
+        metricsContextBox.setVisible(true);
+        metricsContextBox.setBorder(new EmptyBorder(5,5,5,5));
+        metricsContextBox.setFont(comboBoxFont);
 
-        contextBox.addActionListener(e -> {
-            String itemName = String.valueOf(contextBox.getSelectedItem());
+        metricsContextBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(metricsContextBox.getSelectedItem());
             arrayOfChoicesMetrics.set(3, itemName);
             recalculateMetrics();
         });
@@ -604,18 +648,25 @@ public class AdAuctionGUI extends JFrame {
 
         Box contextVerticalBox = Box.createVerticalBox();
         contextVerticalBox.add(contextLabel);
-        contextVerticalBox.add(contextBox);
+        contextVerticalBox.add(metricsContextBox);
         //end box
 
         //start Box
         String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
-        JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
-        incomeBox.setVisible(true);
-        incomeBox.setBorder(new EmptyBorder(5,5,5,5));
-        incomeBox.setFont(comboBoxFont);
+        metricsIncomeBox = new JComboBox<>(incomeChoices);
+        metricsIncomeBox.setVisible(true);
+        metricsIncomeBox.setBorder(new EmptyBorder(5,5,5,5));
+        metricsIncomeBox.setFont(comboBoxFont);
 
-        incomeBox.addActionListener(e -> {
-            String itemName = String.valueOf(incomeBox.getSelectedItem());
+        metricsIncomeBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(metricsIncomeBox.getSelectedItem());
             arrayOfChoicesMetrics.set(4, itemName);
             recalculateMetrics();
         });
@@ -626,7 +677,65 @@ public class AdAuctionGUI extends JFrame {
 
         Box incomeVerticalBox = Box.createVerticalBox();
         incomeVerticalBox.add(incomeLabel);
-        incomeVerticalBox.add(incomeBox);
+        incomeVerticalBox.add(metricsIncomeBox);
+        //end box
+
+        //start Box
+        String[] startDateChoices = new String[]{"Any"};
+        metricsStartDateBox = new JComboBox<>(startDateChoices);
+        metricsStartDateBox.setVisible(true);
+        metricsStartDateBox.setBorder(new EmptyBorder(5,5,5,5));
+        metricsStartDateBox.setFont(comboBoxFont);
+
+        metricsStartDateBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(metricsStartDateBox.getSelectedItem());
+            arrayOfChoicesMetrics.set(5, itemName);
+            recalculateMetrics();
+        });
+
+        JLabel startDateLabel = new JLabel("START DATE");
+        startDateLabel.setFont(mainFont);
+        startDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        Box startDateVerticalBox = Box.createVerticalBox();
+        startDateVerticalBox.add(startDateLabel);
+        startDateVerticalBox.add(metricsStartDateBox);
+        //end box
+
+        //start Box
+        String[] endDateChoices = new String[]{"Any"};
+        metricsEndDateBox = new JComboBox<>(endDateChoices);
+        metricsEndDateBox.setVisible(true);
+        metricsEndDateBox.setBorder(new EmptyBorder(5,5,5,5));
+        metricsEndDateBox.setFont(comboBoxFont);
+
+        metricsEndDateBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(metricsEndDateBox.getSelectedItem());
+            arrayOfChoicesMetrics.set(6, itemName);
+            recalculateMetrics();
+        });
+
+        JLabel endDateLabel = new JLabel("END DATE");
+        endDateLabel.setFont(mainFont);
+        endDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        Box endDateVerticalBox = Box.createVerticalBox();
+        endDateVerticalBox.add(endDateLabel);
+        endDateVerticalBox.add(metricsEndDateBox);
         //end box
 
         Box metricsNorthBox = Box.createHorizontalBox();
@@ -636,6 +745,8 @@ public class AdAuctionGUI extends JFrame {
         metricsNorthBox.add(ageVerticalBox);
         metricsNorthBox.add(contextVerticalBox);
         metricsNorthBox.add(incomeVerticalBox);
+        metricsNorthBox.add(startDateVerticalBox);
+        metricsNorthBox.add(endDateVerticalBox);
 
         metricsGrid.add(metricsNorthBox, BorderLayout.NORTH);
     }
@@ -909,13 +1020,20 @@ public class AdAuctionGUI extends JFrame {
     public void createChartNorthBox(){
         //start Box
         String[] metricsChoices = new String[]{"Impressions", "CPA", "CPC", "CPM", "CTR", "Uniques", "Bounces", "Bounce Rate", "Clicks", "Conversions", "Total Impression Cost"};
-        JComboBox<String> metricsBox = new JComboBox<>(metricsChoices);
-        metricsBox.setVisible(true);
-        metricsBox.setBorder(new EmptyBorder(5,5,5,5));
-        metricsBox.setFont(comboBoxFont);
+        chartsMetricsBox = new JComboBox<>(metricsChoices);
+        chartsMetricsBox.setVisible(true);
+        chartsMetricsBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsMetricsBox.setFont(comboBoxFont);
 
-        metricsBox.addActionListener(e -> {
-            String itemName = String.valueOf(metricsBox.getSelectedItem());
+        chartsMetricsBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsMetricsBox.getSelectedItem());
             arrayOfChoicesChart.set(0, itemName);
             recalculateCharts();
         });
@@ -926,18 +1044,25 @@ public class AdAuctionGUI extends JFrame {
 
         Box metricsVerticalBox = Box.createVerticalBox();
         metricsVerticalBox.add(metricsLabel);
-        metricsVerticalBox.add(metricsBox);
+        metricsVerticalBox.add(chartsMetricsBox);
         //end box
 
         //start Box
         String[] genderChoices = new String[]{"Any", "Male", "Female"};
-        JComboBox<String> genderBox = new JComboBox<>(genderChoices);
-        genderBox.setVisible(true);
-        genderBox.setBorder(new EmptyBorder(5,5,5,5));
-        genderBox.setFont(comboBoxFont);
+        chartsGenderBox = new JComboBox<>(genderChoices);
+        chartsGenderBox.setVisible(true);
+        chartsGenderBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsGenderBox.setFont(comboBoxFont);
 
-        genderBox.addActionListener(e -> {
-            String itemName = String.valueOf(genderBox.getSelectedItem());
+        chartsGenderBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsGenderBox.getSelectedItem());
             arrayOfChoicesChart.set(1, itemName);
             recalculateCharts();
         });
@@ -948,18 +1073,25 @@ public class AdAuctionGUI extends JFrame {
 
         Box genderVerticalBox = Box.createVerticalBox();
         genderVerticalBox.add(genderLabel);
-        genderVerticalBox.add(genderBox);
+        genderVerticalBox.add(chartsGenderBox);
         //end box
 
         //start Box
         String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
-        JComboBox<String> ageBox = new JComboBox<>(ageChoices);
-        ageBox.setVisible(true);
-        ageBox.setBorder(new EmptyBorder(5,5,5,5));
-        ageBox.setFont(comboBoxFont);
+        chartsAgeBox = new JComboBox<>(ageChoices);
+        chartsAgeBox.setVisible(true);
+        chartsAgeBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsAgeBox.setFont(comboBoxFont);
 
-        ageBox.addActionListener(e -> {
-            String itemName = String.valueOf(ageBox.getSelectedItem());
+        chartsAgeBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsAgeBox.getSelectedItem());
             arrayOfChoicesChart.set(2, itemName);
             recalculateCharts();
         });
@@ -970,18 +1102,25 @@ public class AdAuctionGUI extends JFrame {
 
         Box ageVerticalBox = Box.createVerticalBox();
         ageVerticalBox.add(ageLabel);
-        ageVerticalBox.add(ageBox);
+        ageVerticalBox.add(chartsAgeBox);
         //end box
 
         //start Box
         String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
-        JComboBox<String> contextBox = new JComboBox<>(contextChoices);
-        contextBox.setVisible(true);
-        contextBox.setBorder(new EmptyBorder(5,5,5,5));
-        contextBox.setFont(comboBoxFont);
+        chartsContextBox = new JComboBox<>(contextChoices);
+        chartsContextBox.setVisible(true);
+        chartsContextBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsContextBox.setFont(comboBoxFont);
 
-        contextBox.addActionListener(e -> {
-            String itemName = String.valueOf(contextBox.getSelectedItem());
+        chartsContextBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsContextBox.getSelectedItem());
             arrayOfChoicesChart.set(3, itemName);
             recalculateCharts();
         });
@@ -992,18 +1131,25 @@ public class AdAuctionGUI extends JFrame {
 
         Box contextVerticalBox = Box.createVerticalBox();
         contextVerticalBox.add(contextLabel);
-        contextVerticalBox.add(contextBox);
+        contextVerticalBox.add(chartsContextBox);
         //end box
 
         //start Box
         String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
-        JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
-        incomeBox.setVisible(true);
-        incomeBox.setBorder(new EmptyBorder(5,5,5,5));
-        incomeBox.setFont(comboBoxFont);
+        chartsIncomeBox = new JComboBox<>(incomeChoices);
+        chartsIncomeBox.setVisible(true);
+        chartsIncomeBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsIncomeBox.setFont(comboBoxFont);
 
-        incomeBox.addActionListener(e -> {
-            String itemName = String.valueOf(incomeBox.getSelectedItem());
+        chartsIncomeBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsIncomeBox.getSelectedItem());
             arrayOfChoicesChart.set(4, itemName);
             recalculateCharts();
         });
@@ -1014,7 +1160,63 @@ public class AdAuctionGUI extends JFrame {
 
         Box incomeVerticalBox = Box.createVerticalBox();
         incomeVerticalBox.add(incomeLabel);
-        incomeVerticalBox.add(incomeBox);
+        incomeVerticalBox.add(chartsIncomeBox);
+        //end box
+
+        //start Box
+        String[] startDateChoices = new String[]{"Any"};
+        chartsStartDateBox = new JComboBox<>(startDateChoices);
+        chartsStartDateBox.setVisible(true);
+        chartsStartDateBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsStartDateBox.setFont(comboBoxFont);
+
+        chartsStartDateBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsStartDateBox.getSelectedItem());
+            arrayOfChoicesHistogram.set(5, itemName);
+        });
+
+        JLabel startDateLabel = new JLabel("START DATE");
+        startDateLabel.setFont(mainFont);
+        startDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        Box startDateVerticalBox = Box.createVerticalBox();
+        startDateVerticalBox.add(startDateLabel);
+        startDateVerticalBox.add(chartsStartDateBox);
+        //end box
+
+        //start Box
+        String[] endDateChoices = new String[]{"Any"};
+        chartsEndDateBox = new JComboBox<>(endDateChoices);
+        chartsEndDateBox.setVisible(true);
+        chartsEndDateBox.setBorder(new EmptyBorder(5,5,5,5));
+        chartsEndDateBox.setFont(comboBoxFont);
+
+        chartsEndDateBox.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
+            String itemName = String.valueOf(chartsEndDateBox.getSelectedItem());
+            arrayOfChoicesHistogram.set(6, itemName);
+        });
+
+        JLabel endDateLabel = new JLabel("END DATE");
+        endDateLabel.setFont(mainFont);
+        endDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        Box endDateVerticalBox = Box.createVerticalBox();
+        endDateVerticalBox.add(endDateLabel);
+        endDateVerticalBox.add(chartsEndDateBox);
         //end box
 
         Box chartNorthBox = Box.createHorizontalBox();
@@ -1025,6 +1227,8 @@ public class AdAuctionGUI extends JFrame {
         chartNorthBox.add(ageVerticalBox);
         chartNorthBox.add(contextVerticalBox);
         chartNorthBox.add(incomeVerticalBox);
+        chartNorthBox.add(startDateVerticalBox);
+        chartNorthBox.add(endDateVerticalBox);
 
         chartsGrid.add(chartNorthBox, BorderLayout.NORTH);
     }
@@ -1047,6 +1251,13 @@ public class AdAuctionGUI extends JFrame {
         chartSlider.setLabelTable(position);
 
         chartSlider.addChangeListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
+
             String sliderValue = position.get(chartSlider.getValue()).getText();
 
             if (!arrayOfChoicesChart.get(7).equals(sliderValue)) {
@@ -1070,63 +1281,69 @@ public class AdAuctionGUI extends JFrame {
         addChartToComparePanel.add(addChartToCompareButton);
 
         addChartToCompareButton.addActionListener(e -> {
-            if (countCharts < 4){
-                JPanel panel = new JPanel(new GridBagLayout());
-            JPanel chartJPanel = new JPanel(new BorderLayout());
-            countCharts++;
-            switch (arrayOfChoicesChart.get(7)) {
-                case "Hours": {
-                    ChartPanel chartPanel = new ChartPanel(chartController.getHoursChart());
-                    chartPanel.setPreferredSize(new Dimension(500, 300));
-                    chartJPanel.add(chartPanel);
-                    chartJPanel.validate();
-                    panel.add(chartJPanel);
-                    compareChartsGrid.add(panel);
-                    break;
-                }
-                case "Days": {
-                    ChartPanel chartPanel = new ChartPanel(chartController.getDaysChart());
-                    chartPanel.setPreferredSize(new Dimension(500, 300));
-                    chartJPanel.add(chartPanel);
-                    chartJPanel.validate();
-                    panel.add(chartJPanel);
-                    compareChartsGrid.add(panel);
-                    break;
-                }
-                case "Weeks": {
-                    ChartPanel chartPanel = new ChartPanel(chartController.getWeeksChart());
-                    chartPanel.setPreferredSize(new Dimension(500, 300));
-                    chartJPanel.add(chartPanel);
-                    chartJPanel.validate();
-                    panel.add(chartJPanel);
-                    compareChartsGrid.add(panel);
-                    break;
-                }
-                case "Months": {
-                    ChartPanel chartPanel = new ChartPanel(chartController.getMonthsChart());
-                    chartPanel.setPreferredSize(new Dimension(500, 300));
-                    chartJPanel.add(chartPanel);
-                    chartJPanel.validate();
-                    panel.add(chartJPanel);
-                    compareChartsGrid.add(panel);
-                    break;
-                }
-                case "Years": {
-                    ChartPanel chartPanel = new ChartPanel(chartController.getYearsChart());
-                    chartPanel.setPreferredSize(new Dimension(500, 300));
-                    chartJPanel.add(chartPanel);
-                    chartJPanel.validate();
-                    panel.add(chartJPanel);
-                    compareChartsGrid.add(panel);
-                    break;
-                }
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
             }
-        }
-            else {
+
+            if (countCharts < 4) {
+                JPanel panel = new JPanel(new GridBagLayout());
+                JPanel chartJPanel = new JPanel(new BorderLayout());
+                countCharts++;
+
+                switch (arrayOfChoicesChart.get(7)) {
+                    case "Hours": {
+                        ChartPanel chartPanel = new ChartPanel(chartController.getHoursChart());
+                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartJPanel.add(chartPanel);
+                        chartJPanel.validate();
+                        panel.add(chartJPanel);
+                        compareChartsGrid.add(panel);
+                        break;
+                    }
+                    case "Days": {
+                        ChartPanel chartPanel = new ChartPanel(chartController.getDaysChart());
+                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartJPanel.add(chartPanel);
+                        chartJPanel.validate();
+                        panel.add(chartJPanel);
+                        compareChartsGrid.add(panel);
+                        break;
+                    }
+                    case "Weeks": {
+                        ChartPanel chartPanel = new ChartPanel(chartController.getWeeksChart());
+                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartJPanel.add(chartPanel);
+                        chartJPanel.validate();
+                        panel.add(chartJPanel);
+                        compareChartsGrid.add(panel);
+                        break;
+                    }
+                    case "Months": {
+                        ChartPanel chartPanel = new ChartPanel(chartController.getMonthsChart());
+                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartJPanel.add(chartPanel);
+                        chartJPanel.validate();
+                        panel.add(chartJPanel);
+                        compareChartsGrid.add(panel);
+                        break;
+                    }
+                    case "Years": {
+                        ChartPanel chartPanel = new ChartPanel(chartController.getYearsChart());
+                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartJPanel.add(chartPanel);
+                        chartJPanel.validate();
+                        panel.add(chartJPanel);
+                        compareChartsGrid.add(panel);
+                        break;
+                    }
+                }
+            } else {
                 JOptionPane.showMessageDialog(null, "Can't add more than 4 charts to compare");
             }
         });
-
 
         JPanel chartSouthGrid = new JPanel(new GridLayout(1, 2));
         chartSouthGrid.setPreferredSize(new Dimension(chartsGrid.getWidth(),200));
@@ -1173,13 +1390,13 @@ public class AdAuctionGUI extends JFrame {
     public void createHistogramNorthBox() {
         // start Box
         String[] metricChoices = new String[] {"Metrics","Impressions","CPA","CPC","CPM","CTR","Uniques","Bounce","Bounce Rate","Clicks","Conversions","Total Cost"};
-        JComboBox<String> metricsBox = new JComboBox<>(metricChoices);
-        metricsBox.setVisible(true);
-        metricsBox.setBorder(new EmptyBorder(5,5,5,5));
-        metricsBox.setFont(comboBoxFont);
+        histogramMetricsBox = new JComboBox<>(metricChoices);
+        histogramMetricsBox.setVisible(true);
+        histogramMetricsBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramMetricsBox.setFont(comboBoxFont);
 
-        metricsBox.addActionListener(e -> {
-            String itemName = String.valueOf(metricsBox.getSelectedItem());
+        histogramMetricsBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramMetricsBox.getSelectedItem());
             arrayOfChoicesHistogram.set(0, itemName);
         });
 
@@ -1189,19 +1406,19 @@ public class AdAuctionGUI extends JFrame {
 
         Box metricsVerticalBox = Box.createVerticalBox();
         metricsVerticalBox.add(metricsLabel);
-        metricsVerticalBox.add(metricsBox);
+        metricsVerticalBox.add(histogramMetricsBox);
 
         //end box
 
         //start Box
         String[] genderChoices = new String[] {"Any","Male","Female"};
-        JComboBox<String> genderBox = new JComboBox<>(genderChoices);
-        genderBox.setVisible(true);
-        genderBox.setBorder(new EmptyBorder(5,5,5,5));
-        genderBox.setFont(comboBoxFont);
+        histogramGenderBox = new JComboBox<>(genderChoices);
+        histogramGenderBox.setVisible(true);
+        histogramGenderBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramGenderBox.setFont(comboBoxFont);
 
-        genderBox.addActionListener(e -> {
-            String itemName = String.valueOf(genderBox.getSelectedItem());
+        histogramGenderBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramGenderBox.getSelectedItem());
             arrayOfChoicesHistogram.set(1, itemName);
         });
 
@@ -1211,18 +1428,18 @@ public class AdAuctionGUI extends JFrame {
 
         Box genderVerticalBox = Box.createVerticalBox();
         genderVerticalBox.add(genderLabel);
-        genderVerticalBox.add(genderBox);
+        genderVerticalBox.add(histogramGenderBox);
         //end box
 
         //start Box
         String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
-        JComboBox<String> ageBox = new JComboBox<>(ageChoices);
-        ageBox.setVisible(true);
-        ageBox.setBorder(new EmptyBorder(5,5,5,5));
-        ageBox.setFont(comboBoxFont);
+        histogramAgeBox = new JComboBox<>(ageChoices);
+        histogramAgeBox.setVisible(true);
+        histogramAgeBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramAgeBox.setFont(comboBoxFont);
 
-        ageBox.addActionListener(e -> {
-            String itemName = String.valueOf(ageBox.getSelectedItem());
+        histogramAgeBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramAgeBox.getSelectedItem());
             arrayOfChoicesHistogram.set(2, itemName);
         });
 
@@ -1232,18 +1449,18 @@ public class AdAuctionGUI extends JFrame {
 
         Box ageVerticalBox = Box.createVerticalBox();
         ageVerticalBox.add(ageLabel);
-        ageVerticalBox.add(ageBox);
+        ageVerticalBox.add(histogramAgeBox);
         //end box
 
         //start Box
         String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
-        JComboBox<String> contextBox = new JComboBox<>(contextChoices);
-        contextBox.setVisible(true);
-        contextBox.setBorder(new EmptyBorder(5,5,5,5));
-        contextBox.setFont(comboBoxFont);
+        histogramContextBox = new JComboBox<>(contextChoices);
+        histogramContextBox.setVisible(true);
+        histogramContextBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramContextBox.setFont(comboBoxFont);
 
-        contextBox.addActionListener(e -> {
-            String itemName = String.valueOf(contextBox.getSelectedItem());
+        histogramContextBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramContextBox.getSelectedItem());
             arrayOfChoicesHistogram.set(3, itemName);
         });
 
@@ -1253,18 +1470,18 @@ public class AdAuctionGUI extends JFrame {
 
         Box contextVerticalBox = Box.createVerticalBox();
         contextVerticalBox.add(contextLabel);
-        contextVerticalBox.add(contextBox);
+        contextVerticalBox.add(histogramContextBox);
         //end box
 
         //start Box
         String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
-        JComboBox<String> incomeBox = new JComboBox<>(incomeChoices);
-        incomeBox.setVisible(true);
-        incomeBox.setBorder(new EmptyBorder(5,5,5,5));
-        incomeBox.setFont(comboBoxFont);
+        histogramIncomeBox = new JComboBox<>(incomeChoices);
+        histogramIncomeBox.setVisible(true);
+        histogramIncomeBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramIncomeBox.setFont(comboBoxFont);
 
-        incomeBox.addActionListener(e -> {
-            String itemName = String.valueOf(incomeBox.getSelectedItem());
+        histogramIncomeBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramIncomeBox.getSelectedItem());
             arrayOfChoicesHistogram.set(4, itemName);
         });
 
@@ -1274,7 +1491,49 @@ public class AdAuctionGUI extends JFrame {
 
         Box incomeVerticalBox = Box.createVerticalBox();
         incomeVerticalBox.add(incomeLabel);
-        incomeVerticalBox.add(incomeBox);
+        incomeVerticalBox.add(histogramIncomeBox);
+        //end box
+
+        //start Box
+        String[] startDateChoices = new String[]{"Any"};
+        histogramStartDateBox = new JComboBox<>(startDateChoices);
+        histogramStartDateBox.setVisible(true);
+        histogramStartDateBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramStartDateBox.setFont(comboBoxFont);
+
+        histogramStartDateBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramStartDateBox.getSelectedItem());
+            arrayOfChoicesHistogram.set(5, itemName);
+        });
+
+        JLabel startDateLabel = new JLabel("START DATE");
+        startDateLabel.setFont(mainFont);
+        startDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        Box startDateVerticalBox = Box.createVerticalBox();
+        startDateVerticalBox.add(startDateLabel);
+        startDateVerticalBox.add(histogramStartDateBox);
+        //end box
+
+        //start Box
+        String[] endDateChoices = new String[]{"Any"};
+        histogramEndDateBox = new JComboBox<>(endDateChoices);
+        histogramEndDateBox.setVisible(true);
+        histogramEndDateBox.setBorder(new EmptyBorder(5,5,5,5));
+        histogramEndDateBox.setFont(comboBoxFont);
+
+        histogramEndDateBox.addActionListener(e -> {
+            String itemName = String.valueOf(histogramEndDateBox.getSelectedItem());
+            arrayOfChoicesHistogram.set(6, itemName);
+        });
+
+        JLabel endDateLabel = new JLabel("END DATE");
+        endDateLabel.setFont(mainFont);
+        endDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+        Box endDateVerticalBox = Box.createVerticalBox();
+        endDateVerticalBox.add(endDateLabel);
+        endDateVerticalBox.add(histogramEndDateBox);
         //end box
 
         Box histogramNorthBox = Box.createHorizontalBox();
@@ -1285,6 +1544,8 @@ public class AdAuctionGUI extends JFrame {
         histogramNorthBox.add(ageVerticalBox);
         histogramNorthBox.add(contextVerticalBox);
         histogramNorthBox.add(incomeVerticalBox);
+        histogramNorthBox.add(startDateVerticalBox);
+        histogramNorthBox.add(endDateVerticalBox);
 
         histogramGrid.add(histogramNorthBox,BorderLayout.NORTH);
     }
@@ -1388,15 +1649,19 @@ public class AdAuctionGUI extends JFrame {
         compareGrid.add(compareChartsGrid, BorderLayout.CENTER);
         compareGrid.add(resetComparePanel, BorderLayout.SOUTH);
 
-            menu.add(compareGrid);
+        menu.add(compareGrid);
 
         resetCompareButton.addActionListener(e -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
             countCharts = 0;
             menu.remove(compareGrid);
             createCompareGrid();
         });
-
-
     }
 
     // converts a metric to a readable string
@@ -1407,40 +1672,121 @@ public class AdAuctionGUI extends JFrame {
             return String.format("%.4g%n", metric); // change the 4 to change the dp
     }
 
-    
-
-
     // loads the files
     public void createCampaign() {
-        campaignController.createCampaign(impressionsFileLocation, clickFileLocation, serverFileLocation);
-        createMetrics(campaignController.createMetrics());
-        createCharts(campaignController.createCharts());
 
-        metricsGrid.setVisible(true);
-        chartsGrid.setVisible(false);
-        histogramGrid.setVisible(false);
-        compareGrid.setVisible(false);
+            disableFilters();
+            gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            campaignController.createCampaign(impressionsFileLocation, clickFileLocation, serverFileLocation);
+            createMetrics(campaignController.createMetrics());
+
+            enableFilters();
+            createCharts(campaignController.createCharts());
+            gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+
+            if(compareGrid != null) {
+                menu.remove(compareGrid);
+                menu.revalidate();
+                menu.repaint();
+            }
+            createCompareGrid();
+            metricsGrid.setVisible(true);
+            chartsGrid.setVisible(false);
+            histogramGrid.setVisible(false);
+            compareGrid.setVisible(false);
+
+            countCharts = 0;
+
+
     }
 
     // fast load the campaign for testing only
     public void fastCreateCampaign() {
-        campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
-        createMetrics(campaignController.createMetrics());
-        createCharts(campaignController.createCharts());
-
-
-        if(compareGrid != null) {
-            menu.remove(compareGrid);
+        if (filesMenu!=null){
+            loadCampaignButton.setEnabled(true);
+            menu.remove(filesMenu);
             menu.revalidate();
             menu.repaint();
         }
-        createCompareGrid();
-        metricsGrid.setVisible(true);
-        chartsGrid.setVisible(false);
-        histogramGrid.setVisible(false);
-        compareGrid.setVisible(false);
 
-        countCharts = 0;
+            disableFilters();
+            gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+            campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
+            createMetrics(campaignController.createMetrics());
+
+            enableFilters();
+            createCharts(campaignController.createCharts());
+            gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+
+
+            if(compareGrid != null) {
+                menu.remove(compareGrid);
+                menu.revalidate();
+                menu.repaint();
+            }
+            createCompareGrid();
+            metricsGrid.setVisible(true);
+            chartsGrid.setVisible(false);
+            histogramGrid.setVisible(false);
+            compareGrid.setVisible(false);
+
+            countCharts = 0;
+
+    }
+
+    // enables the filter dropdown menus
+    public void enableFilters() {
+        metricsGenderBox.setEnabled(true);
+        metricsAgeBox.setEnabled(true);
+        metricsContextBox.setEnabled(true);
+        metricsIncomeBox.setEnabled(true);
+        metricsStartDateBox.setEnabled(true);
+        metricsEndDateBox.setEnabled(true);
+
+        chartsMetricsBox.setEnabled(true);
+        chartsGenderBox.setEnabled(true);
+        chartsAgeBox.setEnabled(true);
+        chartsContextBox.setEnabled(true);
+        chartsIncomeBox.setEnabled(true);
+        chartsStartDateBox.setEnabled(true);
+        chartsEndDateBox.setEnabled(true);
+
+        histogramMetricsBox.setEnabled(true);
+        histogramGenderBox.setEnabled(true);
+        histogramAgeBox.setEnabled(true);
+        histogramContextBox.setEnabled(true);
+        histogramIncomeBox.setEnabled(true);
+        histogramStartDateBox.setEnabled(true);
+        histogramEndDateBox.setEnabled(true);
+    }
+
+    // disables the filter dropdown menus
+    public void disableFilters() {
+        metricsGenderBox.setEnabled(false);
+        metricsAgeBox.setEnabled(false);
+        metricsContextBox.setEnabled(false);
+        metricsIncomeBox.setEnabled(false);
+        metricsStartDateBox.setEnabled(false);
+        metricsEndDateBox.setEnabled(false);
+
+        chartsMetricsBox.setEnabled(false);
+        chartsGenderBox.setEnabled(false);
+        chartsAgeBox.setEnabled(false);
+        chartsContextBox.setEnabled(false);
+        chartsIncomeBox.setEnabled(false);
+        chartsStartDateBox.setEnabled(false);
+        chartsEndDateBox.setEnabled(false);
+
+        histogramMetricsBox.setEnabled(false);
+        histogramGenderBox.setEnabled(false);
+        histogramAgeBox.setEnabled(false);
+        histogramContextBox.setEnabled(false);
+        histogramIncomeBox.setEnabled(false);
+        histogramStartDateBox.setEnabled(false);
+        histogramEndDateBox.setEnabled(false);
     }
 
     // displays the metrics when loaded
@@ -1451,13 +1797,24 @@ public class AdAuctionGUI extends JFrame {
 
     // calls the controller to recalculate the metrics
     public void recalculateMetrics() {
-        metricController.updateMetrics(arrayOfChoicesMetrics.get(1), // gender
-                arrayOfChoicesMetrics.get(2), // age
-                arrayOfChoicesMetrics.get(3), // context
-                arrayOfChoicesMetrics.get(4), // income
-                arrayOfChoicesMetrics.get(5), // start date
-                arrayOfChoicesMetrics.get(6)); // start date
-        updateMetrics();
+        try {
+            new Thread(() -> {
+                disableFilters();
+                gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                metricController.updateMetrics(arrayOfChoicesMetrics.get(1), // gender
+                        arrayOfChoicesMetrics.get(2), // age
+                        arrayOfChoicesMetrics.get(3), // context
+                        arrayOfChoicesMetrics.get(4), // income
+                        arrayOfChoicesMetrics.get(5), // start date
+                        arrayOfChoicesMetrics.get(6)); // start date
+                updateMetrics();
+                enableFilters();
+                gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }).start();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No campaign loaded!");
+            enableFilters();
+        }
     }
 
     // displays the updated metrics
@@ -1467,6 +1824,7 @@ public class AdAuctionGUI extends JFrame {
         impressionsValue.setFont(fontOfValue);
         impressionsBox.remove(0);
         impressionsBox.add(impressionsValue, 0);
+        impressionsBox.repaint();
         impressionsBox.revalidate();
 
         clicksValue = new JLabel(toString(metricController.getClicksNo()));
@@ -1474,6 +1832,7 @@ public class AdAuctionGUI extends JFrame {
         clicksValue.setFont(fontOfValue);
         clicksBox.remove(0);
         clicksBox.add(clicksValue, 0);
+        clicksBox.repaint();
         clicksBox.revalidate();
 
         uniquesValue = new JLabel(toString(metricController.getUniquesNo()));
@@ -1481,6 +1840,7 @@ public class AdAuctionGUI extends JFrame {
         uniquesValue.setFont(fontOfValue);
         uniquesBox.remove(0);
         uniquesBox.add(uniquesValue, 0);
+        uniquesBox.repaint();
         uniquesBox.revalidate();
 
         ctrValues = new JLabel(toString(metricController.getCtr()));
@@ -1488,6 +1848,7 @@ public class AdAuctionGUI extends JFrame {
         ctrValues.setFont(fontOfValue);
         ctrBox.remove(0);
         ctrBox.add(ctrValues, 0);
+        ctrBox.repaint();
         ctrBox.revalidate();
 
         cpaValues = new JLabel(toString(metricController.getCpa()));
@@ -1495,6 +1856,7 @@ public class AdAuctionGUI extends JFrame {
         cpaValues.setFont(fontOfValue);
         cpaBox.remove(0);
         cpaBox.add(cpaValues, 0);
+        cpaBox.repaint();
         cpaBox.revalidate();
 
         cpcValues = new JLabel(toString(metricController.getCpc()));
@@ -1502,6 +1864,7 @@ public class AdAuctionGUI extends JFrame {
         cpcValues.setFont(fontOfValue);
         cpcBox.remove(0);
         cpcBox.add(cpcValues, 0);
+        cpcBox.repaint();
         cpcBox.revalidate();
 
         cpmValues = new JLabel(toString(metricController.getCpm()));
@@ -1509,6 +1872,7 @@ public class AdAuctionGUI extends JFrame {
         cpmValues.setFont(fontOfValue);
         cpmBox.remove(0);
         cpmBox.add(cpmValues, 0);
+        cpmBox.repaint();
         cpmBox.revalidate();
 
         conversionsValues = new JLabel(toString(metricController.getConversionsNo()));
@@ -1516,6 +1880,7 @@ public class AdAuctionGUI extends JFrame {
         conversionsValues.setFont(fontOfValue);
         conversionsBox.remove(0);
         conversionsBox.add(conversionsValues, 0);
+        conversionsBox.repaint();
         conversionsBox.revalidate();
 
         totalCostValues = new JLabel(toString(metricController.getTotalImpressionCost()));
@@ -1523,6 +1888,7 @@ public class AdAuctionGUI extends JFrame {
         totalCostValues.setFont(fontOfValue);
         totalCostBox.remove(0);
         totalCostBox.add(totalCostValues, 0);
+        totalCostBox.repaint();
         totalCostBox.revalidate();
 
         bounceValues = new JLabel(toString(metricController.getBouncesNo()));
@@ -1530,6 +1896,7 @@ public class AdAuctionGUI extends JFrame {
         bounceValues.setFont(fontOfValue);
         bouncesBox.remove(0);
         bouncesBox.add(bounceValues, 0);
+        bouncesBox.repaint();
         bouncesBox.revalidate();
 
         bounceRateValues = new JLabel(toString(metricController.getBr()));
@@ -1537,6 +1904,7 @@ public class AdAuctionGUI extends JFrame {
         bounceRateValues.setFont(fontOfValue);
         bounceRateBox.remove(0);
         bounceRateBox.add(bounceRateValues, 0);
+        bounceRateBox.repaint();
         bounceRateBox.revalidate();
     }
 
@@ -1548,14 +1916,25 @@ public class AdAuctionGUI extends JFrame {
 
     // calls the controller to recalculate the charts
     public void recalculateCharts() {
-        chartController.updateCharts(arrayOfChoicesChart.get(0), // metric
-                arrayOfChoicesChart.get(1), // gender
-                arrayOfChoicesChart.get(2), // age
-                arrayOfChoicesChart.get(3), // context
-                arrayOfChoicesChart.get(4), // income
-                arrayOfChoicesChart.get(5), // start date
-                arrayOfChoicesChart.get(6)); // start date
-        updateCharts();
+        try {
+            new Thread(() -> {
+                disableFilters();
+                gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                chartController.updateCharts(arrayOfChoicesChart.get(0), // metric
+                        arrayOfChoicesChart.get(1), // gender
+                        arrayOfChoicesChart.get(2), // age
+                        arrayOfChoicesChart.get(3), // context
+                        arrayOfChoicesChart.get(4), // income
+                        arrayOfChoicesChart.get(5), // start date
+                        arrayOfChoicesChart.get(6)); // start date
+                updateCharts();
+                enableFilters();
+                gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }).start();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No campaign loaded!");
+            enableFilters();
+        }
     }
 
     // displays the updated charts
@@ -1585,18 +1964,5 @@ public class AdAuctionGUI extends JFrame {
         chartJPanel.remove(0);
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.revalidate();
-    }
-
-    public void loadingTime(){
-
-        loadingImage.setVisible(true);
-        menu.revalidate();
-        menu.repaint();
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        loadingImage.setVisible(false);
     }
 }
