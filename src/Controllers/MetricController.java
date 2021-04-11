@@ -31,7 +31,6 @@ public class MetricController {
         } else {
             endDate = LocalDateTime.parse(stringEndDate, formatter);
         }
-
         metricCalculator.calculateMetrics(gender, age, context, income, startDate, endDate);
     }
 
