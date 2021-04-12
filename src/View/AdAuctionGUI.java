@@ -1942,10 +1942,11 @@ public class AdAuctionGUI extends JFrame {
                         arrayOfChoicesChart.get(3), // context
                         arrayOfChoicesChart.get(4), // income
                         arrayOfChoicesChart.get(5), // start date
-                        arrayOfChoicesChart.get(6)); // start date
+                        arrayOfChoicesChart.get(6)); // end date
                 updateCharts();
                 enableFilters();
                 gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                Thread.currentThread().interrupt();
             }).start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "No campaign loaded!");

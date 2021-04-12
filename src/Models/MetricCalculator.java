@@ -35,7 +35,9 @@ public class MetricCalculator extends Calculator {
 
     // calculates metrics from the entire dataset
     public void calculateMetrics() {
-        calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
+        if (getImpressionLog().size() != 0) {
+            calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
+        }
     }
 
     // calculates metrics with filters
