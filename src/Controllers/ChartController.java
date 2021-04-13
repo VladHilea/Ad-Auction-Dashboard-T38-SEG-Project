@@ -16,6 +16,9 @@ public class ChartController {
     private final Chart monthsChart;
     private final Chart yearsChart;
 
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+
     // all charts have a default display
     public ChartController() {
         this.hoursChart = new Chart("Hours Chart","Impressions", "Hours");
@@ -27,19 +30,21 @@ public class ChartController {
 
     // populates charts with data and default filtering
     public void createCharts(ChartCalculator chartCalculator) {
-        chartCalculator.calculateCharts("Hours");
+        chartCalculator.calculateIntervals(null, null);
+
+        chartCalculator.calculateFilters("hours", "Any" ,"Any", "Any", "Any", null, null);
         this.hoursChart.updateChart(chartCalculator);
 
-        chartCalculator.calculateCharts("Days");
+        chartCalculator.calculateFilters("days", "Any" ,"Any", "Any", "Any", null, null);
         this.daysChart.updateChart(chartCalculator);
 
-        chartCalculator.calculateCharts("Weeks");
+        chartCalculator.calculateFilters("weeks", "Any" ,"Any", "Any", "Any", null, null);
         this.weeksChart.updateChart(chartCalculator);
 
-        chartCalculator.calculateCharts("Months");
+        chartCalculator.calculateFilters("months", "Any" ,"Any", "Any", "Any", null, null);
         this.monthsChart.updateChart(chartCalculator);
 
-        chartCalculator.calculateCharts("Years");
+        chartCalculator.calculateFilters("years", "Any" ,"Any", "Any", "Any", null, null);
         this.yearsChart.updateChart(chartCalculator);
 
         this.chartCalculator = chartCalculator;
@@ -48,9 +53,9 @@ public class ChartController {
     // filters the charts
     public void updateCharts(String metric, String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startDate;
-        LocalDateTime endDate;
+        LocalDateTime startDate, endDate;
 
+        // converting the string dates
         if (stringStartDate.equals("Any")) {
             startDate = chartCalculator.getImpressionLog().get(0).getDate();
         } else {
@@ -62,19 +67,27 @@ public class ChartController {
             endDate = LocalDateTime.parse(stringEndDate, formatter);
         }
 
-        chartCalculator.calculateCharts("Hours", gender, age, context, income, startDate, endDate);
+        // update intervals if the ranges change
+        if (!(this.startDate == startDate) || !(this.endDate == endDate)) {
+            chartCalculator.calculateIntervals(startDate, endDate);
+        }
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        // update the filters
+        chartCalculator.calculateFilters("hours", gender, age, context, income, startDate, endDate);
         this.hoursChart.updateChart(chartCalculator, metric);
 
-        chartCalculator.calculateCharts("Days", gender, age, context, income, startDate, endDate);
+        chartCalculator.calculateFilters("days", gender, age, context, income, startDate, endDate);
         this.daysChart.updateChart(chartCalculator, metric);
 
-        chartCalculator.calculateCharts("Weeks", gender, age, context, income, startDate, endDate);
+        chartCalculator.calculateFilters("weeks", gender, age, context, income, startDate, endDate);
         this.weeksChart.updateChart(chartCalculator, metric);
 
-        chartCalculator.calculateCharts("Months", gender, age, context, income, startDate, endDate);
+        chartCalculator.calculateFilters("months", gender, age, context, income, startDate, endDate);
         this.monthsChart.updateChart(chartCalculator, metric);
 
-        chartCalculator.calculateCharts("Years", gender, age, context, income, startDate, endDate);
+        chartCalculator.calculateFilters("years", gender, age, context, income, startDate, endDate);
         this.yearsChart.updateChart(chartCalculator, metric);
     }
 

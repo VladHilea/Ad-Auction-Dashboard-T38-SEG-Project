@@ -11,7 +11,7 @@ public class Main {
 
     /*
      * to do:
-     * significant speed improvements - partially solved (no longer freezes) with multithreading - problems with metrics display and thread closing!
+     * significant speed improvements - multithreading + reworking chart calculator class
      * improve file reading with anomalous data
      * start and end date selection
      * check every metric is being calculated/displayed properly - hours time granularity!

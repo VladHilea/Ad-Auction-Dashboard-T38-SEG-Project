@@ -3,7 +3,6 @@ package Models;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -22,6 +21,12 @@ public class ChartCalculator extends Calculator {
     private ArrayList<Float> cpmList = new ArrayList<>(); // cost-per-thousand impressions
     private ArrayList<Float> brList = new ArrayList<>(); // bounce rate - number of bounces per click
 
+    private ArrayList<MetricCalculator> hourCalculators = new ArrayList<>();
+    private ArrayList<MetricCalculator> dayCalculators = new ArrayList<>();
+    private ArrayList<MetricCalculator> weekCalculators = new ArrayList<>();
+    private ArrayList<MetricCalculator> monthCalculators = new ArrayList<>();
+    private ArrayList<MetricCalculator> yearCalculators = new ArrayList<>();
+
     public ChartCalculator() {
         super(null, null, null, null);
     }
@@ -30,71 +35,48 @@ public class ChartCalculator extends Calculator {
         super(impressionLog, clickLog, serverLog, users);
     }
 
-    // recalculates intervals from whole time range and no filters
-    public void calculateCharts(String granularity) {
-        calculate(granularity, "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
-    }
-
-    // recalculates intervals from given time range and filters
-    public void calculateCharts(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
-        calculate(granularity, gender, age, context, income, startDate, endDate);
-    }
-
     // produces a list of metric calculators that stores all the logs split into a set interval
-    public void calculate(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
-        // resets the array lists
-        this.impressionsNoList = new ArrayList<>();
-        this.uniquesNoList = new ArrayList<>();
-        this.clicksNoList = new ArrayList<>();
-        this.bouncesNoList = new ArrayList<>();
-        this.conversionsNoList = new ArrayList<>();
-        this.totalImpressionCostList = new ArrayList<>();
-        this.totalClickCostList = new ArrayList<>();
-
-        this.ctrList = new ArrayList<>();
-        this.cpaList = new ArrayList<>();
-        this.cpcList = new ArrayList<>();
-        this.cpmList = new ArrayList<>();
-        this.brList = new ArrayList<>();
+    public void calculateIntervals(LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null) {
+            startDate = getImpressionLog().get(0).getDate();
+        }
+        if (endDate == null) {
+            endDate = getImpressionLog().get(getImpressionLog().size() - 1).getDate();
+        }
+        resetChart();
 
         // creates a list of dates separated by a constant interval
-        ArrayList<LocalDateTime> dates = new ArrayList<>();
-        dates.add(startDate);
+        ArrayList<LocalDateTime> hourDates = new ArrayList<>();
+        ArrayList<LocalDateTime> dayDates = new ArrayList<>();
+        ArrayList<LocalDateTime> weekDates = new ArrayList<>();
+        ArrayList<LocalDateTime> monthDates = new ArrayList<>();
+        ArrayList<LocalDateTime> yearDates = new ArrayList<>();
 
         // calculates time difference and gets dates at every interval
-        switch (granularity) {
-            case "Hours": {
-                for (long i = 1; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
-                    dates.add(startDate.plusHours(i));
-                }
-                break;
-            }
-            case "Days": {
-                for (long i = 1; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
-                    dates.add(startDate.plusDays(i));
-                }
-                break;
-            }
-            case "Weeks": {
-                for (long i = 1; i <= ChronoUnit.WEEKS.between(startDate, endDate) + 1; i++) {
-                    dates.add(startDate.plusWeeks(i));
-                }
-                break;
-            }
-            case "Months": {
-                for (long i = 1; i <= ChronoUnit.MONTHS.between(startDate, endDate) + 1; i++) {
-                    dates.add(startDate.plusMonths(i));
-                }
-                break;
-            }
-            case "Years": {
-                for (long i = 1; i <= ChronoUnit.YEARS.between(startDate, endDate) + 1; i++) {
-                    dates.add(startDate.plusYears(i));
-                }
-                break;
-            }
+        for (long i = 0; i <= ChronoUnit.HOURS.between(startDate, endDate) + 1; i++) {
+            hourDates.add(startDate.plusHours(i));
+        }
+        for (long i = 0; i <= ChronoUnit.DAYS.between(startDate, endDate) + 1; i++) {
+            dayDates.add(startDate.plusDays(i));
+        }
+        for (long i = 0; i <= ChronoUnit.WEEKS.between(startDate, endDate) + 1; i++) {
+            weekDates.add(startDate.plusWeeks(i));
+        }
+        for (long i = 0; i <= ChronoUnit.MONTHS.between(startDate, endDate) + 1; i++) {
+            monthDates.add(startDate.plusMonths(i));
+        }
+        for (long i = 0; i <= ChronoUnit.YEARS.between(startDate, endDate) + 1; i++) {
+            yearDates.add(startDate.plusYears(i));
         }
 
+        this.hourCalculators = createIntervals(hourDates, startDate, endDate);
+        this.dayCalculators = createIntervals(dayDates, startDate, endDate);
+        this.weekCalculators = createIntervals(weekDates, startDate, endDate);
+        this.monthCalculators = createIntervals(monthDates, startDate, endDate);
+        this.yearCalculators = createIntervals(yearDates, startDate, endDate);
+    }
+
+    public ArrayList<MetricCalculator> createIntervals(ArrayList<LocalDateTime> dates, LocalDateTime startDate, LocalDateTime endDate) {
         ArrayList<ImpressionEntry> impressionList = getImpressionLog(startDate, endDate); // list of impressions
         ArrayList<ClickEntry> clickList = getClickLog(startDate, endDate); // list of clicks
         ArrayList<ServerEntry> serverList = getServerLog(startDate, endDate); // list of server entries
@@ -126,18 +108,14 @@ public class ChartCalculator extends Calculator {
                 currentImpressionLog = new ArrayList<>();
 
                 // adds to the next log
-                if (filterEntry(impression, gender, age, income) && filterContext(impression, context)) {
-                    currentImpressionLog.add(impression);
-                }
+                currentImpressionLog.add(impression);
 
                 // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
             // adds the log entry to the current interval log
-            if (filterEntry(impression, gender, age, income) && filterContext(impression, context)) {
-                currentImpressionLog.add(impression);
-            }
+            currentImpressionLog.add(impression);
 
             // completes the last interval log
             if (!impressionIterator.hasNext()) {
@@ -163,18 +141,13 @@ public class ChartCalculator extends Calculator {
                 currentClickLog = new ArrayList<>();
 
                 // adds to the next log
-                if (filterEntry(click, gender, age, income)) {
-                    currentClickLog.add(click);
-                }
+                currentClickLog.add(click);
 
                 // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
-            // adds the log entry to the current interval log
-            if (filterEntry(click, gender, age, income)) {
-                currentClickLog.add(click);
-            }
+            currentClickLog.add(click);
 
             // completes the last interval log
             if (!clickIterator.hasNext()) {
@@ -200,18 +173,13 @@ public class ChartCalculator extends Calculator {
                 currentServerLog = new ArrayList<>();
 
                 // adds to the next log
-                if (filterEntry(server, gender, age, income)) {
-                    currentServerLog.add(server);
-                }
+                currentServerLog.add(server);
 
                 // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
-            // adds the log entry to the current interval log
-            if (filterEntry(server, gender, age, income)) {
-                currentServerLog.add(server);
-            }
+            currentServerLog.add(server);
 
             // completes the last interval log
             if (!serverIterator.hasNext()) {
@@ -224,13 +192,45 @@ public class ChartCalculator extends Calculator {
             for (int i=0; i < intervalImpressionLogs.size(); i++) {
                 intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i), getUsers()));
             }
+            return intervalCalculators;
         } else {
             System.out.println("Error!");
+            return new ArrayList<>();
         }
+    }
+
+    public void calculateFilters(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null) {
+            startDate = getImpressionLog().get(0).getDate();
+        }
+        if (endDate == null) {
+            endDate = getImpressionLog().get(getImpressionLog().size() - 1).getDate();
+        }
+        resetChart();
 
         // calculating metrics for every interval
-        for (MetricCalculator calculator : intervalCalculators) {
-            calculator.calculateMetrics();
+        switch (granularity) {
+            case "hours":
+                calculateMetrics(gender, age, context, income, startDate, endDate, hourCalculators);
+                break;
+            case "days":
+                calculateMetrics(gender, age, context, income, startDate, endDate, dayCalculators);
+                break;
+            case "weeks":
+                calculateMetrics(gender, age, context, income, startDate, endDate, weekCalculators);
+                break;
+            case "months":
+                calculateMetrics(gender, age, context, income, startDate, endDate, monthCalculators);
+                break;
+            case "years":
+                calculateMetrics(gender, age, context, income, startDate, endDate, yearCalculators);
+                break;
+        }
+    }
+
+    private void calculateMetrics(String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate, ArrayList<MetricCalculator> calculators) {
+        for (MetricCalculator calculator : calculators) {
+            calculator.calculateMetrics(gender, age, context, income, startDate, endDate);
 
             this.impressionsNoList.add(calculator.getImpressionsNo());
             this.uniquesNoList.add(calculator.getUniquesNo());
@@ -246,6 +246,23 @@ public class ChartCalculator extends Calculator {
             this.cpmList.add(calculator.getCpm());
             this.brList.add(calculator.getBr());
         }
+    }
+
+    // resets the array lists
+    private void resetChart() {
+        this.impressionsNoList = new ArrayList<>();
+        this.uniquesNoList = new ArrayList<>();
+        this.clicksNoList = new ArrayList<>();
+        this.bouncesNoList = new ArrayList<>();
+        this.conversionsNoList = new ArrayList<>();
+        this.totalImpressionCostList = new ArrayList<>();
+        this.totalClickCostList = new ArrayList<>();
+
+        this.ctrList = new ArrayList<>();
+        this.cpaList = new ArrayList<>();
+        this.cpcList = new ArrayList<>();
+        this.cpmList = new ArrayList<>();
+        this.brList = new ArrayList<>();
     }
 
     // allows the entry to be counted if it matches the filters
