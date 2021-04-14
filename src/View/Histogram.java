@@ -45,7 +45,7 @@ public class Histogram extends ApplicationFrame{
   
   // updates the chart with time granularity change
 	public void updateHistogram(ChartCalculator calculator) {
-		this.histogram = ChartFactory.createHistogram( "Click Costs Distribution" ,"Click Costs","Occurrences", createHistogramDataset(calculator),PlotOrientation.VERTICAL,true,true,false);
+		this.histogram = ChartFactory.createHistogram( "Click Costs Distribution" ,"Click Costs","Frequency Density", createHistogramDataset(calculator),PlotOrientation.VERTICAL,true,true,false);
 	}
 
   public JFreeChart getHistogram() {
