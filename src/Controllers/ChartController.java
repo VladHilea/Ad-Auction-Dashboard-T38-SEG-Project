@@ -19,7 +19,7 @@ public class ChartController {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    // all charts have a default display
+    // all charts are given a default display
     public ChartController() {
         this.hoursChart = new Chart("Hours Chart","Impressions", "Hours");
         this.daysChart = new Chart("Days Chart", "Impressions", "Days");
@@ -28,8 +28,9 @@ public class ChartController {
         this.yearsChart = new Chart("Years Chart",  "Impressions", "Years");
     }
 
-    // populates charts with data and default filtering
+    // initial charts display data with no filtering and the entire time range
     public void createCharts(ChartCalculator chartCalculator) {
+        // initial calculation of data intervals (for each chart point)
         chartCalculator.calculateIntervals(null, null);
 
         chartCalculator.calculateFilters("hours", "Any" ,"Any", "Any", "Any", null, null);
@@ -48,9 +49,17 @@ public class ChartController {
         this.yearsChart.updateChart(chartCalculator);
 
         this.chartCalculator = chartCalculator;
+
+        /*
+        this method is a little weird due to the nature of the chart calculator class
+        1. the chart calculator stores the data points for only the last granularity filtered
+        2. an alternate method would be to store a list of each metric for each granularity so that the method calculateFilters() only needs to be called once
+        3. this would also apply to the updateCharts() method below
+        4. during increment 3 i may change some of these method names to be clearer but we don't have a huge amount of time for it to matter
+         */
     }
 
-    // filters the charts
+    // filters the charts, also updates data intervals if they need to change
     public void updateCharts(String metric, String gender, String age, String context, String income, String stringStartDate, String stringEndDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startDate, endDate;
@@ -67,7 +76,7 @@ public class ChartController {
             endDate = LocalDateTime.parse(stringEndDate, formatter);
         }
 
-        // update intervals if the ranges change
+        // update intervals only if the ranges need to change
         if (!(this.startDate == startDate) || !(this.endDate == endDate)) {
             chartCalculator.calculateIntervals(startDate, endDate);
         }

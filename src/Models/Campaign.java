@@ -18,6 +18,7 @@ public class Campaign {
         serverLog = new ArrayList<>();
     }
 
+    // reads the files
     public Campaign(String impressionFile, String clickFile, String serverFile) {
         // log construction
         ArrayList<ImpressionEntry> impressionLog = new ArrayList<>();

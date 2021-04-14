@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Calculator {
-    private final ArrayList<ImpressionEntry> impressionLog;
-    private final ArrayList<ClickEntry> clickLog;
-    private final ArrayList<ServerEntry> serverLog;
+    private final ArrayList<ImpressionEntry> impressionLog; // list of impressions
+    private final ArrayList<ClickEntry> clickLog; // list of clicks
+    private final ArrayList<ServerEntry> serverLog; // list of server entries
     private final Map<Long, User> users; // list of unique users
 
     public Calculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
@@ -17,11 +17,12 @@ public class Calculator {
         this.users = users;
     }
 
+    // gets a list of all the impression entries
     public ArrayList<ImpressionEntry> getImpressionLog() {
         return impressionLog;
     }
 
-    // gets a list of all the impressions within a given date range
+    // gets a list of all the impression entries within a given date range
     public ArrayList<ImpressionEntry> getImpressionLog(LocalDateTime startDate, LocalDateTime endDate) {
         ArrayList<ImpressionEntry> rangedImpressionsLog = new ArrayList<>();
 
@@ -35,11 +36,12 @@ public class Calculator {
         return rangedImpressionsLog;
     }
 
+    // gets a list of all the click entries
     public ArrayList<ClickEntry> getClickLog() {
         return clickLog;
     }
 
-    // gets a list of all the clicks within a given date range
+    // gets a list of all the click entries within a given date range
     public ArrayList<ClickEntry> getClickLog(LocalDateTime startDate, LocalDateTime endDate) {
         ArrayList<ClickEntry> rangedClicksLog = new ArrayList<>();
 
@@ -52,6 +54,7 @@ public class Calculator {
         return rangedClicksLog;
     }
 
+    // gets a list of all the server entries
     public ArrayList<ServerEntry> getServerLog() {
         return serverLog;
     }
@@ -69,6 +72,7 @@ public class Calculator {
         return rangedClicksLog;
     }
 
+    // gets a list of all the users
     public Map<Long, User> getUsers() {
         return users;
     }

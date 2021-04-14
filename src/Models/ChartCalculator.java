@@ -35,7 +35,7 @@ public class ChartCalculator extends Calculator {
         super(impressionLog, clickLog, serverLog, users);
     }
 
-    // produces a list of metric calculators that stores all the logs split into a set interval
+    // splits the data into its intervals for all time granularities
     public void calculateIntervals(LocalDateTime startDate, LocalDateTime endDate) {
         if (startDate == null) {
             startDate = getImpressionLog().get(0).getDate();
@@ -69,6 +69,7 @@ public class ChartCalculator extends Calculator {
             yearDates.add(startDate.plusYears(i));
         }
 
+        // stores the lists of calculators to reduce unnecessary computation later on
         this.hourCalculators = createIntervals(hourDates, startDate, endDate);
         this.dayCalculators = createIntervals(dayDates, startDate, endDate);
         this.weekCalculators = createIntervals(weekDates, startDate, endDate);
@@ -76,11 +77,14 @@ public class ChartCalculator extends Calculator {
         this.yearCalculators = createIntervals(yearDates, startDate, endDate);
     }
 
+    // splits the data into intervals that represent the points on the graph - each interval is turned into a new calculator
     public ArrayList<MetricCalculator> createIntervals(ArrayList<LocalDateTime> dates, LocalDateTime startDate, LocalDateTime endDate) {
+        // gets the list of all logs in the time range
         ArrayList<ImpressionEntry> impressionList = getImpressionLog(startDate, endDate); // list of impressions
         ArrayList<ClickEntry> clickList = getClickLog(startDate, endDate); // list of clicks
         ArrayList<ServerEntry> serverList = getServerLog(startDate, endDate); // list of server entries
 
+        // used to store the intervals of data
         ArrayList<MetricCalculator> intervalCalculators = new ArrayList<>(); // list of calculators for log entries in each interval
         ArrayList<ArrayList<ImpressionEntry>> intervalImpressionLogs = new ArrayList<>(); // list of impression logs in each interval
         ArrayList<ArrayList<ClickEntry>> intervalClickLogs = new ArrayList<>(); // list of click logs in each interval
@@ -94,7 +98,7 @@ public class ChartCalculator extends Calculator {
         LocalDateTime lastDate = dates.get(1); // last date of interval
         int count = 1;
 
-        // Creates a list of impression logs for each interval
+        // creates a list of impression logs for each interval
         Iterator<ImpressionEntry> impressionIterator = impressionList.iterator();
 
         while (impressionIterator.hasNext()) {
@@ -127,23 +131,17 @@ public class ChartCalculator extends Calculator {
         lastDate = dates.get(1); // last date of interval
         count = 1;
 
-        // Creates a list of click logs for each interval
+        // creates a list of click logs for each interval
         Iterator<ClickEntry> clickIterator = clickList.iterator();
 
         while (clickIterator.hasNext()) {
             ClickEntry click = clickIterator.next();
 
-            if (click.getDate().isAfter(lastDate)) { // if its the first log in a new interval
-                // completes the current interval log
+            if (click.getDate().isAfter(lastDate)) {
                 intervalClickLogs.add(currentClickLog);
-
-                // resets the current interval log
                 currentClickLog = new ArrayList<>();
-
-                // adds to the next log
                 currentClickLog.add(click);
 
-                // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
@@ -159,23 +157,17 @@ public class ChartCalculator extends Calculator {
         lastDate = dates.get(1); // last date of interval
         count = 1;
 
-        // Creates a list of server logs for each interval
+        // creates a list of server logs for each interval
         Iterator<ServerEntry> serverIterator = serverList.iterator();
 
         while (serverIterator.hasNext()) {
             ServerEntry server = serverIterator.next();
 
-            if (server.getEntryDate().isAfter(lastDate)) { // if its the first log in a new interval
-                // completes the current interval log
+            if (server.getEntryDate().isAfter(lastDate)) {
                 intervalServerLogs.add(currentServerLog);
-
-                // resets the current interval log
                 currentServerLog = new ArrayList<>();
-
-                // adds to the next log
                 currentServerLog.add(server);
 
-                // changes the interval
                 count++;
                 lastDate = dates.get(count);
             }
@@ -187,7 +179,7 @@ public class ChartCalculator extends Calculator {
             }
         }
 
-        // creates all the calculators for the intervals (probably doesn't need the if from now on)
+        // combines the intervals of logs to create calculators for each of the intervals
         if (intervalImpressionLogs.size() == intervalClickLogs.size() && intervalImpressionLogs.size() == intervalServerLogs.size()) {
             for (int i=0; i < intervalImpressionLogs.size(); i++) {
                 intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i), getUsers()));
@@ -199,6 +191,7 @@ public class ChartCalculator extends Calculator {
         }
     }
 
+    // filters the appropriate list of calculators
     public void calculateFilters(String granularity, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
         if (startDate == null) {
             startDate = getImpressionLog().get(0).getDate();
@@ -263,23 +256,6 @@ public class ChartCalculator extends Calculator {
         this.cpcList = new ArrayList<>();
         this.cpmList = new ArrayList<>();
         this.brList = new ArrayList<>();
-    }
-
-    // allows the entry to be counted if it matches the filters
-    public boolean filterEntry(Entry entry, String gender, String age, String income) {
-        User user = getUsers().get(entry.getUserId());
-
-        if (user.getGender().equals(gender) || gender.equals("Any")) {
-            if (user.getAge().equals(age) || age.equals("Any")) {
-                return user.getIncome().equals(income) || income.equals("Any");
-            }
-        }
-        return false;
-    }
-
-    // filters the context for impressions only
-    public boolean filterContext(ImpressionEntry impressionEntry, String context) {
-        return impressionEntry.getContext().equals(context) || context.equals("Any");
     }
 
     public ArrayList<Integer> getImpressionsNoList() {
