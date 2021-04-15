@@ -35,6 +35,8 @@ public class MetricCalculator extends Calculator {
 
     // calculates metrics from the entire dataset
     public void calculateMetrics() {
+        //the charts don't work with more than 3 filters or with some of the filters combined without this if statement. i don't know exactly what is the problem
+        if(getImpressionLog().size()>0)
         calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
     }
 

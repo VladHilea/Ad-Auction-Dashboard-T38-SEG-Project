@@ -221,7 +221,7 @@ public class ChartCalculator extends Calculator {
 
         // creates all the calculators for the intervals (probably doesn't need the if from now on)
         if (intervalImpressionLogs.size() == intervalClickLogs.size() && intervalImpressionLogs.size() == intervalServerLogs.size()) {
-            for (int i=0; i < intervalImpressionLogs.size(); i++) {
+            for (int i = 0; i < intervalImpressionLogs.size(); i++) {
                 intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i), getUsers()));
             }
         } else {

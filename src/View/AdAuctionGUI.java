@@ -13,6 +13,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ public class AdAuctionGUI extends JFrame {
     private JFrame gui;
     private JLayeredPane menu;
     private JPanel metricsGrid;
-    private JPanel verticalMenu;
 
     JButton loadCampaignButton;
     // components for campaigns
@@ -54,6 +55,8 @@ public class AdAuctionGUI extends JFrame {
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesHistogram = new ArrayList<>();
     private int countCharts = 0;
+
+    private JPanel settingsGrid;
 
     // model controllers
     private final CampaignController campaignController;
@@ -92,6 +95,8 @@ public class AdAuctionGUI extends JFrame {
         gui.setVisible(true);
         createMenu();
         gui.add(menu);
+        restartDoubleClick();
+
     }
 
     // displays the main structure
@@ -108,20 +113,23 @@ public class AdAuctionGUI extends JFrame {
         createChartsGrid();
         createHistogramsGrid();
         createCompareGrid();
+        createSettingsGrid();
 
         metricsGrid.setVisible(true);
         chartsGrid.setVisible(false);
         histogramGrid.setVisible(false);
         compareGrid.setVisible(false);
+        settingsGrid.setVisible(false);
 
 
 
         disableFilters();
+
     }
 
     // displays the constant vertical menu on the lift hand size
     public void createVerticalMenu(){
-        verticalMenu = new JPanel(new GridLayout(5, 1));
+        JPanel verticalMenu = new JPanel(new GridLayout(5, 1));
         verticalMenu.setBounds(0,100,200,gui.getHeight()-100);
         verticalMenu.setAlignmentY(100);
         verticalMenu.setOpaque(true);
@@ -136,6 +144,7 @@ public class AdAuctionGUI extends JFrame {
         metricsButton.setFont(mainFont);
         metricsButton.setBorderPainted(false);
         metricsButton.setContentAreaFilled(false);
+        metricsButton.setFocusPainted(true);
         metricsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         metricsButtonPanel.add(metricsButton);
@@ -210,6 +219,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -224,6 +234,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(true);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -238,6 +249,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(true);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -252,6 +264,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(true);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -266,6 +279,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(true);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -360,6 +374,7 @@ public class AdAuctionGUI extends JFrame {
             setBackground(Color.RED);
             setForeground(noColor);
             setFocusable(false);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
     /*
      These statements enlarge the button so that it
@@ -374,6 +389,35 @@ public class AdAuctionGUI extends JFrame {
      This allows us to paint a round background.
     */
             setContentAreaFilled(false);
+
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    setBackground(Color.WHITE);
+                    setForeground(Color.RED);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    setBackground(Color.RED);
+                    setForeground(Color.WHITE);
+                }
+            });
         }
 
         protected void paintComponent(Graphics g) {
@@ -403,6 +447,9 @@ public class AdAuctionGUI extends JFrame {
             return shape.contains(x , y);
         }
     }
+
+
+
 
     // displays the load files page
     public void createFileLoadBox() {
@@ -1695,6 +1742,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             countCharts = 0;
 
@@ -1732,6 +1780,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             countCharts = 0;
 
@@ -1964,5 +2013,53 @@ public class AdAuctionGUI extends JFrame {
         chartJPanel.remove(0);
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.revalidate();
+    }
+
+    public void restartDoubleClick(){
+            gui.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (gui.getCursor() == Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) {
+                        if (e.getClickCount() == 5) {
+                            int dialogResult = JOptionPane.showConfirmDialog(null, "The GUI stopped working unexpectedly. Do you want to force stop the last filter?", "Force StoP", JOptionPane.YES_NO_OPTION);
+                            if (dialogResult == 0){
+                                enableFilters();
+                                gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                            }
+
+                        }
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+
+    }
+    
+    public void createSettingsGrid(){
+        settingsGrid = new JPanel(new BorderLayout());
+        settingsGrid.setBounds(200,100,gui.getWidth()-200,gui.getHeight()-100);
+        settingsGrid.setBorder(new EmptyBorder(2,2,2,2));
+        settingsGrid.setAlignmentY(100);
+        settingsGrid.setVisible(false);
+        settingsGrid.setOpaque(true);
     }
 }
