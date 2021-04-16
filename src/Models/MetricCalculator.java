@@ -21,9 +21,6 @@ public class MetricCalculator extends Calculator {
     private float cpm; // cost-per-thousand impressions
     private float br; // bounce rate - number of bounces per click
 
-    private final int pageLimit = 1; // max number of pages to be counted as a bounce
-    private final int bounceTime = 500; // max amount of time to be counted as a bounce
-
     public MetricCalculator() {
         super(null, null, null, null);
     }
@@ -127,7 +124,7 @@ public class MetricCalculator extends Calculator {
 
         // calculates the number of bounces and the number of conversions
         for (ServerEntry server : filteredServerList) {
-            if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
+            if (server.getPages() <= pageLimit || timeDifference(server.getEntryDate(), server.getExitDate()) <= bounceTime || bounceTime == 0) {
                 this.bouncesNo++;
             }
             if (server.isConversion()) {
@@ -144,9 +141,9 @@ public class MetricCalculator extends Calculator {
     }
 
     // calculates difference between two dates given as strings
-    public long timeDifference(int bounceTime, LocalDateTime entryDate, LocalDateTime exitDate) {
+    public long timeDifference(LocalDateTime entryDate, LocalDateTime exitDate) {
         if (exitDate == null) {
-            return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
+            return -1; // where the exit date is invalid, it's counted as a bounce
         } else {
             return (exitDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli() - entryDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli()) / 1000;
         }

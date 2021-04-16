@@ -2,6 +2,7 @@ package Controllers;
 
 import Models.ChartCalculator;
 import View.Chart;
+import View.Histogram;
 import org.jfree.chart.JFreeChart;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,8 @@ public class ChartController {
     private final Chart monthsChart;
     private final Chart yearsChart;
 
+    private final Histogram histogram;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
@@ -26,6 +29,8 @@ public class ChartController {
         this.weeksChart = new Chart("Weeks Chart", "Impressions", "Weeks");
         this.monthsChart = new Chart("Months Chart", "Impressions", "Months");
         this.yearsChart = new Chart("Years Chart",  "Impressions", "Years");
+
+        this.histogram = new Histogram("Histogram");
     }
 
     // initial charts display data with no filtering and the entire time range
@@ -100,6 +105,12 @@ public class ChartController {
         this.yearsChart.updateChart(chartCalculator, metric);
     }
 
+    public void createHistogram(ChartCalculator histogramCalculator) {
+        histogramCalculator.calculateIntervals(null, null);
+        histogramCalculator.calculateFilters("days", "Any" ,"Any", "Any", "Any", null, null);
+        histogram.updateHistogram(histogramCalculator);
+    }
+
     public JFreeChart getHoursChart() {
         return hoursChart.getChart();
     }
@@ -118,5 +129,9 @@ public class ChartController {
 
     public JFreeChart getYearsChart() {
         return yearsChart.getChart();
+    }
+
+    public JFreeChart getHistogram() {
+        return histogram.getHistogram();
     }
 }

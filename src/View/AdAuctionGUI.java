@@ -11,6 +11,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -41,17 +43,18 @@ public class AdAuctionGUI extends JFrame {
     private JSlider chartSlider;
 
     // components for histograms
-    private JComboBox<String> histogramMetricsBox, histogramGenderBox, histogramAgeBox, histogramContextBox, histogramIncomeBox, histogramStartDateBox, histogramEndDateBox;
-    private JPanel histogramGrid;
-    private JSlider histogramSlider;
+    private JPanel histogramGrid, histogramJPanel;
+    private ChartPanel histogramPanel;
 
     // components for compare
     private JPanel compareGrid, compareChartsGrid;
 
+    // components for settings
+    private JPanel settingsGrid;
+
     // filtering
     private final ArrayList<String> arrayOfChoicesMetrics = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
-    private final ArrayList<String> arrayOfChoicesHistogram = new ArrayList<>();
     private int countCharts = 0;
 
     // model controllers
@@ -78,6 +81,7 @@ public class AdAuctionGUI extends JFrame {
         this.chartController = new ChartController();
 
         chartPanel = new ChartPanel(new Chart("Blank Chart", "Impressions", "Days").getChart());
+        histogramPanel = new ChartPanel(new Histogram("Blank Histogram").getHistogram());
     }
 
     // displays the main window
@@ -91,6 +95,7 @@ public class AdAuctionGUI extends JFrame {
         gui.setVisible(true);
         createMenu();
         gui.add(menu);
+        restartDoubleClick();
     }
 
     // displays the main structure
@@ -107,12 +112,14 @@ public class AdAuctionGUI extends JFrame {
         createChartsGrid();
         createHistogramsGrid();
         createCompareGrid();
+        createSettingsGrid();
 
         // display main page
         metricsGrid.setVisible(true);
         chartsGrid.setVisible(false);
         histogramGrid.setVisible(false);
         compareGrid.setVisible(false);
+        settingsGrid.setVisible(false);
 
         changeFilters(false);
     }
@@ -134,6 +141,7 @@ public class AdAuctionGUI extends JFrame {
         metricsButton.setFont(mainFont);
         metricsButton.setBorderPainted(false);
         metricsButton.setContentAreaFilled(false);
+        metricsButton.setFocusPainted(true);
         metricsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         metricsButtonPanel.add(metricsButton);
@@ -209,6 +217,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -224,6 +233,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(true);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -239,6 +249,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(true);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -254,6 +265,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(true);
+            settingsGrid.setVisible(false);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -269,6 +281,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(true);
 
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
@@ -361,12 +374,38 @@ public class AdAuctionGUI extends JFrame {
             setBackground(Color.RED);
             setForeground(noColor);
             setFocusable(false);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             Dimension size = getPreferredSize();
             size.width = size.height = Math.max(size.width , size.height);
             setPreferredSize(size);
 
             setContentAreaFilled(false);
+
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    setBackground(Color.WHITE);
+                    setForeground(Color.RED);
+                }
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    setBackground(Color.RED);
+                    setForeground(Color.WHITE);
+                }
+            });
         }
 
         protected void paintComponent(Graphics g) {
@@ -393,6 +432,41 @@ public class AdAuctionGUI extends JFrame {
             }
             return shape.contains(x , y);
         }
+    }
+
+    public void restartDoubleClick(){
+        gui.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (gui.getCursor() == Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)) {
+                    if (e.getClickCount() == 5) {
+                        int dialogResult = JOptionPane.showConfirmDialog(null, "The GUI stopped working unexpectedly. Do you want to force stop the last filter?", "Force StoP", JOptionPane.YES_NO_OPTION);
+                        if (dialogResult == 0){
+                            changeFilters(true);
+                            gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        }
+
+                    }
+                }
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
     }
 
     // displays the load files page
@@ -1383,290 +1457,25 @@ public class AdAuctionGUI extends JFrame {
         menu.add(chartsGrid);
     }
 
-    // displays the histogram filters
-    public void createHistogramNorthBox() {
-        // start Box
-        String[] metricChoices = new String[]{"Impressions", "Uniques", "Clicks", "Bounces",  "Conversions", "Total Impression Cost", "Total Click Cost", "CTR", "CPA", "CPC", "CPM", "Bounce Rate"};
-        histogramMetricsBox = new JComboBox<>(metricChoices);
-        histogramMetricsBox.setVisible(true);
-        histogramMetricsBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramMetricsBox.setFont(comboBoxFont);
-
-        histogramMetricsBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramMetricsBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(0, itemName);
-        });
-
-        JLabel metricsLabel = new JLabel("METRICS");
-        metricsLabel.setFont(mainFont);
-        metricsLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box metricsVerticalBox = Box.createVerticalBox();
-        metricsVerticalBox.add(metricsLabel);
-        metricsVerticalBox.add(histogramMetricsBox);
-
-        //end box
-
-        //start Box
-        String[] genderChoices = new String[] {"Any","Male","Female"};
-        histogramGenderBox = new JComboBox<>(genderChoices);
-        histogramGenderBox.setVisible(true);
-        histogramGenderBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramGenderBox.setFont(comboBoxFont);
-
-        histogramGenderBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramGenderBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(1, itemName);
-        });
-
-        JLabel genderLabel = new JLabel("GENDER");
-        genderLabel.setFont(mainFont);
-        genderLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box genderVerticalBox = Box.createVerticalBox();
-        genderVerticalBox.add(genderLabel);
-        genderVerticalBox.add(histogramGenderBox);
-        //end box
-
-        //start Box
-        String[] ageChoices = new String[]{"Any", "<25", "25-34", "35-44", "45-54", ">54"};
-        histogramAgeBox = new JComboBox<>(ageChoices);
-        histogramAgeBox.setVisible(true);
-        histogramAgeBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramAgeBox.setFont(comboBoxFont);
-
-        histogramAgeBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramAgeBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(2, itemName);
-        });
-
-        JLabel ageLabel = new JLabel("AGE");
-        ageLabel.setFont(mainFont);
-        ageLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box ageVerticalBox = Box.createVerticalBox();
-        ageVerticalBox.add(ageLabel);
-        ageVerticalBox.add(histogramAgeBox);
-        //end box
-
-        //start Box
-        String[] contextChoices = new String[]{"Any", "Blog", "Social Media", "Shopping", "News"};
-        histogramContextBox = new JComboBox<>(contextChoices);
-        histogramContextBox.setVisible(true);
-        histogramContextBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramContextBox.setFont(comboBoxFont);
-
-        histogramContextBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramContextBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(3, itemName);
-        });
-
-        JLabel contextLabel = new JLabel("CONTEXT");
-        contextLabel.setFont(mainFont);
-        contextLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box contextVerticalBox = Box.createVerticalBox();
-        contextVerticalBox.add(contextLabel);
-        contextVerticalBox.add(histogramContextBox);
-        //end box
-
-        //start Box
-        String[] incomeChoices = new String[]{"Any", "Low", "Medium", "High"};
-        histogramIncomeBox = new JComboBox<>(incomeChoices);
-        histogramIncomeBox.setVisible(true);
-        histogramIncomeBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramIncomeBox.setFont(comboBoxFont);
-
-        histogramIncomeBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramIncomeBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(4, itemName);
-        });
-
-        JLabel incomeLabel = new JLabel("INCOME");
-        incomeLabel.setFont(mainFont);
-        incomeLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box incomeVerticalBox = Box.createVerticalBox();
-        incomeVerticalBox.add(incomeLabel);
-        incomeVerticalBox.add(histogramIncomeBox);
-        //end box
-
-        //start Box
-        String[] startDateChoices = new String[]{"Any"};
-        histogramStartDateBox = new JComboBox<>(startDateChoices);
-        histogramStartDateBox.setVisible(true);
-        histogramStartDateBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramStartDateBox.setFont(comboBoxFont);
-
-        histogramStartDateBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramStartDateBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(5, itemName);
-        });
-
-        JLabel startDateLabel = new JLabel("START DATE");
-        startDateLabel.setFont(mainFont);
-        startDateLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box startDateVerticalBox = Box.createVerticalBox();
-        startDateVerticalBox.add(startDateLabel);
-        startDateVerticalBox.add(histogramStartDateBox);
-        //end box
-
-        //start Box
-        String[] endDateChoices = new String[]{"Any"};
-        histogramEndDateBox = new JComboBox<>(endDateChoices);
-        histogramEndDateBox.setVisible(true);
-        histogramEndDateBox.setBorder(new EmptyBorder(5,5,5,5));
-        histogramEndDateBox.setFont(comboBoxFont);
-
-        histogramEndDateBox.addActionListener(e -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            String itemName = String.valueOf(histogramEndDateBox.getSelectedItem());
-            arrayOfChoicesHistogram.set(6, itemName);
-        });
-
-        JLabel endDateLabel = new JLabel("END DATE");
-        endDateLabel.setFont(mainFont);
-        endDateLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        Box endDateVerticalBox = Box.createVerticalBox();
-        endDateVerticalBox.add(endDateLabel);
-        endDateVerticalBox.add(histogramEndDateBox);
-        //end box
-
-        Box histogramNorthBox = Box.createHorizontalBox();
-        histogramNorthBox.setPreferredSize(new Dimension(metricsGrid.getWidth(),72));
-        histogramNorthBox.setBorder(new EmptyBorder(10,10,10,10));
-        histogramNorthBox.add(metricsVerticalBox);
-        histogramNorthBox.add(genderVerticalBox);
-        histogramNorthBox.add(ageVerticalBox);
-        histogramNorthBox.add(contextVerticalBox);
-        histogramNorthBox.add(incomeVerticalBox);
-        histogramNorthBox.add(startDateVerticalBox);
-        histogramNorthBox.add(endDateVerticalBox);
-
-        histogramGrid.add(histogramNorthBox,BorderLayout.NORTH);
-    }
-
-    // displays the histogram slider (time granularity)
-    public void createHistogramSouthGrid(){
-        histogramSlider = new JSlider(JSlider.HORIZONTAL,0,4,1);
-        histogramSlider.setVisible(true);
-        histogramSlider.setMajorTickSpacing(1);
-        histogramSlider.setPaintTicks(true);
-        histogramSlider.setPaintLabels(true);
-
-        Hashtable<Integer, JLabel> position = new Hashtable<>();
-        position.put(0, new JLabel("Hours"));
-        position.put(1, new JLabel("Days"));
-        position.put(2, new JLabel("Weeks"));
-        position.put(3, new JLabel("Months"));
-        position.put(4, new JLabel("Years"));
-
-        histogramSlider.setLabelTable(position);
-
-        histogramSlider.addChangeListener(e -> {
-            String sliderValue = position.get(histogramSlider.getValue()).getText();
-
-            if (!arrayOfChoicesHistogram.get(7).equals(sliderValue)) {
-                arrayOfChoicesHistogram.set(7, sliderValue);
-            }
-        });
-
-        JPanel addHistogramToComparePanel = new JPanel(new GridBagLayout());
-        addHistogramToComparePanel.setOpaque(false);
-        addHistogramToComparePanel.setBorder(new EmptyBorder(10,10,10,10));
-
-        JButton addHistogramToCompareButton = new JButton("Add to Compare");
-        addHistogramToCompareButton.setFont(mainFont);
-        addHistogramToCompareButton.setBackground(primaryColor);
-        addHistogramToCompareButton.setForeground(noColor);
-        addHistogramToCompareButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        addHistogramToCompareButton.setPreferredSize(new Dimension(400,40));
-
-        addHistogramToComparePanel.add(addHistogramToCompareButton);
-
-        addHistogramToCompareButton.addActionListener(e -> {
-            // no histograms to add
-        });
-
-        JPanel histogramSouthGrid = new JPanel(new GridLayout(1, 2));
-        histogramSouthGrid.setPreferredSize(new Dimension(histogramSouthGrid.getWidth(),200));
-        histogramSouthGrid.setBorder(new EmptyBorder(10,10,10,10));
-
-        histogramSouthGrid.add(histogramSlider);
-        histogramSouthGrid.add(addHistogramToComparePanel);
-
-        histogramGrid.add(histogramSouthGrid,BorderLayout.SOUTH);
-    }
-
     // displays the histogram page
     public void createHistogramsGrid(){
-        arrayOfChoicesHistogram.add("Metrics");
-        arrayOfChoicesHistogram.add("Any");
-        arrayOfChoicesHistogram.add("Any");
-        arrayOfChoicesHistogram.add("Any");
-        arrayOfChoicesHistogram.add("Any");
-        arrayOfChoicesHistogram.add("Days");
-
         histogramGrid = new JPanel(new BorderLayout());
         histogramGrid.setBounds(200,100,gui.getWidth()-200,gui.getHeight()-100);
         histogramGrid.setBackground(metricsGrid.getBackground());
         histogramGrid.setAlignmentY(100);
         histogramGrid.setVisible(false);
 
-        createHistogramNorthBox();
-        createHistogramSouthGrid();
 
         //create panel for chart
+        JPanel panel = new JPanel(new GridBagLayout());
+        histogramJPanel = new JPanel(new BorderLayout());
+
+        histogramJPanel.add(histogramPanel, BorderLayout.CENTER);
+        histogramJPanel.validate();
+        panel.add(histogramJPanel);
+
+        histogramGrid.add(panel, BorderLayout.CENTER);
+
         menu.add(histogramGrid);
     }
 
@@ -1713,6 +1522,16 @@ public class AdAuctionGUI extends JFrame {
         });
     }
 
+    // displays the settings page
+    public void createSettingsGrid(){
+        settingsGrid = new JPanel(new BorderLayout());
+        settingsGrid.setBounds(200,100,gui.getWidth()-200,gui.getHeight()-100);
+        settingsGrid.setBorder(new EmptyBorder(2,2,2,2));
+        settingsGrid.setAlignmentY(100);
+        settingsGrid.setVisible(false);
+        settingsGrid.setOpaque(true);
+    }
+
     // converts a metric to a readable string
     public String toString(float metric) {
         if (metric == (int) metric)
@@ -1730,6 +1549,7 @@ public class AdAuctionGUI extends JFrame {
             campaignController.createCampaign(impressionsFileLocation, clickFileLocation, serverFileLocation);
             createMetrics(campaignController.createMetrics());
             createCharts(campaignController.createCharts());
+            createHistogram(campaignController.createCharts());
 
             gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             changeFilters(true);
@@ -1745,6 +1565,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             countCharts = 0;
         }).start();
@@ -1758,10 +1579,11 @@ public class AdAuctionGUI extends JFrame {
 
             campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
             createMetrics(campaignController.createMetrics());
-
-            changeFilters(true);
             createCharts(campaignController.createCharts());
+            createHistogram(campaignController.createCharts());
+
             gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            changeFilters(true);
 
             if(compareGrid != null) {
                 menu.remove(compareGrid);
@@ -1774,6 +1596,7 @@ public class AdAuctionGUI extends JFrame {
             chartsGrid.setVisible(false);
             histogramGrid.setVisible(false);
             compareGrid.setVisible(false);
+            settingsGrid.setVisible(false);
 
             countCharts = 0;
         }).start();
@@ -1795,14 +1618,6 @@ public class AdAuctionGUI extends JFrame {
         chartsIncomeBox.setEnabled(enable);
         chartsStartDateBox.setEnabled(enable);
         chartsEndDateBox.setEnabled(enable);
-
-        histogramMetricsBox.setEnabled(enable);
-        histogramGenderBox.setEnabled(enable);
-        histogramAgeBox.setEnabled(enable);
-        histogramContextBox.setEnabled(enable);
-        histogramIncomeBox.setEnabled(enable);
-        histogramStartDateBox.setEnabled(enable);
-        histogramEndDateBox.setEnabled(enable);
     }
 
     // displays the metrics when loaded
@@ -1822,7 +1637,7 @@ public class AdAuctionGUI extends JFrame {
                         arrayOfChoicesMetrics.get(3), // context
                         arrayOfChoicesMetrics.get(4), // income
                         arrayOfChoicesMetrics.get(5), // start date
-                        arrayOfChoicesMetrics.get(6)); // start date
+                        arrayOfChoicesMetrics.get(6)); // end date
                 updateMetrics();
                 changeFilters(true);
                 gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -1988,5 +1803,15 @@ public class AdAuctionGUI extends JFrame {
         chartJPanel.remove(0);
         chartJPanel.add(chartPanel, BorderLayout.CENTER);
         chartJPanel.revalidate();
+    }
+
+    // displays the initial chart when loaded
+    public void createHistogram(ChartCalculator calculator) {
+        chartController.createHistogram(calculator);
+
+        histogramPanel = new ChartPanel(chartController.getHistogram());
+        histogramJPanel.remove(0);
+        histogramJPanel.add(histogramPanel, BorderLayout.CENTER);
+        histogramJPanel.revalidate();
     }
 }

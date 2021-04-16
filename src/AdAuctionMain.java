@@ -11,10 +11,10 @@ public class AdAuctionMain {
 
     /*
      * increment 2:
-     * histograms - view, controller and model should be fairly similar to charts
+     * histograms
      * speed improvements wherever possible - multithreading + reworking chart calculator class
      * finalise compare and gui updates
-     * start and end date selection - calendars?
+     * ctr, cpa etc. w/ lots of filters during days not displaying + start and end date selection - calendars?
      * functionality testing
      *
      * increment 3:
