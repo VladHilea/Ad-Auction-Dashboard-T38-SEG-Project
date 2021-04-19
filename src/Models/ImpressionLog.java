@@ -6,10 +6,15 @@ import java.util.ArrayList;
 
 public class ImpressionLog extends Log {
     private ArrayList<Impression> impressionsList = new ArrayList<>(); // list of logs
+<<<<<<< Updated upstream
+=======
+    public boolean isSet = false;
+>>>>>>> Stashed changes
 
     // constructor for the first time opening a campaign
     public ImpressionLog(String impressionFile) {
         Reader impressionReader = new Reader(impressionFile); // file reader
+<<<<<<< Updated upstream
         impressionReader.getLine(); // ignore first line
 
         // reading the file
@@ -28,6 +33,29 @@ public class ImpressionLog extends Log {
             impressionsList.add(impression);
         }
         setDates();
+=======
+        if (impressionReader.fileIsReady()) {
+            isSet = true;
+            impressionReader.getLine(); // ignore first line
+
+            // reading the file
+            while (impressionReader.fileIsReady()) {
+                String[] log = impressionReader.getLine().split(",");
+
+                // extracting an impression log's data
+                Impression impression = new Impression(parseDate(log[0]), // date
+                        Long.parseLong(log[1]), // id
+                        log[2], // gender
+                        log[3], // age
+                        log[4], // income
+                        log[5], // context
+                        Double.parseDouble(log[6])); // impression cost
+
+                impressionsList.add(impression);
+            }
+            setDates();
+        }
+>>>>>>> Stashed changes
     }
 
     // constructor for an exisiting list of impressions
@@ -50,4 +78,13 @@ public class ImpressionLog extends Log {
     public ArrayList<Impression> getImpressionsList() {
         return impressionsList;
     }
+<<<<<<< Updated upstream
+=======
+
+    public boolean isSet() {
+        return isSet;
+    }
+
+
+>>>>>>> Stashed changes
 }

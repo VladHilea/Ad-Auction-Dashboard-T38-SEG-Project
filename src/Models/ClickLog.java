@@ -6,10 +6,15 @@ import java.util.ArrayList;
 
 public class ClickLog extends Log {
     private ArrayList<Click> clicksList = new ArrayList<>(); // list of logs
+<<<<<<< Updated upstream
+=======
+    public boolean isSet = false;
+>>>>>>> Stashed changes
 
     // constructor for the first time opening a campaign
     public ClickLog(String clickFile) {
         Reader clickReader = new Reader(clickFile); // file reader
+<<<<<<< Updated upstream
         clickReader.getLine(); // ignore first line
 
         // reading the file
@@ -24,6 +29,25 @@ public class ClickLog extends Log {
             clicksList.add(click);
         }
         setDates();
+=======
+        if (clickReader.fileIsReady()) {
+            isSet = true;
+            clickReader.getLine(); // ignore first line
+
+            // reading the file
+            while (clickReader.fileIsReady()) {
+                String[] log = clickReader.getLine().split(",");
+
+                // extracting a click log's data
+                Click click = new Click(parseDate(log[0]), // date
+                        Long.parseLong(log[1]), // id
+                        Double.parseDouble(log[2])); // click cost
+
+                clicksList.add(click);
+            }
+            setDates();
+        }
+>>>>>>> Stashed changes
     }
 
     // constructor for an exisiting list of clicks
@@ -46,4 +70,11 @@ public class ClickLog extends Log {
     public ArrayList<Click> getClicksList() {
         return clicksList;
     }
+<<<<<<< Updated upstream
+=======
+
+    public boolean isSet() {
+        return isSet;
+    }
+>>>>>>> Stashed changes
 }

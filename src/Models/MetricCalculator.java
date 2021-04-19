@@ -20,11 +20,32 @@ public class MetricCalculator extends Calculator {
     private float cpm; // cost-per-thousand impressions
     private float br; // bounce rate - number of bounces per click
 
+<<<<<<< Updated upstream
     private final int pageLimit; // max number of pages to be counted as a bounce
     private final int bounceTime; // max amount of time to be counted as a bounce
 
     public MetricCalculator(ImpressionLog impressions, ClickLog clickLog, ServerLog serverLog) {
         super(impressions, clickLog, serverLog);
+=======
+    private final int pageLimit = 1; // max number of pages to be counted as a bounce
+    private final int bounceTime = 500; // max amount of time to be counted as a bounce
+
+    public MetricCalculator() {
+        super(null, null, null, null);
+    }
+
+    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
+        super(impressionLog, clickLog, serverLog, users);
+        calculateMetrics();
+    }
+
+    // calculates metrics from the entire dataset
+    public void calculateMetrics() {
+        //the charts don't work with more than 3 filters or with some of the filters combined without this if statement. i don't know exactly what is the problem
+        if(getImpressionLog().size()>0)
+        calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
+    }
+>>>>>>> Stashed changes
 
         this.pageLimit = 1;
         this.bounceTime = 500;
@@ -56,8 +77,12 @@ public class MetricCalculator extends Calculator {
         }
 
         // calculates the number of bounces and the number of conversions
+<<<<<<< Updated upstream
         ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
         for (Server server : serverList) {
+=======
+        for (ServerEntry server : filteredServerList) {
+>>>>>>> Stashed changes
             if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
                 this.bouncesNo++;
             }
