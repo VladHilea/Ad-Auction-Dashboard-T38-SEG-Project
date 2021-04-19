@@ -1366,7 +1366,8 @@ public class AdAuctionGUI extends JFrame {
                 switch (arrayOfChoicesChart.get(7)) {
                     case "Hours": {
                         ChartPanel chartPanel = new ChartPanel(chartController.getHoursChart());
-                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartPanel.setPreferredSize(new Dimension(500, 280));
+                        chartPanel.setBorder(new EmptyBorder(5,5,5,5));
                         chartJPanel.add(chartPanel);
                         chartJPanel.validate();
                         panel.add(chartJPanel);
@@ -1375,7 +1376,8 @@ public class AdAuctionGUI extends JFrame {
                     }
                     case "Days": {
                         ChartPanel chartPanel = new ChartPanel(chartController.getDaysChart());
-                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartPanel.setPreferredSize(new Dimension(500, 280));
+                        chartPanel.setBorder(new EmptyBorder(5,5,5,5));
                         chartJPanel.add(chartPanel);
                         chartJPanel.validate();
                         panel.add(chartJPanel);
@@ -1384,7 +1386,8 @@ public class AdAuctionGUI extends JFrame {
                     }
                     case "Weeks": {
                         ChartPanel chartPanel = new ChartPanel(chartController.getWeeksChart());
-                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartPanel.setPreferredSize(new Dimension(500, 280));
+                        chartPanel.setBorder(new EmptyBorder(5,5,5,5));
                         chartJPanel.add(chartPanel);
                         chartJPanel.validate();
                         panel.add(chartJPanel);
@@ -1393,7 +1396,8 @@ public class AdAuctionGUI extends JFrame {
                     }
                     case "Months": {
                         ChartPanel chartPanel = new ChartPanel(chartController.getMonthsChart());
-                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartPanel.setPreferredSize(new Dimension(500, 280));
+                        chartPanel.setBorder(new EmptyBorder(5,5,5,5));
                         chartJPanel.add(chartPanel);
                         chartJPanel.validate();
                         panel.add(chartJPanel);
@@ -1402,7 +1406,8 @@ public class AdAuctionGUI extends JFrame {
                     }
                     case "Years": {
                         ChartPanel chartPanel = new ChartPanel(chartController.getYearsChart());
-                        chartPanel.setPreferredSize(new Dimension(500, 300));
+                        chartPanel.setPreferredSize(new Dimension(500, 280));
+                        chartPanel.setBorder(new EmptyBorder(5,5,5,5));
                         chartJPanel.add(chartPanel);
                         chartJPanel.validate();
                         panel.add(chartJPanel);
