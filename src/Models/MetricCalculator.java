@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 
 public class MetricCalculator extends Calculator {
     private int impressionsNo; // number of impressions - people who saw the ad
@@ -20,16 +21,6 @@ public class MetricCalculator extends Calculator {
     private float cpm; // cost-per-thousand impressions
     private float br; // bounce rate - number of bounces per click
 
-<<<<<<< Updated upstream
-    private final int pageLimit; // max number of pages to be counted as a bounce
-    private final int bounceTime; // max amount of time to be counted as a bounce
-
-    public MetricCalculator(ImpressionLog impressions, ClickLog clickLog, ServerLog serverLog) {
-        super(impressions, clickLog, serverLog);
-=======
-    private final int pageLimit = 1; // max number of pages to be counted as a bounce
-    private final int bounceTime = 500; // max amount of time to be counted as a bounce
-
     public MetricCalculator() {
         super(null, null, null, null);
     }
@@ -41,49 +32,99 @@ public class MetricCalculator extends Calculator {
 
     // calculates metrics from the entire dataset
     public void calculateMetrics() {
-        //the charts don't work with more than 3 filters or with some of the filters combined without this if statement. i don't know exactly what is the problem
-        if(getImpressionLog().size()>0)
-        calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
-    }
->>>>>>> Stashed changes
-
-        this.pageLimit = 1;
-        this.bounceTime = 500;
+        if (getImpressionLog().size() != 0) {
+            calculate(getImpressionLog(), getClickLog(), getServerLog(), "Any", "Any", "Any", "Any", getImpressionLog().get(0).getDate(), getImpressionLog().get(getImpressionLog().size() - 1).getDate());
+        }
     }
 
-    // calculates metrics
-    public void calculateMetrics() {
-        // calculates the number of impressions
-        this.impressionsNo = getImpressionLog().getImpressionsList().size();
+    // calculates metrics with filters
+    public void calculateMetrics(String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
+        calculate(getImpressionLog(startDate, endDate), getClickLog(startDate, endDate), getServerLog(startDate, endDate), gender, age, context, income, startDate, endDate);
+    }
 
-        // calculates the number of impressions from unique users and the total cost of impressions
-        ArrayList<Impression> impressionsList = getImpressionLog().getImpressionsList(); // list of impressions
-        HashSet<Long> uniqueIds = new HashSet<>(); // list of unique users
-        for (Impression impression : impressionsList) {
-            if (!uniqueIds.contains(impression.getId())) {
-                uniqueIds.add(impression.getId());
-                this.uniquesNo++;
-                this.totalImpressionsCost += impression.getImpressionCost();
+    // the actual calculations
+    public void calculate(ArrayList<ImpressionEntry> impressionList, ArrayList<ClickEntry> clickList, ArrayList<ServerEntry> serverList, String gender, String age, String context, String income, LocalDateTime startDate, LocalDateTime endDate) {
+        // resets the metrics
+        this.impressionsNo = 0;
+        this.uniquesNo = 0;
+        this.clicksNo = 0;
+        this.bouncesNo = 0;
+        this.conversionsNo = 0;
+        this.totalImpressionsCost = 0;
+        this.totalClicksCost = 0;
+
+        this.ctr = 0;
+        this.cpa = 0;
+        this.cpc = 0;
+        this.cpm = 0;
+        this.br = 0;
+
+        ArrayList<ImpressionEntry> filteredImpressionList = new ArrayList<>();
+        ArrayList<ClickEntry> filteredClickList = new ArrayList<>();
+        ArrayList<ServerEntry> filteredServerList = new ArrayList<>();
+
+        // filtering the lists of impressions, clicks and server logs
+        for (ImpressionEntry impressionEntry : impressionList) {
+            User impressionUser = getUsers().get(impressionEntry.getUserId());
+
+            if (impressionUser.getGender().equals(gender) || gender.equals("Any")) {
+                if (impressionUser.getAge().equals(age) || age.equals("Any")) {
+                    if (impressionEntry.getContext().equals(context) || context.equals("Any")) {
+                        if (impressionUser.getIncome().equals(income) || income.equals("Any")) {
+                            filteredImpressionList.add(impressionEntry);
+                        }
+                    }
+                }
+            }
+        }
+        for (ClickEntry clickEntry : clickList) {
+            User clickUser = getUsers().get(clickEntry.getUserId());
+
+            if (clickUser.getGender().equals(gender) || gender.equals("Any")) {
+                if (clickUser.getAge().equals(age) || age.equals("Any")) {
+                    if (clickUser.getIncome().equals(income) || income.equals("Any")) {
+                        filteredClickList.add(clickEntry);
+                    }
+                }
+            }
+        }
+        for (ServerEntry serverEntry : serverList) {
+            User serverUser = getUsers().get(serverEntry.getUserId());
+
+            if (serverUser.getGender().equals(gender) || gender.equals("Any")) {
+                if (serverUser.getAge().equals(age) || age.equals("Any")) {
+                    if (serverUser.getIncome().equals(income) || income.equals("Any")) {
+                        filteredServerList.add(serverEntry);
+                    }
+                }
             }
         }
 
+        // calculates the number of impressions
+        this.impressionsNo = filteredImpressionList.size();
+
+        // calculates the number of impressions from unique users and the total cost of impressions
+        HashSet<Long> uniqueIds = new HashSet<>();
+
+        for (ImpressionEntry impression : filteredImpressionList) {
+            if (!uniqueIds.contains(impression.getUserId())) {
+                uniqueIds.add(impression.getUserId());
+                this.uniquesNo++;
+            }
+            this.totalImpressionsCost += impression.getImpressionCost();
+        }
+
         // calculates the number of clicks
-        this.clicksNo = getClickLog().getClicksList().size();
+        this.clicksNo = filteredClickList.size();
 
         // calculates the total cost of clicks
-        ArrayList<Click> clickList = getClickLog().getClicksList(); // list of clicks
-        for (Click click : clickList) {
+        for (ClickEntry click : filteredClickList) {
             this.totalClicksCost += click.getClickCost();
         }
 
         // calculates the number of bounces and the number of conversions
-<<<<<<< Updated upstream
-        ArrayList<Server> serverList = getServerLog().getServerList(); // list of server entries
-        for (Server server : serverList) {
-=======
         for (ServerEntry server : filteredServerList) {
->>>>>>> Stashed changes
-            if (server.getPages() <= pageLimit || timeDifference(bounceTime, server.getEntryDate(), server.getExitDate()) <= bounceTime) {
+            if (server.getPages() <= pageLimit || timeDifference(server.getEntryDate(), server.getExitDate()) <= bounceTime || bounceTime == 0) {
                 this.bouncesNo++;
             }
             if (server.isConversion()) {
@@ -100,9 +141,9 @@ public class MetricCalculator extends Calculator {
     }
 
     // calculates difference between two dates given as strings
-    public long timeDifference(int bounceTime, LocalDateTime entryDate, LocalDateTime exitDate) {
+    public long timeDifference(LocalDateTime entryDate, LocalDateTime exitDate) {
         if (exitDate == null) {
-            return bounceTime - 1; // where the exit date is invalid, it's counted as a bounce
+            return -1; // where the exit date is invalid, it's counted as a bounce
         } else {
             return (exitDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli() - entryDate.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli()) / 1000;
         }
