@@ -23,19 +23,15 @@ public class Histogram extends ApplicationFrame {
 
   //creates dataset that is being used by the histogram 
   public HistogramDataset createHistogramDataset(ChartCalculator histogramCalculator) {
-	  ArrayList<Float> floatData = histogramCalculator.getTotalClickCostList();
-	  ArrayList<Double> doubleData = new ArrayList<> ();
-	  for ( float f : floatData) {
-	    doubleData.add((double) f);
-	  }
-	  double [] data = new double [doubleData.size()];
-	  for ( int i = 0 ; i<data.length ; i++) {
-	    data[i] = doubleData.get(i);
+	  ArrayList<Double> data = histogramCalculator.getHistogramList();
+	  double [] histogramData = new double [data.size()];
+	  for ( int i = 0 ; i<data.size() ; i++) {
+		  histogramData[i] = data.get(i);
 	  }
 	  HistogramDataset dataset = new HistogramDataset();
 
-	  if (data.length != 0) {
-		  dataset.addSeries("Histogram",data,20);
+	  if (data.size() != 0) {
+		  dataset.addSeries("Histogram",histogramData,20);
 	  }
 	  return dataset;
   }
