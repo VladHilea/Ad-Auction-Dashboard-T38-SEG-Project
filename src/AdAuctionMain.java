@@ -23,5 +23,10 @@ public class AdAuctionMain {
      * user bounce definition - settings page
      * file reading with anomalous data
      * campaign loading and comparing
+     *
+     * testing:
+     * unit testing
+     * manual testing w/ user stories
+     * calculation testing
      */
 }
