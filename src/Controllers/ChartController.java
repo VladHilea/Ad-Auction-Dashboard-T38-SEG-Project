@@ -81,6 +81,15 @@ public class ChartController {
             endDate = LocalDateTime.parse(stringEndDate, formatter);
         }
 
+        // checking if the date selection is correct
+        if (startDate.isBefore(chartCalculator.getImpressionLog().get(0).getDate())) {
+            return;
+        } else if (endDate.isAfter(chartCalculator.getImpressionLog().get(chartCalculator.getImpressionLog().size() - 1).getDate())) {
+            return;
+        } else if (startDate.isAfter(endDate)) {
+            return;
+        }
+
         // update intervals only if the ranges need to change
         if (!(this.startDate == startDate) || !(this.endDate == endDate)) {
             chartCalculator.calculateIntervals(startDate, endDate);
@@ -102,7 +111,7 @@ public class ChartController {
         this.monthsChart.updateChart(chartCalculator, metric);
 
         chartCalculator.calculateFilters("years", gender, age, context, income, startDate, endDate);
-        this.yearsChart.updateChart(chartCalculator, metric);
+        this.yearsChart.updateChart(chartCalculator, metric);;
     }
 
     public void createHistogram(ChartCalculator histogramCalculator) {

@@ -3,6 +3,8 @@ package View;
 import Controllers.*;
 import Models.*;
 
+import org.jdatepicker.DateModel;
+import org.jdatepicker.JDatePicker;
 import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
@@ -10,8 +12,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
@@ -49,7 +49,8 @@ public class AdAuctionGUI extends JFrame {
     private Box metricsNorthBox;
 
     // components for charts
-    private JComboBox<String> chartsMetricsBox, chartsGenderBox, chartsAgeBox, chartsContextBox, chartsIncomeBox, chartsStartDateBox, chartsEndDateBox;
+    private JComboBox<String> chartsMetricsBox, chartsGenderBox, chartsAgeBox, chartsContextBox, chartsIncomeBox, chartsEndDateBox;
+    private JDatePicker chartsStartDatePicker;
     private JPanel chartsGrid, chartJPanel;
     private ChartPanel chartPanel;
     private JSlider chartSlider;
@@ -1271,13 +1272,12 @@ public class AdAuctionGUI extends JFrame {
         //end box
 
         //start Box
-        String[] startDateChoices = new String[]{"Any"};
-        chartsStartDateBox = new JComboBox<>(startDateChoices);
-        chartsStartDateBox.setVisible(false);
-        chartsStartDateBox.setBorder(new EmptyBorder(5,5,5,5));
-        chartsStartDateBox.setFont(comboBoxFont);
+        chartsStartDatePicker = new JDatePicker();
+        chartsStartDatePicker.setVisible(false);
+        chartsStartDatePicker.setBorder(new EmptyBorder(5,5,5,5));
+        chartsStartDatePicker.setFont(comboBoxFont);
 
-        chartsStartDateBox.addActionListener(e -> {
+        chartsStartDatePicker.addActionListener(e -> {
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
                 menu.remove(filesMenu);
@@ -1285,8 +1285,12 @@ public class AdAuctionGUI extends JFrame {
                 menu.repaint();
             }
 
-            String itemName = String.valueOf(chartsStartDateBox.getSelectedItem());
-            arrayOfChoicesChart.set(5, itemName);
+            DateModel<?> model = chartsStartDatePicker.getModel();
+            String date = model.getYear() + "-" + model.getMonth() + "-" + model.getDay() + " 00:00:00";
+            System.out.println(date);
+
+            arrayOfChoicesChart.set(5, date);
+            // recalculateCharts();
         });
 
         JLabel startDateLabel = new JLabel("START DATE");
@@ -1296,7 +1300,7 @@ public class AdAuctionGUI extends JFrame {
 
         Box startDateVerticalBox = Box.createVerticalBox();
         startDateVerticalBox.add(startDateLabel);
-        startDateVerticalBox.add(chartsStartDateBox);
+        startDateVerticalBox.add(chartsStartDatePicker);
         //end box
 
         //start Box
@@ -1615,16 +1619,14 @@ public class AdAuctionGUI extends JFrame {
 
         Box fontHBox = Box.createHorizontalBox();
         fontHBox.add(fontLabel);
-        fontHBox.add(Box.createHorizontalStrut(300));
+        fontHBox.add(Box.createHorizontalStrut(320));
         fontHBox.add(fontComboBox);
-
 
         String[] colorChoices = new String[] {"Blue" , "Orange" , "Green"};
         primaryColorLabel = new JLabel("Font Primary Color");
         primaryColorLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         primaryColorLabel.setForeground(secondaryColor);
         primaryColorLabel.setFont(mainFont);
-
 
         primaryColorComboBox = new JComboBox<>(colorChoices);
         primaryColorComboBox.setVisible(true);
@@ -1691,12 +1693,12 @@ public class AdAuctionGUI extends JFrame {
 
         Box primaryColorHBox = Box.createHorizontalBox();
         primaryColorHBox.add(primaryColorLabel);
-        primaryColorHBox.add(Box.createHorizontalStrut(300));
+        primaryColorHBox.add(Box.createHorizontalStrut(260));
         primaryColorHBox.add(primaryColorComboBox);
 
         Box secondaryColorHBox = Box.createHorizontalBox();
         secondaryColorHBox.add(secondaryColorLabel);
-        secondaryColorHBox.add(Box.createHorizontalStrut(300));
+        secondaryColorHBox.add(Box.createHorizontalStrut(240));
         secondaryColorHBox.add(secondaryColorComboBox);
 
         styleVerticalBox = Box.createVerticalBox();
@@ -1733,7 +1735,7 @@ public class AdAuctionGUI extends JFrame {
 
         Box bounceHBox = Box.createHorizontalBox();
         bounceHBox.add(bounceTypeLabel);
-        bounceHBox.add(Box.createHorizontalStrut(280));
+        bounceHBox.add(Box.createHorizontalStrut(300));
         bounceHBox.add(bounceComboBox);
 
         bounceVBox = Box.createVerticalBox();
@@ -1771,28 +1773,28 @@ public class AdAuctionGUI extends JFrame {
     public void updateColors(){
         if (filesMenu!=null) {
             filesMenu.setBackground(primaryColor);
-            styleLabel.setForeground(primaryColor);
-            technicalLabel.setForeground(primaryColor);
-            impressions.setForeground(secondaryColor);
-            uniques.setForeground(secondaryColor);
-            clicks.setForeground(secondaryColor);
-            bounces.setForeground(secondaryColor);
-            conversions.setForeground(secondaryColor);
-            totalImpressionCost.setForeground(secondaryColor);
-            totalClickCost.setForeground(secondaryColor);
-            ctr.setForeground(secondaryColor);
-            cpa.setForeground(secondaryColor);
-            cpc.setForeground(secondaryColor);
-            cpm.setForeground(secondaryColor);
-            bounceRate.setForeground(secondaryColor);
-            fontLabel.setForeground(secondaryColor);
-            primaryColorLabel.setForeground(secondaryColor);
-            secondaryColorLabel.setForeground(secondaryColor);
-            bounceTypeLabel.setForeground(secondaryColor);
-            topMenu.setBackground(primaryColor);
-            addChartToCompareButton.setBackground(primaryColor);
-            resetCompareButton.setBackground(primaryColor);
         }
+        styleLabel.setForeground(primaryColor);
+        technicalLabel.setForeground(primaryColor);
+        impressions.setForeground(secondaryColor);
+        uniques.setForeground(secondaryColor);
+        clicks.setForeground(secondaryColor);
+        bounces.setForeground(secondaryColor);
+        conversions.setForeground(secondaryColor);
+        totalImpressionCost.setForeground(secondaryColor);
+        totalClickCost.setForeground(secondaryColor);
+        ctr.setForeground(secondaryColor);
+        cpa.setForeground(secondaryColor);
+        cpc.setForeground(secondaryColor);
+        cpm.setForeground(secondaryColor);
+        bounceRate.setForeground(secondaryColor);
+        fontLabel.setForeground(secondaryColor);
+        primaryColorLabel.setForeground(secondaryColor);
+        secondaryColorLabel.setForeground(secondaryColor);
+        bounceTypeLabel.setForeground(secondaryColor);
+        topMenu.setBackground(primaryColor);
+        addChartToCompareButton.setBackground(primaryColor);
+        resetCompareButton.setBackground(primaryColor);
     }
 
     public void updateFont(){
@@ -1866,6 +1868,12 @@ public class AdAuctionGUI extends JFrame {
     // loads the files
     public void createCampaign() {
         new Thread(() -> {
+            if (filesMenu!=null){
+                loadCampaignButton.setEnabled(true);
+                menu.remove(filesMenu);
+                menu.revalidate();
+                menu.repaint();
+            }
             changeFilters(false);
             gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -1906,7 +1914,7 @@ public class AdAuctionGUI extends JFrame {
             changeFilters(false);
             gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-            campaignController.createCampaign("src/Logs/impression_log.csv", "src/Logs/click_log.csv", "src/Logs/server_log.csv");
+            campaignController.createCampaign("Logs/impression_log.csv", "Logs/click_log.csv", "Logs/server_log.csv");
             createMetrics(campaignController.createMetrics());
             createCharts(campaignController.createCharts());
             createHistogram(campaignController.createCharts());
@@ -1945,7 +1953,7 @@ public class AdAuctionGUI extends JFrame {
         chartsAgeBox.setEnabled(enable);
         chartsContextBox.setEnabled(enable);
         chartsIncomeBox.setEnabled(enable);
-        chartsStartDateBox.setEnabled(enable);
+        chartsStartDatePicker.setEnabled(enable);
         chartsEndDateBox.setEnabled(enable);
     }
 
