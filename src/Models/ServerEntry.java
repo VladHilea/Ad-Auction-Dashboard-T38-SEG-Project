@@ -2,15 +2,14 @@ package Models;
 
 import java.time.LocalDateTime;
 
-public class Server extends LogEntry {
-    LocalDateTime entryDate; // entry date and time, stored as date
-    LocalDateTime exitDate; // exit date and time
-    int pages; // num of pages viewed
-    boolean conversion; // has the user acted after clicking?
+public class ServerEntry extends Entry {
+    private final LocalDateTime entryDate; // entry date and time, stored as date
+    private final LocalDateTime exitDate; // exit date and time
+    private final int pages; // num of pages viewed
+    private final boolean conversion; // has the user acted after clicking?
 
-    public Server(LocalDateTime entryDate, long id, LocalDateTime exitDate, int pages, boolean conversion) {
-        super(id);
-
+    public ServerEntry(Long userId, LocalDateTime entryDate, LocalDateTime exitDate, int pages, boolean conversion) {
+        super(userId);
         this.entryDate = entryDate;
         this.exitDate = exitDate;
         this.pages = pages;

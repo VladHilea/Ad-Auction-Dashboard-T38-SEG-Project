@@ -2,13 +2,12 @@ package Models;
 
 import java.time.LocalDateTime;
 
-public class Click extends LogEntry {
-    LocalDateTime date; // date and time
-    double clickCost; // 6 d.p. value (>0)
+public class ClickEntry extends Entry {
+    private final LocalDateTime date; // date and time
+    private final double clickCost; // 6 d.p. value (>0)
 
-    public Click(LocalDateTime date, long id, double clickCost) {
-        super(id);
-
+    public ClickEntry(long userId, LocalDateTime date, double clickCost) {
+        super(userId);
         this.date = date;
         this.clickCost = clickCost;
     }

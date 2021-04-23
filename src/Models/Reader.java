@@ -3,19 +3,17 @@ package Models;
 import java.io.*;
 
 public class Reader {
+    private final File configuration;
+    private BufferedReader reader;
+
     public Reader(String fileName) {
         configuration = new File(fileName);
-        this.fileName = fileName;
         try {
             reader = new BufferedReader(new FileReader(configuration));
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         }
     }
-
-    File configuration;
-    BufferedReader reader;
-    String fileName;
 
     public String getLine() {
         try {
