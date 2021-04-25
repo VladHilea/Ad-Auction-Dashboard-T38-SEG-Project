@@ -43,19 +43,20 @@ public class AdAuctionGUI extends JFrame {
     private JButton fastCampaignButton;
 
     // components for metrics
-    private JComboBox<String> metricsGenderBox, metricsAgeBox, metricsContextBox, metricsIncomeBox, metricsStartDateBox, metricsEndDateBox;
+    private JComboBox<String> metricsGenderBox, metricsAgeBox, metricsContextBox, metricsIncomeBox;
     private JLabel impressionsValue, clicksValue, uniquesValue, ctrValues, cpaValues, cpcValues, cpmValues, conversionsValues, totalImpressionCostValues, totalClickCostValues, bounceValues, bounceRateValues;
     private Box impressionsBox, clicksBox, uniquesBox, ctrBox, cpaBox, cpcBox, cpmBox, conversionsBox, totalImpressionCostBox, totalClickCostBox, bouncesBox, bounceRateBox;
     private Box metricsNorthBox;
+    private JDatePicker metricsStartDatePicker, metricsEndDatePicker;
 
     // components for charts
-    private JComboBox<String> chartsMetricsBox, chartsGenderBox, chartsAgeBox, chartsContextBox, chartsIncomeBox, chartsEndDateBox;
-    private JDatePicker chartsStartDatePicker;
+    private JComboBox<String> chartsMetricsBox, chartsGenderBox, chartsAgeBox, chartsContextBox, chartsIncomeBox;
     private JPanel chartsGrid, chartJPanel;
     private ChartPanel chartPanel;
     private JSlider chartSlider;
     private Hashtable<Integer, JLabel> position;
     private Box chartNorthBox;
+    private JDatePicker chartsStartDatePicker, chartsEndDatePicker;
 
     // components for histograms
     private JPanel histogramGrid, histogramJPanel;
@@ -778,13 +779,12 @@ public class AdAuctionGUI extends JFrame {
         //end box
 
         //start Box
-        String[] startDateChoices = new String[]{"Any"};
-        metricsStartDateBox = new JComboBox<>(startDateChoices);
-        metricsStartDateBox.setVisible(false);
-        metricsStartDateBox.setBorder(new EmptyBorder(5,5,5,5));
-        metricsStartDateBox.setFont(comboBoxFont);
+        metricsStartDatePicker = new JDatePicker();
+        metricsStartDatePicker.setVisible(true);
+        metricsStartDatePicker.setBorder(new EmptyBorder(5,5,5,5));
+        metricsStartDatePicker.setFont(comboBoxFont);
 
-        metricsStartDateBox.addActionListener(e -> {
+        metricsStartDatePicker.addActionListener(e -> {
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
                 menu.remove(filesMenu);
@@ -792,29 +792,39 @@ public class AdAuctionGUI extends JFrame {
                 menu.repaint();
             }
 
-            String itemName = String.valueOf(metricsStartDateBox.getSelectedItem());
-            arrayOfChoicesMetrics.set(5, itemName);
+            DateModel<?> model = metricsStartDatePicker.getModel();
+
+            String date = model.getYear() + "-";
+            if (toString(model.getMonth()).length() == 1) {
+                date += "0";
+            }
+            date += (model.getMonth() + 1) + "-";
+            if (toString(model.getDay()).length() == 1) {
+                date += "0";
+            }
+            date += model.getDay() + " 00:00:00";
+
+            arrayOfChoicesMetrics.set(5, date);
             recalculateMetrics();
         });
 
         JLabel startDateLabel = new JLabel("START DATE");
-        startDateLabel.setVisible(false);
+        startDateLabel.setVisible(true);
         startDateLabel.setFont(mainFont);
         startDateLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         Box startDateVerticalBox = Box.createVerticalBox();
         startDateVerticalBox.add(startDateLabel);
-        startDateVerticalBox.add(metricsStartDateBox);
+        startDateVerticalBox.add(metricsStartDatePicker);
         //end box
 
         //start Box
-        String[] endDateChoices = new String[]{"Any"};
-        metricsEndDateBox = new JComboBox<>(endDateChoices);
-        metricsEndDateBox.setVisible(false);
-        metricsEndDateBox.setBorder(new EmptyBorder(5,5,5,5));
-        metricsEndDateBox.setFont(comboBoxFont);
+        metricsEndDatePicker = new JDatePicker();
+        metricsEndDatePicker.setVisible(true);
+        metricsEndDatePicker.setBorder(new EmptyBorder(5,5,5,5));
+        metricsEndDatePicker.setFont(comboBoxFont);
 
-        metricsEndDateBox.addActionListener(e -> {
+        metricsEndDatePicker.addActionListener(e -> {
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
                 menu.remove(filesMenu);
@@ -822,19 +832,30 @@ public class AdAuctionGUI extends JFrame {
                 menu.repaint();
             }
 
-            String itemName = String.valueOf(metricsEndDateBox.getSelectedItem());
-            arrayOfChoicesMetrics.set(6, itemName);
+            DateModel<?> model = metricsEndDatePicker.getModel();
+
+            String date = model.getYear() + "-";
+            if (toString(model.getMonth()).length() == 1) {
+                date += "0";
+            }
+            date += (model.getMonth() + 1) + "-";
+            if (toString(model.getDay()).length() == 1) {
+                date += "0";
+            }
+            date += model.getDay() + " 00:00:00";
+
+            arrayOfChoicesMetrics.set(6, date);
             recalculateMetrics();
         });
 
         JLabel endDateLabel = new JLabel("END DATE");
-        endDateLabel.setVisible(false);
+        endDateLabel.setVisible(true);
         endDateLabel.setFont(mainFont);
         endDateLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         Box endDateVerticalBox = Box.createVerticalBox();
         endDateVerticalBox.add(endDateLabel);
-        endDateVerticalBox.add(metricsEndDateBox);
+        endDateVerticalBox.add(metricsEndDatePicker);
         //end box
 
         metricsNorthBox = Box.createHorizontalBox();
@@ -1273,7 +1294,7 @@ public class AdAuctionGUI extends JFrame {
 
         //start Box
         chartsStartDatePicker = new JDatePicker();
-        chartsStartDatePicker.setVisible(false);
+        chartsStartDatePicker.setVisible(true);
         chartsStartDatePicker.setBorder(new EmptyBorder(5,5,5,5));
         chartsStartDatePicker.setFont(comboBoxFont);
 
@@ -1286,15 +1307,23 @@ public class AdAuctionGUI extends JFrame {
             }
 
             DateModel<?> model = chartsStartDatePicker.getModel();
-            String date = model.getYear() + "-" + model.getMonth() + "-" + model.getDay() + " 00:00:00";
-            System.out.println(date);
+
+            String date = model.getYear() + "-";
+            if (toString(model.getMonth()).length() == 1) {
+                date += "0";
+            }
+            date += (model.getMonth() + 1) + "-";
+            if (toString(model.getDay()).length() == 1) {
+                date += "0";
+            }
+            date += model.getDay() + " 00:00:00";
 
             arrayOfChoicesChart.set(5, date);
-            // recalculateCharts();
+            recalculateCharts();
         });
 
         JLabel startDateLabel = new JLabel("START DATE");
-        startDateLabel.setVisible(false);
+        startDateLabel.setVisible(true);
         startDateLabel.setFont(mainFont);
         startDateLabel.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -1304,13 +1333,12 @@ public class AdAuctionGUI extends JFrame {
         //end box
 
         //start Box
-        String[] endDateChoices = new String[]{"Any"};
-        chartsEndDateBox = new JComboBox<>(endDateChoices);
-        chartsEndDateBox.setVisible(false);
-        chartsEndDateBox.setBorder(new EmptyBorder(5,5,5,5));
-        chartsEndDateBox.setFont(comboBoxFont);
+        chartsEndDatePicker = new JDatePicker();
+        chartsEndDatePicker.setVisible(true);
+        chartsEndDatePicker.setBorder(new EmptyBorder(5,5,5,5));
+        chartsEndDatePicker.setFont(comboBoxFont);
 
-        chartsEndDateBox.addActionListener(e -> {
+        chartsEndDatePicker.addActionListener(e -> {
             if (filesMenu!=null){
                 loadCampaignButton.setEnabled(true);
                 menu.remove(filesMenu);
@@ -1318,18 +1346,30 @@ public class AdAuctionGUI extends JFrame {
                 menu.repaint();
             }
 
-            String itemName = String.valueOf(chartsEndDateBox.getSelectedItem());
-            arrayOfChoicesChart.set(6, itemName);
+            DateModel<?> model = chartsEndDatePicker.getModel();
+
+            String date = model.getYear() + "-";
+            if (toString(model.getMonth()).length() == 1) {
+                date += "0";
+            }
+            date += (model.getMonth() + 1) + "-";
+            if (toString(model.getDay()).length() == 1) {
+                date += "0";
+            }
+            date += model.getDay() + " 00:00:00";
+
+            arrayOfChoicesChart.set(6, date);
+            recalculateCharts();
         });
 
         JLabel endDateLabel = new JLabel("END DATE");
-        endDateLabel.setVisible(false);
+        endDateLabel.setVisible(true);
         endDateLabel.setFont(mainFont);
         endDateLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         Box endDateVerticalBox = Box.createVerticalBox();
         endDateVerticalBox.add(endDateLabel);
-        endDateVerticalBox.add(chartsEndDateBox);
+        endDateVerticalBox.add(chartsEndDatePicker);
         //end box
 
         chartNorthBox = Box.createHorizontalBox();
@@ -1945,8 +1985,8 @@ public class AdAuctionGUI extends JFrame {
         metricsAgeBox.setEnabled(enable);
         metricsContextBox.setEnabled(enable);
         metricsIncomeBox.setEnabled(enable);
-        metricsStartDateBox.setEnabled(enable);
-        metricsEndDateBox.setEnabled(enable);
+        metricsStartDatePicker.setEnabled(enable);
+        metricsEndDatePicker.setEnabled(enable);
 
         chartsMetricsBox.setEnabled(enable);
         chartsGenderBox.setEnabled(enable);
@@ -1954,7 +1994,7 @@ public class AdAuctionGUI extends JFrame {
         chartsContextBox.setEnabled(enable);
         chartsIncomeBox.setEnabled(enable);
         chartsStartDatePicker.setEnabled(enable);
-        chartsEndDateBox.setEnabled(enable);
+        chartsEndDatePicker.setEnabled(enable);
     }
 
     // displays the metrics when loaded
