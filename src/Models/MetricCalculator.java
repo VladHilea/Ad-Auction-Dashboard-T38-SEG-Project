@@ -21,12 +21,12 @@ public class MetricCalculator extends Calculator {
     private float cpm; // cost-per-thousand impressions
     private float br; // bounce rate - number of bounces per click
 
-    public MetricCalculator() {
-        super(null, null, null, null);
+    public MetricCalculator(int pageLimit, int bounceTime) {
+        super(null, null, null, null, pageLimit, bounceTime);
     }
 
-    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
-        super(impressionLog, clickLog, serverLog, users);
+    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users, int pageLimit, int bounceTime) {
+        super(impressionLog, clickLog, serverLog, users, pageLimit, bounceTime);
         calculateMetrics();
     }
 

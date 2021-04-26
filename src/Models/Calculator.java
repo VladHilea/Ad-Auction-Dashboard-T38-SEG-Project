@@ -10,15 +10,16 @@ public class Calculator {
     private final ArrayList<ServerEntry> serverLog; // list of server entries
     private final Map<Long, User> users; // list of unique users
 
-    public int pageLimit = 1; // max number of pages to be counted as a bounce
-    public int bounceTime = 500; // max amount of time to be counted as a bounce
-    // set either value to 0 when not being used
+    public int pageLimit; // max number of pages to be counted as a bounce
+    public int bounceTime; // max amount of time to be counted as a bounce
 
-    public Calculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
+    public Calculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users, int pageLimit, int bounceTime) {
         this.impressionLog = impressionLog;
         this.clickLog = clickLog;
         this.serverLog = serverLog;
         this.users = users;
+        this.pageLimit = pageLimit;
+        this.bounceTime = bounceTime;
     }
 
     // gets a list of all the impression entries

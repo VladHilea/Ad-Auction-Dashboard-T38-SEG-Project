@@ -13,9 +13,9 @@ import org.jfree.data.statistics.HistogramDataset;
 public class Histogram extends ApplicationFrame {
   private JFreeChart histogram;
   
-  public Histogram(String applicationTitle) {
+  public Histogram(String applicationTitle, int pageLimit, int bounceTime) {
 	    super(applicationTitle);
-		updateHistogram(new ChartCalculator());
+		updateHistogram(new ChartCalculator(pageLimit, bounceTime));
 		ChartPanel histogramPanel = new ChartPanel(histogram);
 		histogramPanel.setPreferredSize(new java.awt.Dimension(560 , 367));
 		setContentPane(histogramPanel);

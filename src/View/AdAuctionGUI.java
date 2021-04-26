@@ -70,14 +70,16 @@ public class AdAuctionGUI extends JFrame {
     private JPanel settingsGrid;
     private Box styleVerticalBox;
     private Box bounceVBox;
-    private JComboBox<String> primaryColorComboBox,secondaryColorComboBox,fontComboBox,bounceComboBox;
-    private JLabel styleLabel,primaryColorLabel,secondaryColorLabel,fontLabel,technicalLabel,bounceTypeLabel;
+    private JComboBox<String> primaryColorComboBox,secondaryColorComboBox,fontComboBox,bounceTimeComboBox, pageLimitComboBox;
+    private JLabel styleLabel,primaryColorLabel,secondaryColorLabel,fontLabel,technicalLabel,bounceTimeLabel, pageLimitLabel;
 
     // filtering
     private final ArrayList<String> arrayOfChoicesMetrics = new ArrayList<>();
     private final ArrayList<String> arrayOfChoicesChart = new ArrayList<>();
     private int countCharts = 0;
-    int bounceType = 0;
+
+    public int pageLimit = 1; // max number of pages to be counted as a bounce
+    public int bounceTime = 500; // max amount of time to be counted as a bounce
 
     // model controllers
     private final CampaignController campaignController;
@@ -118,11 +120,11 @@ public class AdAuctionGUI extends JFrame {
     // initialises the display controllers
     public AdAuctionGUI() {
         this.campaignController = new CampaignController();
-        this.metricController = new MetricController();
-        this.chartController = new ChartController();
+        this.metricController = new MetricController(campaignController.getPageLimit(), campaignController.getBounceTime());
+        this.chartController = new ChartController(campaignController.getPageLimit(), campaignController.getBounceTime());
 
-        chartPanel = new ChartPanel(new Chart("Blank Chart", "Impressions", "Days").getChart());
-        histogramPanel = new ChartPanel(new Histogram("Blank Histogram").getHistogram());
+        chartPanel = new ChartPanel(new Chart("Blank Chart", "Impressions", "Days", campaignController.getPageLimit(), campaignController.getBounceTime()).getChart());
+        histogramPanel = new ChartPanel(new Histogram("Blank Histogram", campaignController.getPageLimit(), campaignController.getBounceTime()).getHistogram());
     }
 
     // displays the main window
@@ -1756,33 +1758,70 @@ public class AdAuctionGUI extends JFrame {
         technicalLabel.setForeground(primaryColor);
         technicalLabel.setFont(fontOfText);
 
-        bounceTypeLabel = new JLabel("Bounce Type");
-        bounceTypeLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        bounceTypeLabel.setForeground(secondaryColor);
-        bounceTypeLabel.setFont(mainFont);
+        // page limit
+        pageLimitLabel = new JLabel("Page Limit");
+        pageLimitLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        pageLimitLabel.setForeground(secondaryColor);
+        pageLimitLabel.setFont(mainFont);
 
-        String[] bounceChoices = new String[] {"Both", "Page limit" , "Time limit"};
-        bounceComboBox = new JComboBox<>(bounceChoices);
-        bounceComboBox.setVisible(true);
-        bounceComboBox.setOpaque(false);
-        bounceComboBox.setPreferredSize(new Dimension(100,35));
-        bounceComboBox.setMaximumSize(new Dimension(100,35));
-        bounceComboBox.setBorder(new EmptyBorder(5,5,5,5));
-        bounceComboBox.setFont(comboBoxFont);
-        bounceComboBox.setSelectedIndex(0);
+        String[] pageLimitChoices = new String[] {"1", "2", "3", "4", "5"};
+        pageLimitComboBox = new JComboBox<>(pageLimitChoices);
+        pageLimitComboBox.setVisible(true);
+        pageLimitComboBox.setOpaque(false);
+        pageLimitComboBox.setPreferredSize(new Dimension(100,35));
+        pageLimitComboBox.setMaximumSize(new Dimension(100,35));
+        pageLimitComboBox.setBorder(new EmptyBorder(5,5,5,5));
+        pageLimitComboBox.setFont(comboBoxFont);
+        pageLimitComboBox.setSelectedIndex(0);
 
-        bounceComboBox.addActionListener(e -> bounceType = bounceComboBox.getSelectedIndex());
+        pageLimitComboBox.addActionListener(e -> {
+            pageLimit = Integer.parseInt(String.valueOf(pageLimitComboBox.getSelectedItem()));
+            metricController.updateBounce(pageLimit, bounceTime);
+            chartController.updateBounce(pageLimit, bounceTime);
+            recalculateMetrics();
+            recalculateCharts();
+        });
 
-        Box bounceHBox = Box.createHorizontalBox();
-        bounceHBox.add(bounceTypeLabel);
-        bounceHBox.add(Box.createHorizontalStrut(300));
-        bounceHBox.add(bounceComboBox);
+        // bounce time
+        bounceTimeLabel = new JLabel("Bounce Time");
+        bounceTimeLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        bounceTimeLabel.setForeground(secondaryColor);
+        bounceTimeLabel.setFont(mainFont);
+
+        String[] bounceTimeChoices = new String[] {"100", "500", "1000", "2500"};
+        bounceTimeComboBox = new JComboBox<>(bounceTimeChoices);
+        bounceTimeComboBox.setVisible(true);
+        bounceTimeComboBox.setOpaque(false);
+        bounceTimeComboBox.setPreferredSize(new Dimension(100,35));
+        bounceTimeComboBox.setMaximumSize(new Dimension(100,35));
+        bounceTimeComboBox.setBorder(new EmptyBorder(5,5,5,5));
+        bounceTimeComboBox.setFont(comboBoxFont);
+        bounceTimeComboBox.setSelectedIndex(0);
+
+        bounceTimeComboBox.addActionListener(e -> {
+            bounceTime = Integer.parseInt(String.valueOf(bounceTimeComboBox.getSelectedItem()));
+            metricController.updateBounce(pageLimit, bounceTime);
+            chartController.updateBounce(pageLimit, bounceTime);
+            recalculateMetrics();
+            recalculateCharts();
+        });
+
+        Box pageLimitHBox = Box.createHorizontalBox();
+        pageLimitHBox.add(pageLimitLabel);
+        pageLimitHBox.add(Box.createHorizontalStrut(300));
+        pageLimitHBox.add(pageLimitComboBox);
+
+        Box bounceTimeHBox = Box.createHorizontalBox();
+        bounceTimeHBox.add(bounceTimeLabel);
+        bounceTimeHBox.add(Box.createHorizontalStrut(300));
+        bounceTimeHBox.add(bounceTimeComboBox);
 
         bounceVBox = Box.createVerticalBox();
         bounceVBox.setPreferredSize(new Dimension(settingsGrid.getWidth(),150));
         bounceVBox.setMaximumSize(new Dimension(settingsGrid.getWidth(),150));
         bounceVBox.add(technicalLabel);
-        bounceVBox.add(bounceHBox);
+        bounceVBox.add(pageLimitHBox);
+        bounceVBox.add(bounceTimeHBox);
     }
 
     public void createSettingsGrid(){
@@ -1831,7 +1870,7 @@ public class AdAuctionGUI extends JFrame {
         fontLabel.setForeground(secondaryColor);
         primaryColorLabel.setForeground(secondaryColor);
         secondaryColorLabel.setForeground(secondaryColor);
-        bounceTypeLabel.setForeground(secondaryColor);
+        bounceTimeLabel.setForeground(secondaryColor);
         topMenu.setBackground(primaryColor);
         addChartToCompareButton.setBackground(primaryColor);
         resetCompareButton.setBackground(primaryColor);
@@ -1877,7 +1916,7 @@ public class AdAuctionGUI extends JFrame {
         fontLabel.setFont(mainFont);
         primaryColorLabel.setFont(mainFont);
         secondaryColorLabel.setFont(mainFont);
-        bounceTypeLabel.setFont(mainFont);
+        bounceTimeLabel.setFont(mainFont);
 
         impressionsValue.setFont(fontOfValue);
         uniquesValue.setFont(fontOfValue);
