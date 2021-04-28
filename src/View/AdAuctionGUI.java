@@ -56,6 +56,7 @@ public class AdAuctionGUI extends JFrame {
     private JPanel chartsGrid, chartJPanel;
     private ChartPanel chartPanel;
     private JSlider chartSlider;
+    private JLabel chartNumber;
     JButton addChartToCompareButton;
     Box chartNorthBox;
     Hashtable<Integer, JLabel> position;
@@ -1413,7 +1414,10 @@ public class AdAuctionGUI extends JFrame {
 
             if (countCharts < 4) {
                 JPanel panel = new JPanel(new GridBagLayout());
+                chartNumber = new JLabel("Chart " + countCharts);
+                chartNumber.setFont(mainFont);
                 JPanel chartJPanel = new JPanel(new BorderLayout());
+                panel.add(chartNumber);
                 countCharts++;
 
                 switch (arrayOfChoicesChart.get(7)) {
@@ -1584,10 +1588,10 @@ public class AdAuctionGUI extends JFrame {
     }
 
     // components for settings page
-    private Box styleVerticalBox,bounceVBox, settingsVBox, primaryColorHBox,secondaryColorHBox,fontHBox,bounceHBox;
+    private Box styleVerticalBox,bounceVBox, settingsVBox, primaryColorHBox,secondaryColorHBox,fontHBox,bounceHBox,bounceValueHBox;
     private JComboBox<String> primaryColorComboBox,secondaryColorComboBox,fontComboBox,bounceComboBox;
-    private JLabel styleLabel,primaryColorLabel,secondaryColorLabel,fontLabel,technicalLabel,bounceTypeLabel;
-
+    private JLabel styleLabel,primaryColorLabel,secondaryColorLabel,fontLabel,technicalLabel,bounceTypeLabel,bounceValueLabel;
+    private TextField bounceValueText;
     public void createSettingsStyleBox(){
         styleLabel = new JLabel("Style");
         styleLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -1782,12 +1786,50 @@ public class AdAuctionGUI extends JFrame {
         bounceHBox.add(bounceComboBox);
 
 
+        bounceValueLabel = new JLabel("Bounce Value");
+        bounceValueLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        bounceValueLabel.setForeground(secondaryColor);
+        bounceValueLabel.setFont(mainFont);
+
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+        panel.setVisible(true);
+        panel.setPreferredSize(new Dimension(100,30));
+        panel.setMaximumSize(new Dimension(100,30));
+        bounceValueText = new TextField();
+        bounceValueText.setVisible(true);
+        bounceValueText.setPreferredSize(new Dimension(100,30));
+        bounceValueText.setMaximumSize(new Dimension(100,30));
+        bounceValueText.setFont(mainFont);
+        panel.add(bounceValueText);
+
+
+        bounceValueHBox = Box.createHorizontalBox();
+        bounceValueHBox.add(bounceValueLabel);
+        bounceValueHBox.add(Box.createHorizontalStrut(300));
+        bounceValueHBox.add(panel);
+
+        /*
+        String[] bounceValueChoices = new String[] {"Both", "Page limit" , "Time limit"};
+        bounceComboBox = new JComboBox<>(bounceChoices);
+        bounceComboBox.setVisible(true);
+        bounceComboBox.setOpaque(false);
+        bounceComboBox.setPreferredSize(new Dimension(100,35));
+        bounceComboBox.setMaximumSize(new Dimension(100,35));
+        bounceComboBox.setBorder(new EmptyBorder(5,5,5,5));
+        bounceComboBox.setFont(comboBoxFont);
+        bounceComboBox.setSelectedIndex(0);
+
+         */
+
 
         bounceVBox = Box.createVerticalBox();
         bounceVBox.setPreferredSize(new Dimension(settingsGrid.getWidth(),150));
         bounceVBox.setMaximumSize(new Dimension(settingsGrid.getWidth(),150));
         bounceVBox.add(technicalLabel);
         bounceVBox.add(bounceHBox);
+        bounceVBox.add(bounceValueHBox);
 
 
     }
@@ -1888,6 +1930,8 @@ public class AdAuctionGUI extends JFrame {
         primaryColorLabel.setFont(mainFont);
         secondaryColorLabel.setFont(mainFont);
         bounceTypeLabel.setFont(mainFont);
+        bounceValueLabel.setFont(mainFont);
+        bounceValueText.setFont(mainFont);
 
         impressionsValue.setFont(fontOfValue);
         uniquesValue.setFont(fontOfValue);
