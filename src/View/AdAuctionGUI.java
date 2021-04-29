@@ -347,7 +347,7 @@ public class AdAuctionGUI extends JFrame {
 
         // product title
         //components for top menu
-        productName = new JLabel("Ad Monitor");
+        productName = new JLabel("Ad Auction Dashboard");
         productName.setBackground(primaryColor);
         productName.setSize(100,100);
         productName.setAlignmentX(20);
@@ -1426,7 +1426,7 @@ public class AdAuctionGUI extends JFrame {
             if (countCharts < 4) {
                 JPanel panel = new JPanel(new GridBagLayout());
                 JPanel chartJPanel = new JPanel(new BorderLayout());
-                chartNumber = new JLabel("Chart " + countCharts + 1);
+                chartNumber = new JLabel("Chart " + (countCharts + 1));
                 chartNumber.setFont(mainFont);
                 panel.add(chartNumber);
                 countCharts++;
@@ -1898,6 +1898,7 @@ public class AdAuctionGUI extends JFrame {
         topMenu.setBackground(primaryColor);
         addChartToCompareButton.setBackground(primaryColor);
         resetCompareButton.setBackground(primaryColor);
+        saveChartToFileButton.setBackground(primaryColor);
     }
 
     public void updateFont(){
@@ -1940,6 +1941,7 @@ public class AdAuctionGUI extends JFrame {
         primaryColorLabel.setFont(mainFont);
         secondaryColorLabel.setFont(mainFont);
         bounceTimeLabel.setFont(mainFont);
+        pageLimitLabel.setFont(mainFont);
 
         impressionsValue.setFont(fontOfValue);
         uniquesValue.setFont(fontOfValue);
