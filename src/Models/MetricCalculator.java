@@ -124,7 +124,7 @@ public class MetricCalculator extends Calculator {
 
         // calculates the number of bounces and the number of conversions
         for (ServerEntry server : filteredServerList) {
-            if (server.getPages() <= pageLimit || timeDifference(server.getEntryDate(), server.getExitDate()) <= bounceTime || bounceTime == 0) {
+            if ((server.getPages() <= pageLimit && pageLimit != 0) || (timeDifference(server.getEntryDate(), server.getExitDate()) <= bounceTime && bounceTime != 0)) {
                 this.bouncesNo++;
             }
             if (server.isConversion()) {

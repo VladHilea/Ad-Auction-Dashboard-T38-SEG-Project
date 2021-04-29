@@ -1764,7 +1764,7 @@ public class AdAuctionGUI extends JFrame {
         pageLimitLabel.setForeground(secondaryColor);
         pageLimitLabel.setFont(mainFont);
 
-        String[] pageLimitChoices = new String[] {"1", "2", "3", "4", "5"};
+        String[] pageLimitChoices = new String[] {"None", "1", "2", "3", "4", "5"};
         pageLimitComboBox = new JComboBox<>(pageLimitChoices);
         pageLimitComboBox.setVisible(true);
         pageLimitComboBox.setOpaque(false);
@@ -1772,10 +1772,14 @@ public class AdAuctionGUI extends JFrame {
         pageLimitComboBox.setMaximumSize(new Dimension(100,35));
         pageLimitComboBox.setBorder(new EmptyBorder(5,5,5,5));
         pageLimitComboBox.setFont(comboBoxFont);
-        pageLimitComboBox.setSelectedIndex(0);
+        pageLimitComboBox.setSelectedIndex(2);
 
         pageLimitComboBox.addActionListener(e -> {
-            pageLimit = Integer.parseInt(String.valueOf(pageLimitComboBox.getSelectedItem()));
+            if (String.valueOf(pageLimitComboBox.getSelectedItem()).equals("None")) {
+                pageLimit = 0;
+            } else {
+                pageLimit = Integer.parseInt(String.valueOf(pageLimitComboBox.getSelectedItem()));
+            }
             metricController.updateBounce(pageLimit, bounceTime);
             chartController.updateBounce(pageLimit, bounceTime);
             recalculateMetrics();
@@ -1788,7 +1792,7 @@ public class AdAuctionGUI extends JFrame {
         bounceTimeLabel.setForeground(secondaryColor);
         bounceTimeLabel.setFont(mainFont);
 
-        String[] bounceTimeChoices = new String[] {"100", "500", "1000", "2500"};
+        String[] bounceTimeChoices = new String[] {"None", "100", "500", "1000", "2500"};
         bounceTimeComboBox = new JComboBox<>(bounceTimeChoices);
         bounceTimeComboBox.setVisible(true);
         bounceTimeComboBox.setOpaque(false);
@@ -1796,10 +1800,14 @@ public class AdAuctionGUI extends JFrame {
         bounceTimeComboBox.setMaximumSize(new Dimension(100,35));
         bounceTimeComboBox.setBorder(new EmptyBorder(5,5,5,5));
         bounceTimeComboBox.setFont(comboBoxFont);
-        bounceTimeComboBox.setSelectedIndex(0);
+        bounceTimeComboBox.setSelectedIndex(2);
 
         bounceTimeComboBox.addActionListener(e -> {
-            bounceTime = Integer.parseInt(String.valueOf(bounceTimeComboBox.getSelectedItem()));
+            if (String.valueOf(bounceTimeComboBox.getSelectedItem()).equals("None")) {
+                bounceTime = 0;
+            } else {
+                bounceTime = Integer.parseInt(String.valueOf(bounceTimeComboBox.getSelectedItem()));
+            }
             metricController.updateBounce(pageLimit, bounceTime);
             chartController.updateBounce(pageLimit, bounceTime);
             recalculateMetrics();
@@ -1870,6 +1878,7 @@ public class AdAuctionGUI extends JFrame {
         fontLabel.setForeground(secondaryColor);
         primaryColorLabel.setForeground(secondaryColor);
         secondaryColorLabel.setForeground(secondaryColor);
+        pageLimitLabel.setForeground(secondaryColor);
         bounceTimeLabel.setForeground(secondaryColor);
         topMenu.setBackground(primaryColor);
         addChartToCompareButton.setBackground(primaryColor);
@@ -2034,6 +2043,9 @@ public class AdAuctionGUI extends JFrame {
         chartsIncomeBox.setEnabled(enable);
         chartsStartDatePicker.setEnabled(enable);
         chartsEndDatePicker.setEnabled(enable);
+
+        pageLimitComboBox.setEnabled(enable);
+        bounceTimeComboBox.setEnabled(enable);
     }
 
     // displays the metrics when loaded
