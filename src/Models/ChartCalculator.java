@@ -14,6 +14,7 @@ public class ChartCalculator extends Calculator {
     private ArrayList<Integer> conversionsNoList = new ArrayList<>(); // number of conversions - people who click then acts on ad
     private ArrayList<Float> totalImpressionCostList = new ArrayList<>(); // total impression cost - cost of impressions
     private ArrayList<Float> totalClickCostList = new ArrayList<>(); // total click cost - cost of clicks
+    private final ArrayList<Double> histogramList = new ArrayList<>(); // list of every click cost - used for histograms
 
     private ArrayList<Float> ctrList = new ArrayList<>(); // click-through-rate - clicks per impression
     private ArrayList<Float> cpaList = new ArrayList<>(); // cost-per-acquisition
@@ -27,12 +28,18 @@ public class ChartCalculator extends Calculator {
     private ArrayList<MetricCalculator> monthCalculators = new ArrayList<>();
     private ArrayList<MetricCalculator> yearCalculators = new ArrayList<>();
 
-    public ChartCalculator() {
-        super(null, null, null, null);
+    public ChartCalculator(int pageLimit, int bounceTime) {
+        super(null, null, null, null, pageLimit, bounceTime);
     }
 
-    public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
-        super(impressionLog, clickLog, serverLog, users);
+    public ChartCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users, int pageLimit, int bounceTime) {
+        super(impressionLog, clickLog, serverLog, users, pageLimit, bounceTime);
+
+        for (ClickEntry entry : clickLog) {
+            if (entry.getClickCost() > 0) {
+                histogramList.add(entry.getClickCost());
+            }
+        }
     }
 
     // splits the data into its intervals for all time granularities
@@ -182,7 +189,7 @@ public class ChartCalculator extends Calculator {
         // combines the intervals of logs to create calculators for each of the intervals
         if (intervalImpressionLogs.size() == intervalClickLogs.size() && intervalImpressionLogs.size() == intervalServerLogs.size()) {
             for (int i=0; i < intervalImpressionLogs.size(); i++) {
-                intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i), getUsers()));
+                intervalCalculators.add(new MetricCalculator(intervalImpressionLogs.get(i), intervalClickLogs.get(i), intervalServerLogs.get(i), getUsers(), getPageLimit(), getBounceTime()));
             }
             return intervalCalculators;
         } else {
@@ -284,6 +291,10 @@ public class ChartCalculator extends Calculator {
 
     public ArrayList<Float> getTotalClickCostList() {
         return totalClickCostList;
+    }
+
+    public ArrayList<Double> getHistogramList() {
+        return histogramList;
     }
 
     public ArrayList<Float> getCtrList() {

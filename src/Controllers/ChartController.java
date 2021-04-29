@@ -23,14 +23,14 @@ public class ChartController {
     private LocalDateTime endDate;
 
     // all charts are given a default display
-    public ChartController() {
-        this.hoursChart = new Chart("Hours Chart","Impressions", "Hours");
-        this.daysChart = new Chart("Days Chart", "Impressions", "Days");
-        this.weeksChart = new Chart("Weeks Chart", "Impressions", "Weeks");
-        this.monthsChart = new Chart("Months Chart", "Impressions", "Months");
-        this.yearsChart = new Chart("Years Chart",  "Impressions", "Years");
+    public ChartController(int pageLimit, int bounceTime) {
+        this.hoursChart = new Chart("Hours Chart","Impressions", "Hours", pageLimit, bounceTime);
+        this.daysChart = new Chart("Days Chart", "Impressions", "Days", pageLimit, bounceTime);
+        this.weeksChart = new Chart("Weeks Chart", "Impressions", "Weeks", pageLimit, bounceTime);
+        this.monthsChart = new Chart("Months Chart", "Impressions", "Months", pageLimit, bounceTime);
+        this.yearsChart = new Chart("Years Chart",  "Impressions", "Years", pageLimit, bounceTime);
 
-        this.histogram = new Histogram("Histogram");
+        this.histogram = new Histogram("Histogram", pageLimit, bounceTime);
     }
 
     // initial charts display data with no filtering and the entire time range
@@ -81,6 +81,15 @@ public class ChartController {
             endDate = LocalDateTime.parse(stringEndDate, formatter);
         }
 
+        // checking if the date selection is correct
+        if (startDate.isBefore(chartCalculator.getImpressionLog().get(0).getDate())) {
+            return;
+        } else if (endDate.isAfter(chartCalculator.getImpressionLog().get(chartCalculator.getImpressionLog().size() - 1).getDate())) {
+            return;
+        } else if (startDate.isAfter(endDate)) {
+            return;
+        }
+
         // update intervals only if the ranges need to change
         if (!(this.startDate == startDate) || !(this.endDate == endDate)) {
             chartCalculator.calculateIntervals(startDate, endDate);
@@ -102,7 +111,14 @@ public class ChartController {
         this.monthsChart.updateChart(chartCalculator, metric);
 
         chartCalculator.calculateFilters("years", gender, age, context, income, startDate, endDate);
-        this.yearsChart.updateChart(chartCalculator, metric);
+        this.yearsChart.updateChart(chartCalculator, metric);;
+    }
+
+    public void updateBounce(int pageLimit, int bounceTime) {
+        if (chartCalculator != null) {
+            chartCalculator.setPageLimit(pageLimit);
+            chartCalculator.setBounceTime(bounceTime);
+        }
     }
 
     public void createHistogram(ChartCalculator histogramCalculator) {
