@@ -6,6 +6,7 @@ import Models.*;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -64,7 +65,8 @@ public class AdAuctionGUI extends JFrame {
 
     // components for compare
     private JPanel compareGrid, compareChartsGrid;
-    private JButton resetCompareButton, addChartToCompareButton;
+    private JButton resetCompareButton, addChartToCompareButton, saveChartToFileButton;
+    private JLabel chartNumber;
 
     // components for settings page
     private JPanel settingsGrid;
@@ -1444,6 +1446,9 @@ public class AdAuctionGUI extends JFrame {
             if (countCharts < 4) {
                 JPanel panel = new JPanel(new GridBagLayout());
                 JPanel chartJPanel = new JPanel(new BorderLayout());
+                chartNumber = new JLabel("Chart " + countCharts + 1);
+                chartNumber.setFont(mainFont);
+                panel.add(chartNumber);
                 countCharts++;
 
                 switch (arrayOfChoicesChart.get(7)) {
@@ -1503,12 +1508,42 @@ public class AdAuctionGUI extends JFrame {
             }
         });
 
+        JPanel saveChartToFilePanel = new JPanel(new GridBagLayout());
+        saveChartToFilePanel.setOpaque(false);
+        saveChartToFilePanel.setBorder(new EmptyBorder(10,10,10,10));
+
+        saveChartToFileButton = new JButton("Save Chart");
+        saveChartToFileButton.setFont(mainFont);
+        saveChartToFileButton.setBackground(primaryColor);
+        saveChartToFileButton.setForeground(noColor);
+        saveChartToFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        saveChartToFileButton.setPreferredSize(new Dimension(400,40));
+
+        saveChartToFileButton.addActionListener(e -> {
+            try {
+                JFrame parentFrame = new JFrame();
+
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save a chart");
+
+                int userSelection = fileChooser.showSaveDialog(parentFrame);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    ChartUtilities.saveChartAsJPEG(new File(fileToSave.getAbsolutePath() + ".jpg"), chartPanel.getChart(), 1920, 1080);
+                }
+            } catch (Exception ignored) { }
+        });
+
+        saveChartToFilePanel.add(saveChartToFileButton);
+
         JPanel chartSouthGrid = new JPanel(new GridLayout(1, 2));
         chartSouthGrid.setPreferredSize(new Dimension(chartsGrid.getWidth(),200));
         chartSouthGrid.setBorder(new EmptyBorder(10,10,10,10));
 
         chartSouthGrid.add(chartSlider);
         chartSouthGrid.add(addChartToComparePanel);
+        chartSouthGrid.add(saveChartToFilePanel);
 
         chartsGrid.add(chartSouthGrid,BorderLayout.SOUTH);
     }

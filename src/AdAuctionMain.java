@@ -11,15 +11,8 @@ public class AdAuctionMain {
 
     /*
      * increment 3:
-     * additional chart functionality - explore JFreeChart features
-     * printing functionality and saving charts as files*
-     * user bounce definition - settings page
-     * file reading with anomalous data
-     * campaign loading and comparing*
-     *
-     * testing:
-     * unit testing
-     * manual testing w/ user stories
-     * calculation testing
+     * additional chart functionality
+     * printing functionality / saving charts
+     * campaign loading and comparing
      */
 }
