@@ -41,7 +41,6 @@ public class AdAuctionGUI extends JFrame {
     private String impressionsFileLocation, clickFileLocation, serverFileLocation;
     private JLabel productName;
     private JButton loadCampaignButton;
-    private JButton fastCampaignButton;
 
     // components for metrics
     private JComboBox<String> metricsGenderBox, metricsAgeBox, metricsContextBox, metricsIncomeBox;
@@ -372,24 +371,6 @@ public class AdAuctionGUI extends JFrame {
         // load files of campaign
         loadCampaignButton.addActionListener(e -> createFileLoadBox());
 
-        // TESTING ONLY
-        // fast load campaign button
-        JPanel fastCampaignButtonPanel = new JPanel(new BorderLayout());
-        fastCampaignButtonPanel.setOpaque(false);
-
-        fastCampaignButton = new JButton("Fast Load Campaign (TESTING/DEMONSTRATION ONLY!)");
-        fastCampaignButton.setFont(mainFont);
-        fastCampaignButton.setBorderPainted(false);
-        fastCampaignButton.setContentAreaFilled(false);
-        fastCampaignButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        fastCampaignButton.setForeground(noColor);
-
-        fastCampaignButtonPanel.add(fastCampaignButton);
-
-        // fast load files of campaign
-        fastCampaignButton.addActionListener(e -> fastCreateCampaign());
-        // TESTING ONLY
-
         // close the program
         JButton closeButton = new RoundButton("X");
 
@@ -402,7 +383,6 @@ public class AdAuctionGUI extends JFrame {
 
         Box topRight = Box.createHorizontalBox();
         topRight.add(loadCampaignButtonPanel);
-        topRight.add(fastCampaignButtonPanel); // TEMPORARY FOR TESTING ONLY
         topRight.add(closeButton);
         topRight.setBounds(gui.getWidth()-200,0,200,100);
 
@@ -1954,7 +1934,6 @@ public class AdAuctionGUI extends JFrame {
         settingsButton.setFont(mainFont);
         productName.setFont(mainFont);
         loadCampaignButton.setFont(mainFont);
-        fastCampaignButton.setFont(mainFont);
         addChartToCompareButton.setFont(mainFont);
         resetCompareButton.setFont(mainFont);
         fontLabel.setFont(mainFont);
@@ -1982,10 +1961,13 @@ public class AdAuctionGUI extends JFrame {
 
     // converts a metric to a readable string
     public String toString(float metric) {
-        if (metric == (int) metric)
-            return String.format("%d", (int) metric);
-        else
-            return String.format("%.4g%n", metric); // change the 4 to change the dp
+        String dpMetric = String.valueOf(Math.round(metric * 10000.0) / 10000.0);
+
+        StringBuilder sb = new StringBuilder(dpMetric);
+        while (sb.length() > 0 && (sb.charAt(sb.length() - 1) == '0' || sb.charAt(sb.length() - 1) == '.')) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
     }
 
     // loads the files
@@ -2001,43 +1983,6 @@ public class AdAuctionGUI extends JFrame {
             gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
             campaignController.createCampaign(impressionsFileLocation, clickFileLocation, serverFileLocation);
-            createMetrics(campaignController.createMetrics());
-            createCharts(campaignController.createCharts());
-            createHistogram(campaignController.createCharts());
-
-            gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            changeFilters(true);
-
-            if(compareGrid != null) {
-                menu.remove(compareGrid);
-                menu.revalidate();
-                menu.repaint();
-            }
-
-            createCompareGrid();
-            metricsGrid.setVisible(true);
-            chartsGrid.setVisible(false);
-            histogramGrid.setVisible(false);
-            compareGrid.setVisible(false);
-            settingsGrid.setVisible(false);
-
-            countCharts = 0;
-        }).start();
-    }
-
-    // fast load the campaign !! TESTING ONLY !!
-    public void fastCreateCampaign() {
-        new Thread(() -> {
-            if (filesMenu!=null){
-                loadCampaignButton.setEnabled(true);
-                menu.remove(filesMenu);
-                menu.revalidate();
-                menu.repaint();
-            }
-            changeFilters(false);
-            gui.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-            campaignController.createCampaign("Logs/impression_log.csv", "Logs/click_log.csv", "Logs/server_log.csv");
             createMetrics(campaignController.createMetrics());
             createCharts(campaignController.createCharts());
             createHistogram(campaignController.createCharts());
@@ -2120,7 +2065,7 @@ public class AdAuctionGUI extends JFrame {
 
     // displays the updated metrics
     public void updateMetrics() {
-        impressionsValue = new JLabel(String.valueOf(metricController.getImpressionsNo()));
+        impressionsValue = new JLabel(toString(metricController.getImpressionsNo()));
         impressionsValue.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         impressionsValue.setFont(fontOfValue);
         impressionsBox.remove(0);
