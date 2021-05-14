@@ -12,6 +12,10 @@ public class Campaign {
     private final ArrayList<ServerEntry> serverLog; // list of successful and unsuccessful conversions
     private final Map<Long, User> users = new HashMap<>(); // list of unique users
 
+    public int pageLimit = 2; // max number of pages to be counted as a bounce
+    public int bounceTime = 500; // max amount of time to be counted as a bounce
+    // set either value to 0 when not being used
+
     public Campaign() {
         impressionLog = new ArrayList<>();
         clickLog = new ArrayList<>();
@@ -123,5 +127,21 @@ public class Campaign {
 
     public Map<Long, User> getUsers() {
         return users;
+    }
+
+    public int getPageLimit() {
+        return pageLimit;
+    }
+
+    public int getBounceTime() {
+        return bounceTime;
+    }
+
+    public void setPageLimit(int pageLimit) {
+        this.pageLimit = pageLimit;
+    }
+
+    public void setBounceTime(int bounceTime) {
+        this.bounceTime = bounceTime;
     }
 }

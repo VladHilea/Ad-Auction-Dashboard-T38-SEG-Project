@@ -18,14 +18,14 @@ public class Chart extends ApplicationFrame {
 	private String chartTitle;
 	private String metric;
 
-	public Chart(String applicationTitle, String metric, String granularity) {
+	public Chart(String applicationTitle, String metric, String granularity, int pageLimit, int bounceTime) {
 		super(applicationTitle);
 
 		this.granularity = granularity;
 		this.chartTitle = metric + " vs Time (" + granularity + ")";
 		this.metric = metric;
 
-		updateChart(new ChartCalculator());
+		updateChart(new ChartCalculator(pageLimit, bounceTime));
 
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(560 , 367));

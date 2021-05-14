@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 public class MetricController {
     private MetricCalculator metricCalculator;
 
-    public MetricController() {
-        this.metricCalculator = new MetricCalculator();
+    public MetricController(int pageLimit, int bounceTime) {
+        this.metricCalculator = new MetricCalculator(pageLimit, bounceTime);
     }
 
     public void createMetrics(MetricCalculator metricCalculator) {
@@ -32,6 +32,11 @@ public class MetricController {
             endDate = LocalDateTime.parse(stringEndDate, formatter);
         }
         metricCalculator.calculateMetrics(gender, age, context, income, startDate, endDate);
+    }
+
+    public void updateBounce(int pageLimit, int bounceTime) {
+        metricCalculator.setPageLimit(pageLimit);
+        metricCalculator.setBounceTime(bounceTime);
     }
 
     public int getImpressionsNo() {

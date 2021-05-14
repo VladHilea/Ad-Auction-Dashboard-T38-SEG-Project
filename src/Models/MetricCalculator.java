@@ -21,12 +21,12 @@ public class MetricCalculator extends Calculator {
     private float cpm; // cost-per-thousand impressions
     private float br; // bounce rate - number of bounces per click
 
-    public MetricCalculator() {
-        super(null, null, null, null);
+    public MetricCalculator(int pageLimit, int bounceTime) {
+        super(null, null, null, null, pageLimit, bounceTime);
     }
 
-    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users) {
-        super(impressionLog, clickLog, serverLog, users);
+    public MetricCalculator(ArrayList<ImpressionEntry> impressionLog, ArrayList<ClickEntry> clickLog, ArrayList<ServerEntry> serverLog, Map<Long, User> users, int pageLimit, int bounceTime) {
+        super(impressionLog, clickLog, serverLog, users, pageLimit, bounceTime);
         calculateMetrics();
     }
 
@@ -124,7 +124,7 @@ public class MetricCalculator extends Calculator {
 
         // calculates the number of bounces and the number of conversions
         for (ServerEntry server : filteredServerList) {
-            if (server.getPages() <= pageLimit || timeDifference(server.getEntryDate(), server.getExitDate()) <= bounceTime || bounceTime == 0) {
+            if ((server.getPages() <= pageLimit && pageLimit != 0) || (timeDifference(server.getEntryDate(), server.getExitDate()) <= bounceTime && bounceTime != 0)) {
                 this.bouncesNo++;
             }
             if (server.isConversion()) {
